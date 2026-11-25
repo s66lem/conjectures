@@ -12,7 +12,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | :--- | :--- | :---: | :---: |
 | **1.** [Fanelli–Moscardelli stability threshold conjecture](results/fanelli-moscardelli/) | Disproved for all odd $N \ge 7$ | [DOI](https://doi.org/10.5281/zenodo.24519727) | **Lean 4** · Audit · Python · DRAT SAT |
 | **2.** [Csernák–Soukup tree stacking conjecture & literal ASH](results/csernak-soukup-tree-stacking/) | Conj. 5.6 proved; literal Hyp. 3.2 disproved | [DOI](https://doi.org/10.5281/zenodo.24519728) | **Lean 4** · Audit · Python BFS |
-| **3.** [Allie–Du Preez–Hefty–Mafunda tree remoteness conjecture](results/allie-dupreez-hefty-mafunda-remoteness/) | Disproved (infinite family + $k=8$ minimizer) | [DOI](https://doi.org/10.5281/zenodo.24519729) | Audit · Python BFS |
+| **3.** [Allie–Du Preez–Hefty–Mafunda tree remoteness conjecture](results/allie-dupreez-hefty-mafunda-remoteness/) | Disproved (infinite family + $k=8$ minimizer) | [DOI](https://doi.org/10.5281/zenodo.24519729) | **Lean 4** · Audit · Python BFS |
 | **4.** [Firoozbakht’s OEIS A108569 parity conjecture](results/firoozbakht-oeis-a108569/) | Disproved (infinite odd family) | — | **Lean 4** · Audit · Python |
 | **5.** [Rossi rank score veto core distortion conjecture](results/rossi-veto-core-distortion/) | Proved (exact distortion $1 + 2(\|\mathbf{s}\|_1 - s_m)$) | [PDF](results/rossi-veto-core-distortion/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 | **6.** [Togni multi-label radio labeling conjectures](results/togni-multilabel-radio/) | Conj. 2 proved (all $k, m$); Conj. 1 upper bound & exact $k=3$ | [PDF](results/togni-multilabel-radio/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
