@@ -1,0 +1,95 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xurl}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+
+\title{Odd Solutions to $\varphi(n) = \varphi(n + \varphi(n))$: Disproving Firoozbakht's Parity Conjecture for OEIS A108569}
+\author{Salem Levinstein}
+\date{November 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Farideh Firoozbakht conjectured in 2005 (OEIS A108569) that every solution $n > 1$ to the Euler totient equation $\varphi(n) = \varphi(n + \varphi(n))$ is even. We disprove this conjecture by exhibiting the explicit odd counterexample
+\[
+  n = 5{,}095{,}354{,}107 = 3 \times 1033 \times 1{,}644{,}193,
+\]
+for which $n + \varphi(n) = 8{,}488{,}966{,}395 = 3 \times 5 \times 7 \times 13 \times 19 \times 327{,}317$ and $\varphi(n) = \varphi(n + \varphi(n)) = 3{,}393{,}612{,}288$. Scaling by powers of $3$ immediately yields an infinite family of odd solutions $n_j = 3^j \cdot 5{,}095{,}354{,}107$ ($j \ge 0$). The entire proof, including primality certificates and the infinite family, is formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+Let $\varphi$ denote Euler's totient function, and let
+\[
+  A = \{n \in \mathbb{Z}_{>0} : \varphi(n) = \varphi(n + \varphi(n))\}
+\]
+be the set of positive integer solutions, ordered as $a_0 < a_1 < a_2 < \cdots$ with $a_0 = 1$. Since $\varphi(2^m) = 2^{m-1}$ and $\varphi(2^m + 2^{m-1}) = \varphi(3 \cdot 2^{m-1}) = 2 \cdot 2^{m-2} = 2^{m-1}$ for every $m \ge 2$, the sequence $A$ is infinite.
+
+In July 2005, Farideh Firoozbakht registered $A$ as OEIS sequence A108569 and conjectured that every term $a_k$ with $k > 0$ (equivalently, every solution $n > 1$) is even. The problem also appears as an open conjecture in the \texttt{formal-conjectures} repository (file \texttt{OEIS/108569.lean}). We show that this parity conjecture is false and that $A$ contains infinitely many odd integers.
+
+\section{Main Result}
+
+\begin{theorem}\label{thm:counterexample}
+Let $n = 5{,}095{,}354{,}107$. Then $n > 1$ is odd and satisfies $\varphi(n) = \varphi(n + \varphi(n))$.
+\end{theorem}
+
+\begin{proof}
+We factor $n$ as
+\[
+  n = 3 \times 1033 \times 1{,}644{,}193.
+\]
+Each of the three factors $3$, $1033$, and $1{,}644{,}193$ is prime and pairwise distinct (for $1033$, no prime $\le 31$ divides $1033$; for $1{,}644{,}193$, no prime $\le 1282$ divides $1{,}644{,}193$). In particular $n > 1$ is odd, and by multiplicativity of $\varphi$,
+\[
+  \varphi(n) = (3 - 1)(1033 - 1)(1{,}644{,}193 - 1) = 2 \times 1032 \times 1{,}644{,}192 = 3{,}393{,}612{,}288.
+\]
+Consequently,
+\[
+  n + \varphi(n) = 5{,}095{,}354{,}107 + 3{,}393{,}612{,}288 = 8{,}488{,}966{,}395.
+\]
+Factoring this sum yields
+\[
+  n + \varphi(n) = 3 \times 5 \times 7 \times 13 \times 19 \times 327{,}317,
+\]
+where all six factors are distinct primes (no prime $\le 572$ divides $327{,}317$). Applying multiplicativity again gives
+\[
+  \varphi(n + \varphi(n)) = 2 \times 4 \times 6 \times 12 \times 18 \times 327{,}316 = 3{,}393{,}612{,}288 = \varphi(n).
+\]
+Since $1 \in A$, $n \in A$, and $1 < n$, the integer $n$ occurs as $a_k$ for $k = |\{x \in A : x < n\}| \ge 1$, refuting Firoozbakht's conjecture.
+\end{proof}
+
+\begin{corollary}\label{cor:family}
+For every integer $j \ge 0$, the odd integer $n_j = 3^j \cdot 5{,}095{,}354{,}107$ satisfies $\varphi(n_j) = \varphi(n_j + \varphi(n_j))$. In particular, OEIS A108569 contains infinitely many odd terms.
+\end{corollary}
+
+\begin{proof}
+Write $n = 5{,}095{,}354{,}107$ and $m = n + \varphi(n) = 8{,}488{,}966{,}395$. Because $3 \mid n$ and $3 \mid m$, every prime factor of $3^j$ already divides both $n$ and $m$. Using the identity $\varphi(p^j u) = p^j \varphi(u)$ whenever $p \mid u$, we obtain for every $j \ge 0$:
+\[
+  \varphi(3^j n) = 3^j \varphi(n) = 3^j \varphi(m) = \varphi(3^j m) = \varphi\bigl(3^j(n + \varphi(n))\bigr) = \varphi\bigl(3^j n + \varphi(3^j n)\bigr).
+\]
+Since $n$ and $3^j$ are both odd, every $n_j = 3^j n$ is an odd member of $A$.
+\end{proof}
+
+\section{Construction Method and Verification}
+
+To locate odd solutions systematically, write $n = d p$ and $m = n + \varphi(n) = M q$ with odd integers $d, M$ and primes $p \nmid d$, $q \nmid M$. Let $B = \varphi(d)$, $D = \varphi(M)$, $g = \gcd(B, D)$, $b = B/g$, and $e = D/g$. The condition $\varphi(n) = \varphi(m)$ reads $B(p - 1) = D(q - 1)$, i.e., $p - 1 = e t$ and $q - 1 = b t$ for an integer $t \ge 1$. Substituting into $m = n + \varphi(n)$ yields
+\[
+  M(1 + b t) = d(1 + e t) + B e t \implies \bigl((d + B)e - b M\bigr) t = M - d.
+\]
+Setting $k = (d + B)e - b M$, each pair $(d, M)$ with $k > 0$ and $k \mid (M - d)$ determines a unique candidate $t = (M - d)/k$, $p = 1 + e t$, $q = 1 + b t$. Choosing $d = 3 \cdot 1033 = 3099$ and $M = 3 \cdot 5 \cdot 7 \cdot 13 \cdot 19 = 25935$ gives $B = 2064$, $D = 10368$, $g = 48$, $b = 43$, $e = 216$, $k = 3$, $t = 7612$, and the prime pair $p = 1{,}644{,}193$, $q = 327{,}317$.
+
+A standalone Python~3 verifier (\texttt{verify.py}) and a complete Lean~4 formalization (module \texttt{Conjectures.FiroozbakhtA108569}, depending only on standard axioms) are archived in the companion repository:
+\begin{center}
+\url{https://github.com/s66lem/conjectures/tree/main/results/firoozbakht-oeis-a108569}
+\end{center}
+
+\begin{thebibliography}{9}
+\bibitem{OEIS}
+F.~Firoozbakht, Sequence A108569: Numbers $n$ such that $\varphi(n) = \varphi(n + \varphi(n))$, \emph{The On-Line Encyclopedia of Integer Sequences}, \url{https://oeis.org/A108569}, 2005.
+\end{thebibliography}
+
+\end{document}
