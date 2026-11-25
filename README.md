@@ -25,6 +25,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **13.** [Sinclair Conjecture C (radial-derivative Hilbert series front-loading)](results/sinclair-radial-mobius/) | Disproved ($M(K_{1,1,4}+e)$: $h_2^\beta = 31 < 32 = h_3^\beta$, family $m=4..7$ + binary example) | [PDF](results/sinclair-radial-mobius/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 | **14.** [Arana–Haxell–Kaiser–Stehlík Conjecture 1.3 ($k = 3$, $G$-stable Kneser graphs)](results/arana-haxell-kaiser-stehlik-kneser/) | Proved completely for $k = 3$ (+ Schrijver $k = 3$, all-$k$ star obstruction at $4k-3$, $k = 4$ $C_m \sqcup K_1$ for $m \ge 39$) | [PDF](results/arana-haxell-kaiser-stehlik-kneser/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 | **15.** [Manabe Conjecture 57 (purely periodic three-move subtraction games)](results/manabe-subtraction-games/) | Proved in full (strengthened to all $1 \le a < b < c$ at $\mathrm{P}$-position level + Conj. 52 $\iff$ Conj. 56 for all $c > b$ + $100.9\text{M}$ census) | [PDF](results/manabe-subtraction-games/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
+| **16.** [Chen–Zwicker Conjecture 1 ($\mathrm{EF1}_{\mathrm{outer}}$ spectrum of connected graphs)](results/chen-zwicker-ef1-outer/) | Disproved (minimal $8$-vertex graph $H$: `NO` at $k=2$, `YES` at $k=3$, `NO` at $k=4$ from common binary up to heterogeneous monotone) | [PDF](results/chen-zwicker-ef1-outer/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -46,6 +47,7 @@ python3 results/benedetti-menara-flag-layered/verify.py
 python3 results/sinclair-radial-mobius/verify.py
 python3 results/arana-haxell-kaiser-stehlik-kneser/verify.py base
 python3 results/manabe-subtraction-games/verify.py
+python3 results/chen-zwicker-ef1-outer/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

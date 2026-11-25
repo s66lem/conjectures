@@ -13,3 +13,4 @@ import Conjectures.FlagLayeredR2
 import Conjectures.SinclairRadialMobius
 import Conjectures.StableKneserK3
 import Conjectures.ManabeSubtraction
+import Conjectures.ChenZwickerEF1Outer

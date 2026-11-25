@@ -1,0 +1,60 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{An Eight-Vertex Counterexample to the Chen--Zwicker $\mathrm{EF1}_{\mathrm{outer}}$ Spectrum Conjecture}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Chen and Zwicker (\texttt{arXiv:2402.05884}) introduced the $\mathrm{EF1}_{\mathrm{outer}}$ spectrum of a connected graph $G$ for a valuation class $\mathcal{V}$, recording for each number of agents $k \ge 1$ whether every $k$-agent instance on $G$ admits a connected allocation that is envy-free up to one outer good. They conjectured---and Bousquet, Connor, Totschnig, and Zeitoun (\texttt{arXiv:2608.29902}) proved for common binary additive valuations on trees---that the spectrum of every connected graph has a single contiguous \textup{NO} block (\textup{YES}$^*$\,\textup{NO}$^*$\,\textup{YES}$^\infty$). We disprove this conjecture with an $8$-vertex connected graph $H$ ($K_{2,3}$ plus a pendant leaf on each vertex of the $3$-part), whose spectrum has \textup{NO} at $k = 2$, \textup{YES} at $k = 3$, and \textup{NO} at $k = 4$ simultaneously for every valuation class between common binary additive and arbitrary heterogeneous monotone valuations. Exhaustive enumeration shows $8$ vertices is minimal. The result is formally verified in Lean~4 without additional axioms.
+\end{abstract}
+
+\section{Introduction}
+
+Let $G = (V, E)$ be a connected simple graph and $N = \{1, \dots, k\}$ a set of $k$ agents with monotone valuations $v_i : \mathcal{C}(G) \to \mathbb{R}_{\ge 0}$ ($v_i(\varnothing) = 0$) on connected vertex subsets. Following~\cite[Definition~2]{BCTZ2026}, a \emph{connected allocation} is a partition $A = (A_1, \dots, A_k)$ of $V$ into $k$ pairwise disjoint connected subsets (allowing empty bundles), and $A$ is \emph{envy-free up to one outer good} ($\mathrm{EF1}_{\mathrm{outer}}$) if for all $i, j \in N$, either $A_j = \varnothing$ or there exists $x \in A_j$ such that $A_j \setminus \{x\}$ is connected and $v_i(A_i) \ge v_i(A_j \setminus \{x\})$.
+
+For a fixed valuation class $\mathcal{V}$, the \emph{$\mathrm{EF1}_{\mathrm{outer}}$ spectrum} of $G$ has entry \textup{YES} at $k$ if every $k$-agent instance with valuations in $\mathcal{V}$ admits a connected $\mathrm{EF1}_{\mathrm{outer}}$ allocation, and \textup{NO} otherwise. Chen and Zwicker~\cite{CZ2024} conjectured (\cite[Conjecture~1]{BCTZ2026}) that for every connected graph $G$, the spectrum consists of an initial \textup{YES} string, a possibly empty contiguous \textup{NO} string, and an infinite \textup{YES} tail. Bousquet et al.~\cite[Theorem~7]{BCTZ2026} confirmed this for common binary additive valuations on trees. We show it fails already on $8$ vertices for non-trees across all standard valuation classes.
+
+\section{Counterexample}
+
+Let $H = (V, E)$ be the $8$-vertex connected graph with $V = \{u, w, a, b, c, \ell_a, \ell_b, \ell_c\}$ and edges
+\[
+E(H) = \{ua, ub, uc, wa, wb, wc, a\ell_a, b\ell_b, c\ell_c\},
+\]
+i.e., $K_{2,3}$ with parts $\{u, w\}$ and $\{a, b, c\}$ (the \emph{hubs}) together with a pendant leaf on each hub. Let $\beta$ denote the common binary additive valuation with $\beta(a) = \beta(b) = \beta(c) = 1$ and $\beta(v) = 0$ on $I := \{u, w, \ell_a, \ell_b, \ell_c\}$.
+
+\begin{theorem}\label{thm:main}
+Let $\mathcal{V}$ be any valuation class containing $\beta$ and contained in heterogeneous monotone valuations (for example, common binary additive, common additive, common monotone, heterogeneous additive, or heterogeneous monotone). Then the $\mathrm{EF1}_{\mathrm{outer}}$ spectrum of $H$ for $\mathcal{V}$ has \textup{NO} at $k = 2$, \textup{YES} at $k = 3$, and \textup{NO} at $k = 4$. Consequently, Conjecture~1 of~\cite{CZ2024,BCTZ2026} is false for $\mathcal{V}$.
+\end{theorem}
+
+\begin{proof}
+\emph{\textup{NO} at $k = 2$ (under $\beta$).} Let $(X, Y)$ be any connected $2$-allocation of $H$. Each leaf $\ell_h$ ($h \in \{a, b, c\}$) has unique neighbor $h$, so either $\{\ell_h\}$ is an entire bundle or $\ell_h$ lies in the same bundle as $h$. If some bundle is $\{\ell_h\}$ (value $0$), the other bundle has value $3$, and deleting any single vertex leaves value at least $2 > 0$, causing envy. Otherwise every hub shares its bundle with its leaf. One bundle, say $X$, contains at least two hubs (hence at least four vertices), so deleting any hub $h \in X$ separates $\ell_h$ from the rest of $X$. Every outer vertex $x$ of $X$ therefore has $\beta(x) = 0$, whence $\beta(X \setminus \{x\}) = \beta(X) \ge 2 > 1 \ge \beta(Y)$, causing envy.
+
+\emph{\textup{NO} at $k = 4$ (under $\beta$).} Let $(A_1, A_2, A_3, A_4)$ be a connected $\mathrm{EF1}_{\mathrm{outer}}$ allocation under $\beta$. Since $\beta(V) = 3 < 4$, some bundle has value $0$. To avoid envy from its owner, every bundle contains at most one hub, and that hub must be outer in its bundle. Hence the three hubs lie in three distinct bundles $B_a, B_b, B_c$. Since $I$ is an independent set whose neighbors all lie in $\{a, b, c\}$, every vertex of $B_h \cap I$ is adjacent in $B_h$ only to $h$; removing $h$ disconnects $B_h$ whenever $|B_h \cap I| \ge 2$. Thus $|B_h \cap I| \le 1$ for each $h \in \{a, b, c\}$, leaving at least $5 - 3 = 2$ vertices of the independent set $I$ outside $B_a \cup B_b \cup B_c$. These must occupy at least $2$ additional nonempty bundles, forcing at least $3 + 2 = 5 > 4$ nonempty bundles, a contradiction.
+
+\emph{\textup{YES} at $k = 3$.} For common binary additive valuations, all $2^8 = 256$ valuations admit a connected $\mathrm{EF1}_{\mathrm{outer}}$ allocation among the $66$ unordered connected $3$-partitions of $H$. More generally, for arbitrary heterogeneous monotone valuations $v_1, v_2, v_3$, an exact rational SMT check (\textup{QF\_LRA} in Z3, unsat core of $18$ allocations) and our Lean~4 formalization establish that every $3$-agent monotone profile on $H$ admits a connected $\mathrm{EF1}_{\mathrm{outer}}$ allocation.
+\end{proof}
+
+\begin{remark}[Minimality and Higher-Order Family]
+Exhaustive checking of all connected graphs on at most $7$ vertices shows no graph has a binary spectrum gap; on $8$ vertices, exactly $4$ of the $11{,}117$ connected graphs have a gap ($H$ plus $0, 1, 2,$ or $3$ edges among $\{a, b, c\}$), all with common binary spectrum \textup{Y N Y N Y Y Y Y}. Attaching pendant leaves to the $m$-side of $K_{s,m}$ gives \textup{NO} on $[2, m-1]$ and $[m+1, m+s-1]$ by the same proofs, with computed \textup{YES} at $k = m$ for eight tested pairs $(s, m)$ up to $(5, 4)$ and $(4, 5)$. Theorem~\ref{thm:main} is formally verified in Lean~4 (\texttt{ChenZwickerEF1Outer.lean}, zero \texttt{sorry}, standard axioms only).
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{BCTZ2026}
+N.~Bousquet, F.~Connor, A.~Totschnig, and S.~Zeitoun, \emph{Fair division of graphs: beyond traceability}, arXiv:2608.29902v1 [cs.GT], 2026.
+
+\bibitem{CZ2024}
+J.~Chen and W.~S.~Zwicker, \emph{Fair division of graphs: outer-EF1 allocations}, arXiv:2402.05884 [cs.GT], 2024.
+\end{thebibliography}
+
+\end{document}
