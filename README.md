@@ -15,6 +15,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **3.** [Allie–Du Preez–Hefty–Mafunda tree remoteness conjecture](results/allie-dupreez-hefty-mafunda-remoteness/) | Disproved (infinite family + $k=8$ minimizer) | [DOI](https://doi.org/10.5281/zenodo.24519729) | Audit · Python BFS |
 | **4.** [Firoozbakht’s OEIS A108569 parity conjecture](results/firoozbakht-oeis-a108569/) | Disproved (infinite odd family) | — | **Lean 4** · Audit · Python |
 | **5.** [Rossi rank score veto core distortion conjecture](results/rossi-veto-core-distortion/) | Proved (exact distortion $1 + 2(\|\mathbf{s}\|_1 - s_m)$) | [PDF](results/rossi-veto-core-distortion/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
+| **6.** [Togni multi-label radio labeling conjectures](results/togni-multilabel-radio/) | Conj. 2 proved (all $k, m$); Conj. 1 upper bound & exact $k=3$ | [PDF](results/togni-multilabel-radio/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -26,6 +27,7 @@ python3 results/csernak-soukup-tree-stacking/verify.py
 python3 results/allie-dupreez-hefty-mafunda-remoteness/verify.py
 python3 results/firoozbakht-oeis-a108569/verify.py
 python3 results/rossi-veto-core-distortion/verify.py
+python3 results/togni-multilabel-radio/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

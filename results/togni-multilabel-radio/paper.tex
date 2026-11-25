@@ -1,0 +1,168 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Multi-Label Radio Labelings of Paths and Cycles}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve Conjecture~2 of Togni (\emph{On Multi-label radio Labelings of Graphs}, arXiv:2610.25863) for all $k, m \ge 1$: setting $S = \lceil (k+1)^2 / 2 \rceil$ and $M = mS + 1$, every cycle $C_n$ of order $n \ge \max\{3, \lceil kSM/2 \rceil\}$ satisfies $\lambda_k^m(C_n) \le mS$. The proof combines a minimum-norm $\mathbb{Z}^2$ lattice construction—which simultaneously establishes the upper bound $\lambda_k^m(P_n) \le mS - 1$ in Conjecture~1 for all $n, k, m \ge 1$—with a sheared floor projection modulo $M$ that closes cleanly around arbitrary sufficiently long cycles. We also prove the matching eventual lower bound $\lambda_3^m(P_n) = 8m - 1$ for all $m \ge 1$, settling Conjecture~1 for $k = 3$, and prove divisibility obstructions showing why modulus-$S$ toroidal labelings fail for infinitely many cycle lengths for every $k \ge 1$.
+\end{abstract}
+
+\section{Introduction}
+
+For integers $m, k \ge 1$ and a connected graph $G = (V, E)$, Togni~\cite{Togni2026} defines an \emph{$(m, k)$-radio labeling} of $G$ as an assignment $\ell : V \to \binom{\mathbb{N}}{m}$ of $m$ distinct nonnegative integer labels to each vertex such that for all (possibly equal) vertices $x, y \in V$ and all $c_x \in \ell(x)$, $c_y \in \ell(y)$ with $(x, c_x) \neq (y, c_y)$,
+\[
+|c_x - c_y| \ge k + 1 - d_G(x, y),
+\]
+where $d_G$ denotes shortest-path distance in $G$. The \emph{span} of $\ell$ is $\max_{x, c \in \ell(x)} c - \min_{x, c \in \ell(x)} c$, and the \emph{$(m, k)$-radio number} $\lambda_k^m(G)$ is the minimum span over all $(m, k)$-radio labelings of $G$.
+
+Set $D := k + 1$ and $S := \lceil D^2 / 2 \rceil$. Togni~\cite[Section~5]{Togni2026} proposed two conjectures generalizing the $m = 1$ path conjecture of Kchikech, Khennoufa, and Togni~\cite{KKT2007}:
+\begin{itemize}
+\item \textbf{Conjecture 1:} For all $k, m \ge 1$, there exists $n_0$ such that $\lambda_k^m(P_n) = mS - 1$ for all $n \ge n_0$.
+\item \textbf{Conjecture 2:} For all $k, m \ge 1$, there exists $n_0$ such that $\lambda_k^m(C_n) \le mS$ for all $n \ge n_0$.
+\end{itemize}
+
+In this note we prove Conjecture~2 completely with an explicit threshold $n_0$, prove the upper bound in Conjecture~1 for every $n, k, m \ge 1$, settle Conjecture~1 completely for $k = 3$ and all $m \ge 1$, and explain the modular obstruction that prevents the naive modulus-$S$ scheme from closing on general cycles.
+
+\begin{theorem}[Conjecture 1 Upper Bound]\label{thm:path}
+For all integers $n, k, m \ge 1$, we have $\lambda_k^m(P_n) \le mS - 1$. Moreover, $\lambda_k^m(C_n) \le mS - 1$ whenever $n \ge 3$ and $S \mid n$.
+\end{theorem}
+
+\begin{theorem}[Resolution of Conjecture 2]\label{thm:cycle}
+Let $k, m \ge 1$, $S = \lceil (k+1)^2/2 \rceil$, $M = mS + 1$, and set $a = k$ for odd $k$ and $a = k + 1$ for even $k$. For every integer $n \ge \max\{3, kM \cdot \operatorname{dist}(an, S\mathbb{Z})\}$—and in particular for every $n \ge \max\{3, \lceil kSM/2 \rceil\}$—we have
+\[
+\lambda_k^m(C_n) \le mS.
+\]
+\end{theorem}
+
+\begin{theorem}[Conjecture 1 for $k = 3$]\label{thm:k3}
+For every integer $m \ge 1$, there exists $n_0(m)$ such that $\lambda_3^m(P_n) = 8m - 1$ for all $n \ge n_0(m)$.
+\end{theorem}
+
+\section{The Lattice Construction}
+
+Let $D = k + 1$, $S = \lceil D^2/2 \rceil$, and set $a = k$ when $k$ is odd ($D = 2r$) and $a = k + 1$ when $k$ is even ($D = 2r + 1$). Define the index-$S$ lattice
+\[
+L := \{(h, z) \in \mathbb{Z}^2 : z \equiv ah \pmod{S}\}.
+\]
+
+\begin{lemma}\label{lem:lattice}
+Every nonzero vector $(h, z) \in L \setminus \{(0, 0)\}$ satisfies $|h| + |z| \ge D$.
+\end{lemma}
+
+\begin{proof}
+Since $[\mathbb{Z}^2 : L] = S$, any two vectors $e_1, e_2 \in L$ with $|\det(e_1, e_2)| = S$ form a $\mathbb{Z}$-basis of $L$.
+
+\emph{Case 1: $D = 2r$ ($r \ge 1$, $S = 2r^2$, $a = 2r - 1$).} Take $e_1 = (r, -r)$ and $e_2 = (r+1, r-1)$. Then $ar - (-r) = 2r^2 = S$, $a(r+1) - (r-1) = 2r^2 = S$, and $\det(e_1, e_2) = r(r-1) + r(r+1) = 2r^2 = S$, so $e_1, e_2$ generate $L$. For any $(h, z) = u e_1 + v e_2 \neq (0, 0)$ with $u, v \in \mathbb{Z}$, we have $h + z = 2rv$. If $v \neq 0$, then $|h| + |z| \ge |h + z| = 2r|v| \ge D$; if $v = 0$, then $u \neq 0$ and $|h| + |z| = 2r|u| \ge D$.
+
+\emph{Case 2: $D = 2r + 1$ ($r \ge 1$, $S = 2r^2 + 2r + 1$, $a = 2r + 1$).} Take $e_1 = (r, -r-1)$ and $e_2 = (r+1, r)$. Then $ar - (-r-1) = S$, $a(r+1) - r = S$, and $\det(e_1, e_2) = r^2 + (r+1)^2 = S$, so $e_1, e_2$ generate $L$. Moreover, $e_1 \cdot e_2 = 0$ and $\|e_1\|_2^2 = \|e_2\|_2^2 = S$. For $(h, z) = u e_1 + v e_2 \neq (0, 0)$: if $u^2 + v^2 = 1$, then $(h, z) \in \{\pm e_1, \pm e_2\}$ has $|h| + |z| = 2r + 1 = D$; if $u^2 + v^2 \ge 2$, then
+\[
+|h| + |z| \ge \sqrt{h^2 + z^2} = \sqrt{(u^2 + v^2)S} \ge \sqrt{2S} = \sqrt{D^2 + 1} > D. \qedhere
+\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:path}]
+Assign to vertex $i \in \{0, \dots, n-1\}$ of $P_n$ the $m$ distinct labels
+\[
+\ell(i) := \{(ai \bmod S) + jS : 0 \le j < m\} \subset \{0, \dots, mS - 1\}.
+\]
+For any two distinct incidences $(i, c)$ and $(i', c')$, the difference $(h, z) = (i' - i, c' - c)$ is a nonzero vector in $L$, so $|i' - i| + |c' - c| \ge D$ by Lemma~\ref{lem:lattice}. When $n \ge 3$ and $S \mid n$, the same formula is $n$-periodic and lifts along any shortest cyclic arc to a nonzero vector in $L$, proving $\lambda_k^m(C_n) \le mS - 1$.
+\end{proof}
+
+\section{Proof of Conjecture 2}
+
+\begin{proof}[Proof of Theorem~\ref{thm:cycle}]
+Let $M = mS + 1$ and suppose $n \ge \max\{3, kM \cdot \operatorname{dist}(an, S\mathbb{Z})\}$. Choose an integer $t$ nearest to $an/S$, so that
+\[
+|tS - an| = \operatorname{dist}(an, S\mathbb{Z}) \le \frac{n}{kM}.
+\]
+(Note that $\operatorname{dist}(an, S\mathbb{Z}) \le S/2$, so $n \ge \max\{3, \lceil kSM/2 \rceil\}$ always suffices.) For $i, j \in \mathbb{Z}$, set
+\[
+F(i, j) := \left\lfloor \frac{M}{m}\left(\frac{ti}{n} + j\right) \right\rfloor = \left\lfloor \frac{M(ti + jn)}{mn} \right\rfloor,
+\]
+and assign to vertex $i \in \mathbb{Z}_n$ of $C_n$ the set of least nonnegative residues modulo $M$:
+\[
+\ell(i) := \{F(i, j) \bmod M : 0 \le j < m\} \subseteq \{0, 1, \dots, mS\}.
+\]
+
+Direct substitution yields two exact identities for all $i, j \in \mathbb{Z}$:
+\begin{equation}\label{eq:identities}
+F(i + n, j) = F(i, j + t), \qquad F(i, j + m) = F(i, j) + M.
+\end{equation}
+The second identity implies that $\{F(i, j) \bmod M : 0 \le j < m\} = \{F(i, j) \bmod M : j \in \mathbb{Z}\}$, and the first then implies that $\ell(i)$ depends only on $i \bmod n$.
+
+At any fixed $i$, increasing $j$ by $1$ adds $M/m = S + 1/m$ inside the floor, so $F(i, j+1) - F(i, j) \ge \lfloor M/m \rfloor \ge S$ for every $j \in \mathbb{Z}$. Since $F(i, m) = F(i, 0) + M$, the $m$ residues in $\ell(i)$ are pairwise distinct and have cyclic separation at least $S$ modulo $M$ (including the wraparound step from $j = m-1$ to $j = m$). Hence any two distinct labels at the same vertex satisfy $|c_1 - c_2| \ge S \ge D = k + 1$.
+
+Now take two distinct vertices $x, y \in V(C_n)$ with $1 \le d_{C_n}(x, y) \le k$, and lift a shortest arc between them to integers $i$ and $i + h$ with $1 \le |h| = d_{C_n}(x, y) \le k$. Let $c_1 \in \ell(x)$ and $c_2 \in \ell(y)$. By~\eqref{eq:identities}, shifting $j$ by multiples of $m$ shifts $F$ by multiples of $M$, so there exist $j, j' \in \mathbb{Z}$ such that $c_1 = F(i, j)$ and $c_2 = F(i + h, j')$ hold as exact integer equalities. Set $z := ah + S(j' - j) \in \mathbb{Z}$. Since $(h, z) \in L$ and $h \neq 0$, Lemma~\ref{lem:lattice} gives $|z| \ge D - |h| \ge 1$.
+
+The difference between the unrounded arguments of $F(i+h, j')$ and $F(i, j)$ is
+\[
+\Delta := \frac{M}{m}\left(\frac{th}{n} + j' - j\right)
+= \frac{M}{mS} z + \frac{M}{m}\left(\frac{t}{n} - \frac{a}{S}\right)h
+= \left(1 + \frac{1}{mS}\right)z + \frac{M(tS - an)}{mnS} h.
+\]
+Using $|tS - an| \le n/(kM)$ and $|h| \le k$, the second term has magnitude at most $1/(mS)$. Hence
+\[
+|\Delta| \ge \left(1 + \frac{1}{mS}\right)|z| - \frac{1}{mS} = |z| + \frac{|z| - 1}{mS} \ge |z| \ge D - |h|.
+\]
+For any reals $u, v$ and integer $K \ge 0$, $|u - v| \ge K$ implies $|\lfloor u \rfloor - \lfloor v \rfloor| \ge K$ (assuming $u \ge v + K$, $\lfloor u \rfloor \ge \lfloor v + K \rfloor = \lfloor v \rfloor + K$). With $K = D - |h|$, we conclude
+\[
+|c_2 - c_1| = |F(i + h, j') - F(i, j)| \ge D - |h| = k + 1 - d_{C_n}(x, y).
+\]
+Since all labels lie in $\{0, \dots, mS\}$, $\ell$ is an $(m, k)$-radio labeling of $C_n$ of span at most $mS$.
+\end{proof}
+
+\section{Exact Equality for $k = 3$ and Modulus-$S$ Obstructions}
+
+\begin{proof}[Proof of Theorem~\ref{thm:k3}]
+By Theorem~\ref{thm:path}, $\lambda_3^m(P_n) \le 8m - 1$ for all $n, m \ge 1$. Restricting a labeling of $P_{n+1}$ to its first $n$ vertices shows $\lambda_3^m(P_n)$ is non-decreasing in $n$, so it suffices to show that no infinite sequence of $(m, 3)$-radio labelings of $P_n$ can have span at most $8m - 2$.
+
+Suppose to the contrary that every $P_n$ admits a labeling into $\{0, \dots, 8m - 2\}$. Recording the last three label sets defines a finite-state automaton of at most $\binom{8m-1}{m}^3$ states, so a sufficiently long path repeats a state and yields a periodic labeling of $\mathbb{Z}$. Taking a multiple of the period gives a horizontal period $N \ge 8$ and $mN$ centers in $\mathbb{Z}_N \times \{0, \dots, 8m - 2\}$ with $m$ centers per column and minimum toroidal Manhattan distance $4$.
+
+Let $B \subset \mathbb{Z} \times \{-1, 0, 1\}$ have sections $\{0, 1\}$ at heights $\pm 1$ and $\{-1, 0, 1, 2\}$ at height $0$. Then $|B| = 8$ and $B$ has Manhattan diameter $3$, so the $mN$ translates of $B$ by the centers are pairwise disjoint on $\mathbb{Z}_N \times \mathbb{Z}$. Let $f_y$ be the number of centers at height $y$ (with $f_y = 0$ outside $\{0, \dots, 8m - 2\}$). Counting covered points in row $y$ gives
+\begin{equation}\label{eq:k3row}
+2f_{y-1} + 4f_y + 2f_{y+1} \le N \qquad (\forall y \in \mathbb{Z}).
+\end{equation}
+Summing~\eqref{eq:k3row} over the $4m$ even heights $y = 0, 2, \dots, 8m - 2$ counts every center in $\{0, \dots, 8m - 2\}$ with weight $4$, giving $4mN \le 4mN$. Hence equality holds at every even height: $4f_{2j} = N - 2f_{2j-1} - 2f_{2j+1}$ for $0 \le j \le 4m - 1$. Setting $b_j := f_{2j+1}$ ($b_{-1} = b_{4m-1} = 0$) and substituting the even-height equalities into~\eqref{eq:k3row} at $y = 2j + 1$ yields $2b_j \le b_{j-1} + b_{j+1}$ for $0 \le j \le 4m - 2$. Since $b_j \ge 0$ and $b_{-1} = b_{4m-1} = 0$, convexity forces $b_j = 0$ for all $j$.
+
+Thus $f_{2j} = N/4$ for each $0 \le j \le 4m - 1$. Horizontal $4$-separation forces all centers at height $2j$ to share a single residue class $r_j \pmod 4$. Adjacent even rows (vertical distance $2$) require $|r_{j+1} - r_j| \ge 2 \pmod 4$, hence $r_{j+1} \equiv r_j + 2 \pmod 4$. All centers therefore lie in columns of one parity, contradicting $m \ge 1$ centers in every column.
+\end{proof}
+
+\begin{proposition}[Modulus-$S$ Toroidal Obstruction]
+Consider a toroidal assignment placing one center per column in $\mathbb{Z}_n \times \mathbb{Z}_S$ with minimum toroidal Manhattan distance $D = k + 1$ (as forced by any modular scheme $f(v_i) = L_{y(i)}$ with $L_y = \{y + jS : 0 \le j < m\}$ when $m \ge 2$). For $n \ge 2D$:
+\begin{enumerate}
+\item If $k$ is even ($D = 2r + 1$), such an assignment exists if and only if $S \mid n$.
+\item If $k$ is odd ($D = 2r$), such an assignment exists only if $D \mid n$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Let $f_y$ ($y \in \mathbb{Z}_S$) count centers at height $y$, and let $T_b(j) = \max(b - |j|, 0)$ periodized modulo $S$, whose second difference is $-2\delta_0 + \delta_b + \delta_{-b}$.
+When $D = 2r + 1$, the Manhattan ball of radius $r$ has size $S$, diameter $D - 1$, and horizontal section sizes $T_r + T_{r+1}$; its $n$ disjoint translates tile $\mathbb{Z}_n \times \mathbb{Z}_S$, so $((T_r + T_{r+1}) * f)_y = n$. Taking the second difference gives $4f_y = f_{y-r} + f_{y+r} + f_{y-r-1} + f_{y+r+1}$. By the maximum principle and $\gcd(r, r+1) = 1$, $f$ is constant and $S \mid n$ (with the converse from Theorem~\ref{thm:path}).
+When $D = 2r$, the union of two horizontally adjacent radius-$(r-1)$ Manhattan balls has size $S$, diameter $D - 1$, and section sizes $2T_r$. Exact tiling gives $(2T_r * f)_y = n$, whose second difference is $2f_y = f_{y-r} + f_{y+r}$. Thus $f$ is constant on each coset of $\langle r \rangle \subset \mathbb{Z}_S$ (of size $S/r = 2r = D$), forcing $D \mid n$.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{KKT2007}
+M.~Kchikech, R.~Khennoufa, and O.~Togni,
+\emph{Linear and cyclic radio $k$-labelings of trees},
+Discussiones Mathematicae Graph Theory \textbf{27}(1) (2007), 105--123.
+
+\bibitem{Togni2026}
+O.~Togni,
+\emph{On Multi-label radio Labelings of Graphs},
+arXiv:2610.25863 (2026).
+\end{thebibliography}
+
+\end{document}
