@@ -19,6 +19,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **7.** [Maharaj 1D discrete Voronoi game conjecture](results/maharaj-voronoi-game/) | Disproved for all $\ell \ge 3$; exact $k^*(\ell) = 2\ell - 1$ | [PDF](results/maharaj-voronoi-game/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 | **8.** [Daga–Ramu exact Littlestone dimensions of intervals](results/daga-ramu-littlestone/) | Both conjectures proved (Conj. 31 & odd-$k$ unions) | [PDF](results/daga-ramu-littlestone/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 | **9.** [Kalmanovich–Nivasch Conjecture 9.1 on planar all-even sets](results/kalmanovich-nivasch-alleven/) | Disproved (36-point counterexample + unbounded seed family) | [PDF](results/kalmanovich-nivasch-alleven/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
+| **10.** [Notik Singer Golomb ruler chamber-uniqueness conjecture](results/notik-singer-golomb/) | Proved for all prime powers (every cyclic PDS) | [PDF](results/notik-singer-golomb/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -34,6 +35,7 @@ python3 results/togni-multilabel-radio/verify.py
 python3 results/maharaj-voronoi-game/verify.py
 python3 results/daga-ramu-littlestone/verify.py
 python3 results/kalmanovich-nivasch-alleven/verify.py
+python3 results/notik-singer-golomb/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

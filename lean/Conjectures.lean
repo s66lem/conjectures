@@ -7,3 +7,4 @@ import Conjectures.VoronoiGame1D
 import Conjectures.AllieRemoteness
 import Conjectures.LittlestoneIntervals
 import Conjectures.KalmanovichNivaschAllEven
+import Conjectures.SingerGolombChamber

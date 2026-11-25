@@ -1,0 +1,76 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Chamber Uniqueness for Largest-Gap Cuts of Cyclic Perfect Difference Sets}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove the conjecture of Notik (\emph{Golomb rulers with real marks: the real and integer optima agree up to ten marks}, arXiv:2611.22656, Section~7) that for every prime power $m$, every Singer ruler cut at its largest cyclic gap is the unique shortest point of its real $1$-separated chamber. In fact, the result holds for every cyclic perfect difference set $D \subset \mathbb{Z}/N\mathbb{Z}$: every anchored point in the chamber has each successive mark gap at least as large as the corresponding gap of the cut ruler. The proof is elementary, requires no linear programming, and yields an explicit full-rank integer dual certificate.
+\end{abstract}
+
+\section{Introduction and Main Result}
+
+Following Notik~\cite{Notik2026}, a \emph{real ($1$-separated) Golomb ruler} on $n \ge 2$ marks is a vector $y = (y_1, \dots, y_n) \in \mathbb{R}^n$ with $0 = y_1 < y_2 < \dots < y_n$ such that every positive pairwise difference satisfies $y_j - y_i \ge 1$ ($1 \le i < j \le n$) and any two distinct labeled positive differences are separated by at least~$1$. Given a real Golomb ruler~$x$, order the $\binom{n}{2}$ pairs $(i, j)$ ($1 \le i < j \le n$) by increasing value of $x_j - x_i$, write $\Delta_r(y) := y_{j_r} - y_{i_r}$ for the difference of rank $r \in \{1, \dots, \binom{n}{2}\}$, and set $\Delta_0(y) := 0$. The \emph{closed chamber} of~$x$ (anchored at $y_1 = 0$, equivalent to Notik's polyhedron $P_\sigma$ in gap coordinates $g_i = y_{i+1} - y_i$) is defined by the consecutive-rank inequalities
+\begin{equation}\label{eq:chamber}
+\Delta_r(y) - \Delta_{r-1}(y) \ge 1 \qquad \left(1 \le r \le \binom{n}{2}\right).
+\end{equation}
+
+A subset $D \subset \mathbb{Z}/N\mathbb{Z}$ with $n = |D| \ge 2$ is a \emph{cyclic perfect difference set} if every nonzero residue in $\mathbb{Z}/N\mathbb{Z}$ has a unique representation $b - a$ with $a, b \in D$ ($a \neq b$). For every prime power $m$, Singer's theorem~\cite{Singer1938} provides a cyclic perfect difference set of $n = m + 1$ marks modulo $N = m^2 + m + 1$ (and every unit multiple $t \cdot D$ with $\gcd(t, N) = 1$ and translate $D + c$ is also a cyclic perfect difference set). Notik~\cite[Section~7]{Notik2026} checked Singer rulers up to $m \le 103$ ($n \le 104$ marks) and conjectured that for every prime power~$m$, every Singer ruler cut at its largest gap is the unique shortest point of its chamber. We confirm this conjecture in full generality.
+
+\begin{theorem}\label{thm:pds}
+Let $D \subset \mathbb{Z}/N\mathbb{Z}$ be a cyclic perfect difference set with $n = |D| \ge 2$ marks. Let $G$ be the largest clockwise cyclic gap between consecutive marks of $D$, and let $0 = x_1 < x_2 < \dots < x_n = L := N - G$ be the integer ruler obtained by cutting $\mathbb{Z}/N\mathbb{Z}$ at $G$ and translating the following mark to~$0$, with consecutive gaps $h_i := x_{i+1} - x_i$ ($1 \le i \le n - 1$). Then:
+\begin{enumerate}
+\item $G$ is unique, and $x$ is a real $1$-separated Golomb ruler lying in its own chamber;
+\item every point $y$ in the closed chamber of $x$ (anchored at $y_1 = 0$) satisfies $y_{i+1} - y_i \ge h_i$ for every $1 \le i \le n - 1$;
+\item consequently $y_n \ge L$, with equality if and only if $y = x$.
+\end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+For every prime power $m$, every Singer ruler (cut at its largest cyclic gap, for any unit multiplier and translate) is the unique shortest point of its chamber.
+\end{corollary}
+
+\section{Proof of Theorem~\ref{thm:pds}}
+
+\begin{proof}
+Order $D$ cyclically around $\mathbb{Z}/N\mathbb{Z}$ with clockwise gaps $g_1, \dots, g_n \in \{1, \dots, N - 1\}$ summing to~$N$. Each cyclic gap $g_i$ is realized by a distinct oriented pair of consecutive marks, so by the perfect difference set property all $g_i$ are pairwise distinct. Hence the largest cyclic gap $G = \max_i g_i$ is unique, and after cutting at $G$ and shifting the following mark to~$0$, the resulting marks $0 = x_1 < \dots < x_n = L := N - G$ satisfy $1 \le h_i = x_{i+1} - x_i < G$ for all $1 \le i \le n - 1$ and $\sum_{i=1}^{n-1} h_i = L$. Because $L < N$, distinct positive ordinary differences of $x$ represent distinct nonzero residues modulo $N$ and are therefore distinct positive integers; thus $x$ is a real $1$-separated Golomb ruler belonging to its own chamber.
+
+Now fix any integer $r$ with $1 \le r \le G - 1$. Since $r \not\equiv 0 \pmod N$, there is a unique ordered pair of marks $(x_a, x_b)$ with $x_b - x_a \equiv r \pmod N$. As $x_a, x_b \in [0, L]$ with $L < N$, the ordinary integer difference $x_b - x_a$ is either $r$ or $r - N$. The latter has magnitude $N - r > N - G = L$, which is impossible since $|x_b - x_a| \le L$. Therefore $x_b - x_a = r > 0$, so $r$ occurs as a positive ordinary difference of $x$. Because the positive ordinary differences of $x$ are distinct positive integers containing $\{1, \dots, G - 1\}$, they occupy the first $G - 1$ ranks of the difference ordering:
+\[
+\Delta_r(x) = r \qquad (1 \le r \le G - 1).
+\]
+
+In particular, each retained consecutive-mark gap $h_i$ satisfies $1 \le h_i \le G - 1$, so the label $(i, i + 1)$ has exact rank $h_i$, meaning $\Delta_{h_i}(y) = y_{i+1} - y_i$. For any anchored point $y$ in the chamber of~$x$, summing the first $h_i$ consecutive chamber inequalities~\eqref{eq:chamber} gives
+\begin{equation}\label{eq:gap}
+y_{i+1} - y_i = \Delta_{h_i}(y) = \sum_{r=1}^{h_i} \bigl(\Delta_r(y) - \Delta_{r-1}(y)\bigr) \ge h_i \qquad (1 \le i \le n - 1).
+\end{equation}
+Summing~\eqref{eq:gap} over $i = 1, \dots, n - 1$ and using $y_1 = 0$ yields $y_n \ge \sum_{i=1}^{n-1} h_i = L$. Equality $y_n = L$ forces $y_{i+1} - y_i = h_i = x_{i+1} - x_i$ for every $i$, and together with $y_1 = 0 = x_1$ this forces $y = x$.
+\end{proof}
+
+\begin{remark}[Explicit integer dual certificate]
+Setting $H := \max_i h_i < G$ and assigning the rank-$r$ row of~\eqref{eq:chamber} the nonnegative integer multiplier $\lambda_r := \#\{1 \le i \le n - 1 : h_i \ge r\}$ ($1 \le r \le H$) gives a full-rank dual certificate: every supported row is active at $x$, the weighted rows telescope identically to $\sum_{i=1}^{n-1} \Delta_{h_i}(y) = y_n - y_1$, the weighted right-hand sides sum to $\sum_{r=1}^H \lambda_r = L$, and the $n - 1$ independent gap functionals $y_{i+1} - y_i$ are prefix sums of the supported rows.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{Notik2026}
+E.~Notik,
+\emph{Golomb rulers with real marks: the real and integer optima agree up to ten marks},
+arXiv:2611.22656 (2026).
+
+\bibitem{Singer1938}
+J.~Singer,
+\emph{A theorem in finite projective geometry and some applications to number theory},
+Transactions of the American Mathematical Society \textbf{43} (1938), 377--385.
+\end{thebibliography}
+
+\end{document}
