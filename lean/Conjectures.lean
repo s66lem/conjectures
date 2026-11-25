@@ -12,3 +12,4 @@ import Conjectures.SpiderRotatability
 import Conjectures.FlagLayeredR2
 import Conjectures.SinclairRadialMobius
 import Conjectures.StableKneserK3
+import Conjectures.ManabeSubtraction

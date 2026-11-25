@@ -1,0 +1,140 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\mex}{mex}
+
+\title{Admissible Angles for Purely Periodic Three-Move Subtraction Games}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Manabe (\texttt{arXiv:2609.05358v2}) established explicit angle tests $\rho \in \Theta_{a+b}, \Theta_{c+a}, \Theta_{c+b}$ that suffice for pure periodicity of the Sprague--Grundy sequence $\mathcal{G}_S$ of a primitive non-additive three-move subtraction game $S = \{a, b, c\}$, and conjectured necessity of the full criterion (Conjecture~52), decomposing it for $c \ge 2(a+b)$ into a period-restriction conjecture (Conjecture~56) and an admissible-angle conjecture (Conjecture~57). We prove Conjecture~57 in a strictly stronger form: for every triple $1 \le a < b < c$ (without assuming $a \ge 2$, $\gcd(a,b,c)=1$, $c \neq a+b$, or minimality of the period), the $\mathrm{P}$-position set $\mathcal{W}_0(S)$ is purely periodic of period $P \in \{a+b, c+a, c+b\}$ if and only if $\rho = c \bmod (a+b) \in \Theta_P$. Along the way we obtain a single cyclic-interval formula for $\Theta_{c+b}$, remove the $c \ge 2(a+b)$ hypothesis from Manabe's Proposition~55 and Proposition~59 (so Conjecture~52 is equivalent to Conjecture~56 for every $c > b$), and establish two partial period exclusions toward Conjecture~56. All theorems are formally verified in Lean~4 without additional axioms.
+\end{abstract}
+
+\section{Introduction}
+
+For integers $1 \le a < b < c$, consider the impartial three-move subtraction game $S = \{a, b, c\}$ on $\mathbb{N}$ with Sprague--Grundy sequence $\mathcal{G}_S(x) = \mex\{\mathcal{G}_S(x-s) : s \in S,\, s \le x\}$ and $\mathrm{P}$-position set $W = \mathcal{W}_0(S) = \{x \in \mathbb{N} : \mathcal{G}_S(x) = 0\}$. Let $B = \{a, b\}$ denote the base two-move game with $\mathrm{P}$-position set $W_B = \mathcal{W}_0(B)$. Set $n = a + b$, $\delta = b - a = \eta a + \varepsilon$ ($0 \le \varepsilon < a$), and $\rho = c \bmod n$. Reading residues modulo $n$ in $\{0, \dots, n - 1\}$, write $\mathcal{Z} = W_B \cap [0, n)$, $D = [a, b) \setminus \mathcal{Z}$, and (formula~(4) of~\cite{Manabe2026})
+\[
+\Lambda = \begin{cases}
+[(\eta + 1)a,\, (\eta + 1)a + \varepsilon), & \eta \text{ even}, \\
+[\eta a + \varepsilon,\, (\eta + 1)a), & \eta \text{ odd}.
+\end{cases}
+\]
+Manabe~\cite[Definition~19]{Manabe2026} defines the three admissible angle sets on $\mathbb{Z}/n\mathbb{Z}$ by
+\begin{align*}
+\rho \in \Theta_{a+b} &\iff \mathcal{Z} \cap (\mathcal{Z} + \rho) = \varnothing, \\
+\rho \in \Theta_{c+a} &\iff \mathcal{Z} \cap [0, \delta) \cap \bigl(\mathcal{Z} + (\delta - \rho)\bigr) = \varnothing, \\
+\rho \in \Theta_{c+b} &\iff (\rho + \Lambda) \cap \mathcal{Z} = \varnothing \text{ and } (\rho + D) \cap \Lambda = \varnothing.
+\end{align*}
+We say that a subset $W \subseteq \mathbb{N}$ (resp.\ $\mathcal{G}_S$) is \emph{$P$-periodic} if $x + P \in W \iff x \in W$ (resp.\ $\mathcal{G}_S(x + P) = \mathcal{G}_S(x)$) for all $x \ge 0$, without requiring $P$ to be minimal. Manabe~\cite[Theorem~34]{Manabe2026} proved that for primitive non-additive triples with $a \ge 2$, admissibility $\rho \in \Theta_{a+b} \cup \Theta_{c+a} \cup \Theta_{c+b}$ implies pure periodicity of $\mathcal{G}_S$ with least period equal to the least admissible candidate. Conjecture~52 asserts the converse. For $c \ge 2(a+b)$, Manabe~\cite[Proposition~59]{Manabe2026} reduced Conjecture~52 to Conjecture~56 ($p \in \{a+b, c+a, c+b\}$) and Conjecture~57 ($p = c+a \Rightarrow \rho \in \Theta_{c+a}$ and $p = c+b \Rightarrow \rho \in \Theta_{c+b}$).
+
+\begin{theorem}\label{thm:main}
+For all integers $1 \le a < b < c$ (without requiring $a \ge 2$, $\gcd(a,b,c)=1$, or $c \neq a+b$):
+\begin{enumerate}
+\item $W$ is $(a+b)$-periodic $\iff W = W_B \iff \rho \in \Theta_{a+b}$;
+\item $W$ is $(c+a)$-periodic $\iff \rho \in \Theta_{c+a}$;
+\item $W$ is $(c+b)$-periodic $\iff \rho + \Lambda + a \subseteq \mathcal{Z} \pmod{n} \iff \rho \in \Theta_{c+b}$.
+\end{enumerate}
+In particular, Conjecture~57 of~\cite{Manabe2026} holds in full, and Conjecture~52 is equivalent to Conjecture~56 for every $c > b$.
+\end{theorem}
+
+\section{Initial Block and Join Criteria}
+
+Recall (Manabe~\cite[Lemma~4]{Manabe2026}) that $W$ is the unique subset of $\mathbb{N}$ that is $S$-independent ($x \in W \Rightarrow x - s \notin W$ for $s \in S$, $s \le x$) and $S$-dominating ($x \notin W \Rightarrow \exists s \in S,\, s \le x,\, x - s \in W$).
+
+\begin{lemma}[Base facts]\label{lem:base}
+For all $1 \le a < b$:
+\begin{enumerate}
+\item $\mathcal{Z} = \{u \in [0, b) : \lfloor u/a \rfloor \text{ is even}\}$ and $W_B = \mathcal{Z} + n\mathbb{N}$.
+\item If $r \in \mathcal{Z}$, then $(r + a) \bmod n \notin \mathcal{Z}$.
+\item $\Lambda = [\delta, b) \setminus \mathcal{Z} = \{w \in [0, n) : w \notin \mathcal{Z},\, (w + a) \bmod n \notin \mathcal{Z}\} \subseteq D$.
+\item Modulo $n$, $\Lambda + a \equiv [-\varepsilon, 0)$ if $\eta$ is even, and $\Lambda + a \equiv [-a, -\varepsilon)$ if $\eta$ is odd.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Put $\mathcal{Z}' = \{u \in [0, b) : \lfloor u/a \rfloor \text{ even}\}$ and $T = \mathcal{Z}' + n\mathbb{N}$. Subtracting $a$ or $b$ from a residue $u \in \mathcal{Z}'$ lands either in $[b, n)$ or in $[0, b)$ with odd quotient mod $a$, so $T$ is $B$-independent. Any $x \notin T$ with residue $u < b$ has odd $\lfloor u/a \rfloor$ so $x - a \in T$, while $u \ge b$ gives $x - b \in [0, a) + n\mathbb{N} \subseteq T$, so $T$ is $B$-dominating. Hence $W_B = T$.
+
+(2) For $r \in \mathcal{Z}$, $r + a < n$; either $r + a \ge b$ or $\lfloor (r+a)/a \rfloor = \lfloor r/a \rfloor + 1$ is odd.
+
+(3) Since $\delta = \eta a + \varepsilon$ and $\delta + a = b = (\eta + 1)a + \varepsilon$, $[\delta, b)$ splits into $[\eta a + \varepsilon, (\eta+1)a)$ (quotient $\eta$) and $[(\eta+1)a, b)$ (quotient $\eta+1$), matching $\Lambda$ in~\cite[(4)]{Manabe2026}. Every $w \in [b, n)$ has $(w+a) \bmod n = w - b \in [0, a) \subseteq \mathcal{Z}$; every $w \in [0, \delta) \setminus \mathcal{Z}$ has odd quotient and $w + a < b$, so $w + a \in \mathcal{Z}$; and every $w \in [\delta, b) \setminus \mathcal{Z}$ has $w + a \in [b, n)$, outside $\mathcal{Z}$. Since $[0, a) \subseteq \mathcal{Z}$, $\Lambda \subseteq D$.
+
+(4) Adding $a$ to $\Lambda$ and using $(\eta+1)a + \varepsilon = b = n - a$ yields $[n - \varepsilon, n)$ for $\eta$ even and $[n - a, n - \varepsilon)$ for $\eta$ odd.
+\end{proof}
+
+\begin{lemma}[First $c + b$ positions]\label{lem:init}
+We have $W \cap [0, c) = W_B \cap [0, c)$, $W \cap [c, c + a) = \varnothing$, and for every $u \in [a, b)$,
+\[
+c + u \in W \iff u \in D \text{ and } (\rho + u + a) \bmod n \notin \mathcal{Z}.
+\]
+\end{lemma}
+
+\begin{proof}
+Below $c$, the games $S$ and $B$ have identical moves; for $x \in [c, c+a)$, $x - c \in [0, a) \subseteq W$, so $x \notin W$. Now put $x = c + u$ with $u \in [a, b)$. Then $x - c = u \in W \iff u \in \mathcal{Z}$, and $x - b \in [c - \delta, c)$ lies in $W$ iff $(c + u - b) \bmod n = (\rho + u + a) \bmod n \in \mathcal{Z}$. If $u \in \mathcal{Z}$, then $x \notin W$. If $u \notin \mathcal{Z}$ (so $u \in D$), then $\lfloor u/a \rfloor$ is odd, so $u - a \in \mathcal{Z} \subseteq W$; hence $x - a = c + (u - a) \notin W$ via the move $c$. Thus $x \in W \iff x - b \notin W$.
+\end{proof}
+
+\begin{lemma}[Join criterion]\label{lem:join}
+Let $P > c$ and $H = W \cap [0, P)$. Then $W$ is $P$-periodic if and only if no $h, h' \in H$ satisfy $h' - h \in \{P - a, P - b, P - c\}$.
+\end{lemma}
+
+\begin{proof}
+If $W$ is $P$-periodic and $h' - h = P - s$ ($s \in S$), then $h + P \in W$ has legal move $s$ to $h' \in W$, contradiction. Conversely, $T = H + P\mathbb{N}$ is $S$-independent (as $s \le c < P$, any move inside $T$ gives a difference $s$ or $P - s$ in $H$) and $S$-dominating (any $r \in [0, P) \setminus H$ has a move $s \le r$ to $r - s \in H$, translating by $kP$), so $W = T$.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main} and Consequences}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+(1) If $W$ is $n$-periodic, then $W \cap [0, n) = \mathcal{Z}$: positions below $c$ agree with $W_B$ by Lemma~\ref{lem:init}, and if $c < n$ then $[c, n) \subseteq [c, c+a)$ is disjoint from $W$ by Lemma~\ref{lem:init} and from $\mathcal{Z} \subseteq [0, b) \subseteq [0, c)$. Thus $W = W_B$. Since $W_B$ inherits $S$-domination from $B$, $W = W_B$ holds iff $W_B$ has no internal difference $c$, i.e., iff $\mathcal{Z} \cap (\mathcal{Z} + \rho) = \varnothing \pmod{n}$.
+
+(2) In Lemma~\ref{lem:join} with $P = c + a$, $P - a = c$ and $P - c = a$ are already moves in $S$, leaving only $P - b = c - \delta$. By Lemma~\ref{lem:init}, $H = W_B \cap [0, c)$. A pair $h, h' \in H$ with $h' = h + c - \delta$ corresponds bijectively to $h \in \mathcal{Z} \cap [0, \delta)$ with $z := h' \bmod n \in \mathcal{Z}$ satisfying $z + \delta \equiv h + \rho \pmod{n}$, so avoidance is verbatim $\rho \in \Theta_{c+a}$.
+
+(3) Write \textup{(N1)} for $\rho + \Lambda + a \subseteq \mathcal{Z} \pmod{n}$. In Lemma~\ref{lem:join} with $P = c + b$, $P - b = c$ and $P - c = b$ are moves, leaving only $P - a = c + \delta$. Since $[0, a) \subseteq H$, avoiding $h' - h = c + \delta$ in $H$ is equivalent to $W \cap [c + \delta, c + b) = \varnothing$. By Lemma~\ref{lem:init} and Lemma~\ref{lem:base}(3) ($\Lambda = [\delta, b) \cap D$), this is equivalent to \textup{(N1)}.
+
+If $\rho \in \Theta_{c+b}$ and $\lambda \in \Lambda$ had $\rho + \lambda + a \notin \mathcal{Z}$, then $w := (\rho + \lambda) \bmod n \notin \mathcal{Z}$ by the first clause of $\Theta_{c+b}$, so $w \in \Lambda$ by Lemma~\ref{lem:base}(3), contradicting $(\rho + D) \cap \Lambda = \varnothing$ since $\lambda \in \Lambda \subseteq D$.
+
+Conversely, assume \textup{(N1)}. If $\rho + \lambda \in \mathcal{Z}$ for some $\lambda \in \Lambda$, Lemma~\ref{lem:base}(2) gives $\rho + \lambda + a \notin \mathcal{Z}$, contradicting \textup{(N1)}. Now suppose $d \in D$ satisfies $\lambda := (\rho + d) \bmod n \in \Lambda$. Write $d = q a + s$ with $q$ odd and $0 \le s < a$. By Lemma~\ref{lem:base}(4), \textup{(N1)} asserts $(\rho - j) \bmod n \in \mathcal{Z}$ for all $j \in J$, where $J = [1, \varepsilon]$ ($\eta$ even) or $J = [\varepsilon + 1, a]$ ($\eta$ odd).
+\begin{itemize}
+\item If $\eta$ is even, then $\varepsilon \ge 1$, $\lambda = (\eta + 1)a + \lambda'$ ($0 \le \lambda' < \varepsilon$), and $q \le \eta + 1$. Put $2m = \eta + 1 - q \in [0, \eta]$ and $t = \lambda' - s \in [1 - a, \varepsilon - 1]$, so $\rho \equiv 2ma + t \pmod{n}$. Choose $j = \max(1, t + 1) \in J$.
+\item If $\eta$ is odd, then $\lambda = \eta a + \varepsilon + \lambda'$ ($0 \le \lambda' < a - \varepsilon$), and $q \le \eta$ (since $q$ is odd and $d < (\eta + 2)a$). Put $2m = \eta - q \in [0, \eta - 1]$ and $t = \varepsilon + \lambda' - s \in [\varepsilon + 1 - a, a - 1]$, so $\rho \equiv 2ma + t \pmod{n}$. Choose $j = \max(\varepsilon + 1, t + 1) \in J$.
+\end{itemize}
+In both cases $t < j \le t + a$, so $t - j \in [-a, -1]$ and $2ma + (t - j) \in [(2m - 1)a, 2ma)$. If $m = 0$, then $(\rho - j) \bmod n = n + t - j \in [b, n)$, outside $\mathcal{Z}$. If $m \ge 1$, then $2m \le \eta$, so $0 \le (2m - 1)a \le 2ma + t - j < \eta a \le \delta < b$, whence $(\rho - j) \bmod n$ has odd quotient $2m - 1$, again outside $\mathcal{Z}$, contradicting \textup{(N1)}.
+
+Finally, if $\mathcal{G}_S$ is $P$-periodic then $W = \mathcal{G}_S^{-1}(0)$ is $P$-periodic, proving Conjecture~57. Combined with~\cite[Theorem~34]{Manabe2026}, this gives Conjecture~52 $\iff$ Conjecture~56 for every $c > b$.
+\end{proof}
+
+\begin{proposition}[Partial period exclusions]\label{prop:partial}
+If $1 \le a < b < c$ and $W$ is $p$-periodic ($p > 0$), then:
+\begin{enumerate}
+\item $p \notin (c - a, c + a)$;
+\item if $c \ge p + n - \gcd(p, n)$, then $W$ is $n$-periodic and $\rho \in \Theta_{a+b}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) If $c - a < p < c$, then $c - p \in [0, a) \subseteq W$ gives $c \in W$; if $c \le p < c + a$, then $0 \in W$ gives $p \in W$; both contradict Lemma~\ref{lem:init}.
+(2) Put $g = \gcd(p, n)$. Since $g \le n$, we have $p \le c$. On $[0, c)$, $W$ coincides with $W_B$ and thus has periods $p$ and $n$; by Fine--Wilf, $W \cap [0, c)$ has period $g$. Because $p \le c$ and $g \mid p$, repeating the $g$-periodic block $W \cap [0, p)$ makes $W$ $g$-periodic on $\mathbb{N}$, hence $n$-periodic, and Theorem~\ref{thm:main}(1) gives $\rho \in \Theta_{a+b}$.
+\end{proof}
+
+\begin{remark}[Verification and Computational Search]
+Theorem~\ref{thm:main} (including the full Sprague--Grundy statement and explicit cyclic-interval form of $\Theta_{c+b}$) and Proposition~\ref{prop:partial} are formally verified in Lean~4 (\texttt{ManabeSubtraction.lean}, zero \texttt{sorry}, standard axioms only). An independent Python~3 verifier reproduces Manabe's Example~1 and census ($7{,}557$ admissible / $7{,}828$ non-admissible triples) and checks all theorems on $16{,}755$ unrestricted triples. In addition, an exact cycle-detection search across $100{,}946{,}926$ primitive non-additive triples ($a \le 80, b \le 500, c \le 2500$; $81 \le a \le 200, b \le 3a, c \le 3(a+b)$; $a \le 12, b \le 60, 2501 \le c \le 12000$) found zero counterexamples to Conjectures~52 or~56, even at the $\mathrm{P}$-position level.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{Manabe2026}
+H.~Manabe, \emph{Purely periodic three-move subtraction games}, arXiv:2609.05358v2 [math.CO], 2026.
+\end{thebibliography}
+
+\end{document}
