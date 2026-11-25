@@ -3,3 +3,4 @@ import Conjectures.RossiVetoCore
 import Conjectures.FanelliMoscardelli
 import Conjectures.TogniRadio
 import Conjectures.CsernakSoukupTreeStacking
+import Conjectures.VoronoiGame1D

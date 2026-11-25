@@ -1,0 +1,16 @@
+# Internal publication audit (2026-11-24)
+
+**Disposition:** pass (cross-model audited and **Lean 4 formally verified**) for the complete disproof of Conjecture 1 (`k*(ℓ) = ℓ + 1` for `ℓ ≥ 2`) and exact determination `k*(ℓ) = 2ℓ - 1` for all `ℓ ≥ 1` in Tamal Maharaj, *The Facility Advantage in the One-Round Discrete Voronoi Game on a Line* (`arXiv:2609.24936`). No claim of external peer-reviewed acceptance or exclusive priority.
+
+- **Source fidelity:** read directly from `arXiv:2609.24936` (Sections 1, 2, 4, Appendix 0.A). Verified exact game rules: finite nonempty voter multiset $V \subset \mathbb{R}$, $P, Q \subset \mathbb{R}$ of sizes $k, \ell$, ties favoring $\mathcal{P}$ ($\mathrm{dist}(v, P) \le \mathrm{dist}(v, Q)$), $\mathcal{P}$ wins iff $|V[P \succ Q]| \ge n/2$, and $k^*(\ell)$ defined over all finite multisets $V \subset \mathbb{R}$ (so simple sets of distinct powers of two qualify).
+- **Cross-model referee review:** independently audited by a separate model family with verdict **ACCEPT**. The referee confirmed every step of both the powers-of-two lower bound and Maharaj's Theorem 4.1 upper bound, tightened the sufficient threshold from $6\ell(\ell - 1) + 1$ to $4\ell(\ell - 1) + 1$ via the $a$-cancelling gap sum $\sum g_j \ge (n - a) - (k - a) = n - k$, and supplied a self-contained three-line proof for $\Gamma_{4,3}(V_{17}) = 8$. All refinements (including padding $P$ up front when $k < 2\ell - 2$) are incorporated in `PROOF.md`, `paper.tex`, and `VoronoiGame1D.lean`.
+- **Lean 4 formal verification:** `lean/Conjectures/VoronoiGame1D.lean` builds cleanly under Lean 4 `v4.33.1` + Mathlib `v4.33.1` (`lake build Conjectures.VoronoiGame1D`, 981 jobs, 0 errors, 0 `sorry`, 0 `axiom`, 0 `native_decide`). Formalized theorems:
+  - `VoronoiGame1D.minDist_lt_iff`: exact equivalence between `minDist Q < minDist P` and `∃ q ∈ Q, captures P q v`.
+  - `VoronoiGame1D.powers_of_two_defeat`: `¬ P_wins (powersOfTwo n) k ℓ` for all `ℓ ≥ 2`, `1 ≤ k ≤ 2ℓ - 2`, `n ≥ 4ℓ(ℓ-1) + 1`.
+  - `VoronoiGame1D.l3_n17_counterexample`: `¬ P_wins (powersOfTwo 17) 4 3`.
+  - `VoronoiGame1D.alwaysWins_two_mul_sub_one`: `AlwaysWins (2ℓ - 1) ℓ` for all `ℓ ≥ 1` (Maharaj Theorem 4.1).
+  - `VoronoiGame1D.facilityAdvantage_eq`: `facilityAdvantage ℓ hℓ = 2 * ℓ - 1` for all `ℓ ≥ 1`.
+  - `VoronoiGame1D.facilityAdvantage_ne_succ` and `VoronoiGame1D.not_maharaj_conjecture1`.
+  - `#print axioms` confirms all six main theorems depend only on `[propext, Classical.choice, Quot.sound]`.
+- **Computational verification:** replayed standalone `verify.py` (Python 3 standard library, exact `Fraction` arithmetic): 3,600 exact literal-rule checks across $\ell \in \{2, 3, 4, 5\}$ at $n = 4\ell(\ell-1)+1$ and $n = 17$, exact verification of $\Gamma_{4,3}(V_{17}) = 8$, and 500 random multiset checks of the $k = 2\ell - 1$ upper-bound placement. Independent DP and class-enumeration scripts additionally confirmed 153,810 feasible classes for $(17, 4, 3)$ and 686,961 classes for $(15, 5, 4)$.
+- **Priority:** checked `arXiv:2609.24936` and web searches for `"2609.24936"` and `"Facility Advantage"` Voronoi game as of 2026-11-24; Conjecture 1 was stated open and no prior disproof was found. Bounded search only.

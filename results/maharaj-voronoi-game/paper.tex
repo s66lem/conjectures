@@ -1,0 +1,125 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\dist}{\operatorname{dist}}
+
+\title{Exact Facility Advantage in the One-Round Discrete Voronoi Game on a Line}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We disprove Conjecture~1 of Maharaj (\emph{The Facility Advantage in the One-Round Discrete Voronoi Game on a Line}, arXiv:2609.24936) for every $\ell \ge 3$ and determine the exact facility advantage $k^*(\ell) = 2\ell - 1$ for every $\ell \ge 1$. For any $\ell \ge 2$, $k \le 2\ell - 2$, and $n \ge 4\ell(\ell - 1) + 1$, the unweighted exponentially spaced voter set $V_n = \{2^0, 2^1, \dots, 2^{n-1}\} \subset \mathbb{R}$ defeats every $k$-facility placement of player~$\mathcal{P}$—with a winning margin growing linearly in $n$—showing that Maharaj's upper bound $k^*(\ell) \le 2\ell - 1$ is tight. For $\ell = 3$, already $V_{17}$ gives an explicit unit-weight counterexample with $\Gamma_{4,3}(V_{17}) = 8 < 8.5$.
+\end{abstract}
+
+\section{Introduction}
+
+In the one-round discrete Voronoi game on the real line~\cite{Maharaj2026,BBD2013,dBKM2019}, an instance is a finite nonempty multiset $V \subset \mathbb{R}$ of $n = |V|$ voters. Player~$\mathcal{P}$ first selects a $k$-element subset $P \subset \mathbb{R}$, and player~$\mathcal{Q}$ responds with an $\ell$-element subset $Q \subset \mathbb{R}$. A voter $v \in V$ is won by $\mathcal{P}$ if $\dist(v, P) \le \dist(v, Q)$ (ties favor~$\mathcal{P}$) and by $\mathcal{Q}$ if $\dist(v, Q) < \dist(v, P)$, where $\dist(v, X) := \min_{x \in X}|v - x|$. Let $V[P \succ Q]$ denote the multiset of voters won by~$\mathcal{P}$, and define
+\[
+\Gamma_{k,\ell}(V) := \max_{P \subset \mathbb{R},\,|P| = k}\;\min_{Q \subset \mathbb{R},\,|Q| = \ell}\;\bigl|V[P \succ Q]\bigr|.
+\]
+Player~$\mathcal{P}$ wins if $\Gamma_{k,\ell}(V) \ge n/2$. Maharaj~\cite[Definition~1]{Maharaj2026} defines the \emph{facility advantage}
+\[
+k^*(\ell) := \min\bigl\{k \ge 1 : \Gamma_{k,\ell}(V) \ge n/2 \text{ for every finite nonempty multiset } V \subset \mathbb{R}\bigr\},
+\]
+proves $k^*(\ell) \le 2\ell - 1$ (Theorem~4.1), establishes $k^*(\ell) \ge \ell + 1$ for $2 \le \ell \le 6$ via computer-assisted enumeration of weighted instances on consecutive integer sites, and conjectures~\cite[Conjecture~1]{Maharaj2026} that $k^*(\ell) = \ell + 1$ for every $\ell \ge 2$.
+
+We show that Conjecture~1 is false for every $\ell \ge 3$: the upper bound $2\ell - 1$ is already exact.
+
+\begin{theorem}\label{thm:lower}
+Let $\ell \ge 2$, $1 \le k \le 2\ell - 2$, and $n \ge 4\ell(\ell - 1) + 1$. For the unit-weight voter set $V_n := \{2^0, 2^1, \dots, 2^{n-1}\} \subset \mathbb{R}$, we have $\Gamma_{k,\ell}(V_n) < n/2$.
+\end{theorem}
+
+\begin{corollary}\label{cor:exact}
+For every $\ell \ge 1$, $k^*(\ell) = 2\ell - 1$. In particular, Conjecture~1 of~\cite{Maharaj2026} fails for every $\ell \ge 3$ and holds only at $\ell = 2$.
+\end{corollary}
+
+\begin{theorem}\label{thm:n17}
+For $V_{17} = \{1, 2, 4, \dots, 65536\}$, we have $\Gamma_{4,3}(V_{17}) = 8 < 8.5$.
+\end{theorem}
+
+\begin{remark}
+Maharaj~\cite[\S4.2]{Maharaj2026} showed that on arithmetic progressions $k = \ell$ suffices and remarked that extremal instances must carry non-trivial multiplicities with $\mathcal{Q}$ winning by a single voter. Theorem~\ref{thm:lower} shows instead that unweighted, exponentially spaced voters defeat every $k \le 2\ell - 2$, with $\mathcal{P}$ retaining only at most $\frac{\ell - 1}{2\ell - 1}n + O(\ell)$ voters. Exhaustive searches restricted to $m \le 10$ consecutive integer positions ($n \le 17$) cannot capture this exponential separation.
+\end{remark}
+
+\section{Proofs of Theorems~\ref{thm:lower} and~\ref{thm:n17}}
+
+Write $x_t := 2^t$ for $0 \le t \le n - 1$. For all $0 \le s \le t$,
+\begin{equation}\label{eq:exp}
+x_{t+1} - x_s = (x_{t+1} - x_t) + (x_t - x_s) = 2^t + (2^t - 2^s) > 2(2^t - 2^s) = 2(x_t - x_s).
+\end{equation}
+
+\begin{proof}[Proof of Theorem~\ref{thm:lower}]
+Let $P \subset \mathbb{R}$ be any strategy of~$\mathcal{P}$ with $|P| = k \le 2\ell - 2$. Set $K := 2\ell - 2$, and pad $P$ with $K - k$ additional distinct real points outside $P$ to obtain $\widetilde{P} \supseteq P$ with $|\widetilde{P}| = K$. Since $\dist(v, \widetilde{P}) \le \dist(v, P)$ for every $v$, any response $Q$ winning strictly more than $n/2$ voters against $\widetilde{P}$ also wins strictly more than $n/2$ voters against $P$. Replacing $P$ by $\widetilde{P}$, we assume $|P| = K = 2\ell - 2$.
+
+Order $P = \{p_1 < p_2 < \dots < p_K\}$ and let $a := |P \cap V_n|$. The points of $P$ partition $\mathbb{R} \setminus P$ into $K + 1 = 2\ell - 1$ pairwise disjoint open gaps
+\[
+G_0 := (-\infty, p_1), \qquad G_i := (p_i, p_{i+1}) \;\;(1 \le i \le K - 1), \qquad G_K := (p_K, +\infty).
+\]
+Set $V(G_j) := V_n \cap G_j$ and $c_j := |V(G_j)|$, so $\sum_{j=0}^K c_j = n - a$.
+
+We exhibit in each gap $G_j$ a single point $q_j \in G_j$ winning at least $g_j := c_j - d_j$ voters of $V(G_j)$ against $P$, where $d_j \in \{0, 1\}$ and $d_j = 1$ occurs only when $1 \le j \le K - 1$ and $p_{j+1} \notin V_n$:
+\begin{itemize}
+\item If $c_j = 0$, pick any $q_j \in G_j$ ($d_j = 0$).
+\item For $G_0$ with $c_0 \ge 1$, set $M := \max V(G_0) < p_1$ and $q_0 := (M + p_1)/2 \in G_0$. Every $v \in V(G_0)$ satisfies $|v - q_0| = q_0 - v < p_1 - v = \dist(v, P)$, so $q_0$ wins all $c_0$ voters ($d_0 = 0$). Symmetrically, $q_K := (p_K + \min V(G_K))/2 \in G_K$ wins all $c_K$ voters of $G_K$ ($d_K = 0$).
+\item For an inner gap $G_i = (p_i, p_{i+1})$ with $c_i \ge 1$, write $V(G_i) = \{x_s, x_{s+1}, \dots, x_t\}$ with $c_i = t - s + 1$ and $p_i < x_s \le x_t < p_{i+1}$. For $v, q \in G_i$, we have $\dist(v, P) = \min(v - p_i, p_{i+1} - v)$, so
+\[
+|v - q| < \dist(v, P) \iff \frac{p_i + q}{2} < v < \frac{q + p_{i+1}}{2}.
+\]
+Thus $q \in G_i$ wins the sub-block $\{x_s, \dots, x_r\}$ ($s \le r \le t$) if and only if
+\[
+\max(p_i,\, 2x_r - p_{i+1}) < q < \min(p_{i+1},\, 2x_s - p_i).
+\]
+Because $p_i < x_s$ and $x_r < p_{i+1}$, this open interval is nonempty if and only if $2(x_r - x_s) < p_{i+1} - p_i$.
+\begin{enumerate}
+\item If $p_{i+1} \in V_n$, then $p_{i+1} = x_{t+1}$, so $p_{i+1} - p_i > x_{t+1} - x_s > 2(x_t - x_s)$ by~\eqref{eq:exp}; taking $r = t$ yields $q_i \in G_i$ winning all $c_i$ voters ($d_i = 0$).
+\item If $p_{i+1} \notin V_n$ and $t = s$, taking $q_i := x_s \in G_i$ wins the unique voter ($d_i = 0$).
+\item If $p_{i+1} \notin V_n$ and $t > s$, then $p_{i+1} - p_i > x_t - x_s > 2(x_{t-1} - x_s)$ by~\eqref{eq:exp}; taking $r = t - 1$ yields $q_i \in G_i$ winning $c_i - 1$ voters ($d_i = 1$).
+\end{enumerate}
+\end{itemize}
+
+Since the right endpoints $p_2, \dots, p_K$ of the inner gaps are distinct elements of $P$, we have $\sum_{j=0}^K d_j \le |P \setminus V_n| = K - a$. Summing the guaranteed captures $g_j = c_j - d_j$ over all $K + 1 = 2\ell - 1$ gaps cancels $a$ identically:
+\begin{equation}\label{eq:sumg}
+\sum_{j=0}^{2\ell - 2} g_j \ge (n - a) - (K - a) = n - (2\ell - 2).
+\end{equation}
+Let $J \subset \{0, \dots, 2\ell - 2\}$ index the $\ell$ largest values of $g_j$, and set $Q := \{q_j : j \in J\}$. Because the open gaps $G_j$ are pairwise disjoint, $|Q| = \ell$ and the subsets of $V(G_j)$ won by $q_j$ ($j \in J$) are pairwise disjoint. By averaging over the $\ell$ largest of $2\ell - 1$ numbers, $\mathcal{Q}$ wins at least
+\[
+\sum_{j \in J} g_j \ge \frac{\ell}{2\ell - 1}\bigl(n - (2\ell - 2)\bigr) > \frac{n}{2}
+\]
+voters whenever $n > 4\ell(\ell - 1)$. Hence $\Gamma_{k,\ell}(V_n) < n/2$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:n17}]
+Apply~\eqref{eq:sumg} with $n = 17$ and $K = 4$ ($\ell = 3$): the five integer captures $g_0, \dots, g_4$ satisfy $\sum_{j=0}^4 g_j \ge 13$. Sorting them as $g_{(1)} \ge \dots \ge g_{(5)}$, if $g_{(1)} + g_{(2)} + g_{(3)} \le 8$ then $g_{(3)} \le 2$, forcing $\sum_{j=1}^5 g_{(j)} \le 8 + 2 + 2 = 12 < 13$, a contradiction. Thus $\mathcal{Q}$ always wins at least $9$ voters, giving $\Gamma_{4,3}(V_{17}) \le 8$. Conversely, $P = \{2, 32, 512, 8192\}$ absorbs $4$ voters and leaves five gaps of sizes $1, 3, 3, 3, 3$, so any three facilities of~$\mathcal{Q}$ win at most $9$ voters, leaving $8$ for~$\mathcal{P}$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:exact}]
+For $\ell = 1$, $k^*(1) = 1$ (a median wins). For $\ell \ge 2$, Theorem~\ref{thm:lower} gives $k^*(\ell) \ge 2\ell - 1$, while Maharaj's Theorem~4.1~\cite{Maharaj2026} gives $k^*(\ell) \le 2\ell - 1$: given any $n$-voter multiset $v_1 \le \dots \le v_n$, setting $B := \lfloor n/(2\ell) \rfloor$ and greedily placing $2\ell - 1$ points on every $(B+1)$-st remaining voter leaves at most $B$ voters in each gap, so any $\ell$ facilities of~$\mathcal{Q}$ win at most $\ell B \le n/2$ voters.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{BBD2013}
+A.~Banik, B.~B.~Bhattacharya, and S.~Das,
+\emph{Optimal strategies for the one-round discrete Voronoi game on a line},
+Journal of Combinatorial Optimization \textbf{26}(4) (2013), 655--669.
+
+\bibitem{dBKM2019}
+M.~de~Berg, S.~Kisfaludi-Bak, and M.~Mehr,
+\emph{On one-round discrete Voronoi games},
+30th International Symposium on Algorithms and Computation (ISAAC 2019), LIPIcs \textbf{149}, 37:1--37:17.
+
+\bibitem{Maharaj2026}
+T.~Maharaj,
+\emph{The Facility Advantage in the One-Round Discrete Voronoi Game on a Line},
+arXiv:2609.24936 (2026).
+\end{thebibliography}
+
+\end{document}

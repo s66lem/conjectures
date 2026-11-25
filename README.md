@@ -16,6 +16,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **4.** [Firoozbakht’s OEIS A108569 parity conjecture](results/firoozbakht-oeis-a108569/) | Disproved (infinite odd family) | — | **Lean 4** · Audit · Python |
 | **5.** [Rossi rank score veto core distortion conjecture](results/rossi-veto-core-distortion/) | Proved (exact distortion $1 + 2(\|\mathbf{s}\|_1 - s_m)$) | [PDF](results/rossi-veto-core-distortion/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 | **6.** [Togni multi-label radio labeling conjectures](results/togni-multilabel-radio/) | Conj. 2 proved (all $k, m$); Conj. 1 upper bound & exact $k=3$ | [PDF](results/togni-multilabel-radio/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
+| **7.** [Maharaj 1D discrete Voronoi game conjecture](results/maharaj-voronoi-game/) | Disproved for all $\ell \ge 3$; exact $k^*(\ell) = 2\ell - 1$ | [PDF](results/maharaj-voronoi-game/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -28,6 +29,7 @@ python3 results/allie-dupreez-hefty-mafunda-remoteness/verify.py
 python3 results/firoozbakht-oeis-a108569/verify.py
 python3 results/rossi-veto-core-distortion/verify.py
 python3 results/togni-multilabel-radio/verify.py
+python3 results/maharaj-voronoi-game/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
