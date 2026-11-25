@@ -1,0 +1,169 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\DeclareMathOperator{\stack}{stack}
+\DeclareMathOperator{\clear}{clear}
+\DeclareMathOperator{\estim}{estim}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\leaf}{leaf}
+
+\title{Unconditional Resolution of the Tree Stacking Conjecture and Counterexamples to the Literal Almost Stacked Hypothesis}
+\author{}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Csern\'ak and Soukup (\texttt{arXiv:2610.09650}) introduced the Almost Stacked Hypothesis (ASH) for graph pebbling, defined an explicit tree invariant $\estim(T)$, proved $\stack(T) \ge \estim(T)$ unconditionally and $\stack(T) = \estim(T)$ assuming ASH, and conjectured that $\stack(T) = \estim(T)$ holds unconditionally for every finite connected tree $T$ (Conjecture~5.6). We prove Conjecture~5.6 unconditionally via a constructive bottom-up greedy algorithm and a fractional relaxation, giving an $O(n^2)$ stacking procedure. We also show that the literal formulation of Hypothesis~3.2 (taking the least threshold at which all almost stacked configurations succeed) fails for both stacking (on $P_4$, threshold $12$ vs.\ $\stack(P_4)=15$) and clearing (on the triangle with a two-edge tail, threshold $16$ vs.\ $\clear=22$) due to non-monotonicity of almost-stacked pebblability.
+\end{abstract}
+
+\section{Introduction}
+
+In graph pebbling on a finite connected graph $G = (V, E)$, a \emph{configuration} is a map $c : V \to \mathbb{N}$ of size $\|c\| = \sum_{v \in V} c(v)$, and a pebbling move $u \Rightarrow v$ along an edge $uv \in E$ removes $2$ pebbles from $u$ and adds $1$ pebble to $v$. Following Csern\'ak and Soukup~\cite{CS26} (Definitions~2.1 and~3.1):
+\begin{itemize}
+  \item $c$ is \emph{stacked} if $|\supp(c)| = 1$, and \emph{cleared} if $\|c\| = 1$;
+  \item $\stack(G)$ (resp.\ $\clear(G)$ for non-bipartite $G$) is the least integer $t \ge 2$ such that every configuration of size $t$ can reach a stacked (resp.\ cleared) configuration;
+  \item $c$ is \emph{almost stacked} if $c(u) \le 1$ for all $u \in V \setminus \{v_0\}$ for some $v_0 \in V$.
+\end{itemize}
+
+For a finite tree $T$ and $r \in V(T)$, Csern\'ak and Soukup~\cite[Definition~5.1]{CS26} define
+\[
+\rho_T(r) := \sum_{\substack{v \in V(T) \\ v = r \text{ or } \deg(v) > 1}} \deg(v) \, 2^{\dist_T(r,v)}, \qquad
+\leaf_T(r) := |\{v \in V(T) \setminus \{r\} : \deg(v) = 1\}|,
+\]
+and $\estim(T) := \max\bigl\{2,\, 1 + \max_{r \in V(T)}(\rho_T(r) + \leaf_T(r))\bigr\}$. They proved $\stack(T) \ge \estim(T)$ unconditionally~\cite[Theorem~5.2]{CS26}, deduced equality under ASH, and posed $\stack(T) = \estim(T)$ unconditionally as Conjecture~5.6.
+
+\begin{theorem}[Resolution of Conjecture~5.6]\label{thm:trees}
+Every finite connected tree $T$ satisfies $\stack(T) = \estim(T)$.
+\end{theorem}
+
+\begin{proposition}[Counterexamples to literal Hypothesis~3.2]\label{prop:ash}
+The literal Almost Stacked Hypothesis~\cite[Hypothesis~3.2]{CS26} fails for both stacking and clearing:
+\begin{enumerate}
+  \item On $P_4 = (0\text{--}1\text{--}2\text{--}3)$, every size $2 \le t \le 11$ admits a non-stackable almost stacked configuration, whereas all $32$ almost stacked configurations of size $12$ are stackable; yet $(9,0,0,3)$ of size $12$ is not stackable, non-stackable almost stacked configurations reappear at sizes $13$ and $14$ (e.g., $(13,0,0,1)$), and $\stack(P_4) = 15 \neq 12$.
+  \item On $G_5$ (triangle $0\text{--}1\text{--}2$ with tail $2\text{--}3\text{--}4$), every size $2 \le t \le 15$ admits a non-clearable almost stacked configuration, whereas all $80$ almost stacked configurations of size $16$ are clearable; yet $(0,0,0,2,14)$ of size $16$ is not clearable, non-clearable almost stacked configurations reappear at sizes $17$ and $21$ (e.g., $(0,0,0,0,21)$), and $\clear(G_5) = 22 \neq 16$.
+\end{enumerate}
+\end{proposition}
+
+Proposition~\ref{prop:ash} is verified directly by exact breadth-first search in the companion script \texttt{verify.py}. Across all $12{,}112$ connected graphs on $n \le 8$ vertices, literal Hypothesis~3.2 fails on $2{,}580$ graph-parameter pairs, whereas the monotone repair $1 + \max\{t : \text{some almost stacked config of size } t \text{ fails}\}$ holds on all $23{,}971$ checked pairs (and for trees in stacking, follows from Theorem~\ref{thm:trees}).
+
+\section{Proof of Theorem~\ref{thm:trees}}
+
+For $|V(T)| = 1$, Definitions~2.1 and~5.1 of~\cite{CS26} give $\stack(K_1) = 2 = \estim(K_1)$. Assume now that $n = |V(T)| \ge 2$. Since $\stack(T) \ge \estim(T)$ is~\cite[Theorem~5.2]{CS26}, it suffices to prove that every configuration $c$ on $T$ with $\|c\| \ge \estim(T)$ is stackable.
+
+Let $L := \{v \in V(T) : \deg(v) = 1\}$ be the leaf set. For any $r \in V(T)$, write $R_r(y) := 2^{\dist_T(r,y)}$ and $E_r := \rho_T(r) + \leaf_T(r)$, so $\estim(T) = 1 + \max_{r \in V(T)} E_r \ge 3$.
+
+\begin{lemma}[Edge form]\label{lem:A}
+For every $r \in V(T)$,
+\[
+E_r = \sum_{y \in V(T) \setminus \{r\}} e_y, \qquad
+e_y := \begin{cases}
+\frac{3}{2} R_r(y) & \text{if } y \notin L, \\
+\frac{1}{2} R_r(y) + 1 & \text{if } y \in L.
+\end{cases}
+\]
+\end{lemma}
+
+\begin{proof}
+Root $T$ at $r$. Each $v \in V(T)$ has $\deg(v) = \#\mathrm{children}(v) + \mathbf{1}[v \neq r]$. Since each child $y \neq r$ has parent $p$ with $R_r(p) = \frac{1}{2} R_r(y)$,
+\[
+\rho_T(r) + \leaf_T(r) = \sum_{y \neq r} \frac{1}{2} R_r(y) + \sum_{y \neq r,\, y \notin L} R_r(y) + \sum_{y \neq r,\, y \in L} 1 = \sum_{y \neq r} e_y. \qedhere
+\]
+\end{proof}
+
+Fix a root $w \in V(T)$ and denote by $B(y)$ the rooted subtree at $y$. Call $y \neq w$ \emph{live} if $\sum_{u \in B(y)} c(u) > 0$. Define $\tau : \mathbb{Z} \to \mathbb{Z}$ by
+\[
+\tau(V) := \begin{cases}
+2V - 3 & \text{if } V \le 1, \\
+V/2 & \text{if } V \ge 2 \text{ is even}, \\
+(V - 3)/2 & \text{if } V \ge 3 \text{ is odd}.
+\end{cases}
+\]
+Compute $V(y)$ bottom-up by $V(y) := c(y) + \sum_{z \text{ live child of } y} \tau(V(z))$, and set $v_w(c) := V(w)$.
+
+\begin{lemma}[Soundness of the greedy algorithm]\label{lem:B}
+If $v_w(c) \ge 1$, then $c$ is stackable at $w$ (ending with $v_w(c)$ pebbles at $w$).
+\end{lemma}
+
+\begin{proof}
+Define the recursive procedure $\mathrm{Run}(y)$, called when $B(y) \setminus \{y\}$ is untouched from $c$ and $y$ currently holds $c(y) + \delta(y)$ pebbles ($\delta(y) \ge 0$ delivered to $y$ prior to the call):
+\begin{enumerate}
+  \item For each live child $z$ of $y$ with $V(z) \ge 1$: execute $\mathrm{Run}(z)$ (with $\delta(z) = 0$), then perform $\lfloor V(z)/2 \rfloor$ moves $z \Rightarrow y$.
+  \item For each live child $z$ of $y$ with $V(z) \le 0$: perform $1 - V(z)$ moves $y \Rightarrow z$ (so $\delta(z) = 1 - V(z)$), then execute $\mathrm{Run}(z)$.
+  \item For each live child $z$ of $y$ with $V(z) \le 0$ or ($V(z) \ge 1$ odd): perform one round $y \Rightarrow z$ followed by $z \Rightarrow y$.
+\end{enumerate}
+We prove by bottom-up induction on $y$ that if $h(y) := V(y) + \delta(y) \ge 1$, then $\mathrm{Run}(y)$ executes only legal moves inside $B(y)$, empties $B(y) \setminus \{y\}$, and leaves $h(y)$ pebbles on $y$.
+
+If $y$ has no live children, $B(y) \setminus \{y\}$ is empty and $y$ holds $c(y) + \delta(y) = h(y)$ pebbles. Otherwise, sibling subtrees are disjoint and each recursive call acts only within its subtree. In Step~1, each live child $z$ with $V(z) \ge 1$ has $h(z) = V(z) \ge 1$, so by induction $\mathrm{Run}(z)$ empties $B(z) \setminus \{z\}$ and leaves $V(z)$ pebbles on $z$; the $\lfloor V(z)/2 \rfloor$ moves $z \Rightarrow y$ are legal and leave $V(z) \bmod 2 \in \{0,1\}$ pebbles on $z$.
+
+After Step~1, $y$ holds $P = c(y) + \delta(y) + \sum_{V(z) \ge 1} \lfloor V(z)/2 \rfloor$ pebbles. Let $D := \sum_{V(z) \le 0} (1 - V(z))$ be the total number of payments in Step~2 and $o$ be the number of rounds in Step~3. Since $\tau(V) = \lfloor V/2 \rfloor - \mathbf{1}[V \text{ odd}]$ for $V \ge 1$ and $\tau(V) = -2(1-V) - 1$ for $V \le 0$, we have $P - 2D - o = V(y) + \delta(y) = h(y)$.
+
+In Step~2, before every payment move $y \Rightarrow z$, vertex $y$ holds at least $P - 2(D-1) = h(y) + o + 2 \ge 3$ pebbles, so all payments are legal; each child called in Step~2 has $h(z) = V(z) + (1 - V(z)) = 1$, so by induction $\mathrm{Run}(z)$ empties $B(z) \setminus \{z\}$ and leaves $1$ pebble on $z$. Entering Step~3, every child scheduled for a round holds exactly $1$ pebble with its proper subtree empty, and $y$ holds $P - 2D = h(y) + o$ pebbles. Before each round, $y$ holds at least $h(y) + 1 \ge 2$ pebbles, so $y \Rightarrow z$ (raising $z$ from $1$ to $2$) and $z \Rightarrow y$ (emptying $z$ at net cost $1$ to $y$) are both legal. After Step~3, $B(y) \setminus \{y\}$ is empty and $y$ holds $P - 2D - o = h(y)$ pebbles. Applying the claim at $y = w$ with $\delta(w) = 0$ stacks $c$ at $w$.
+\end{proof}
+
+\begin{lemma}[Fractional relaxation and affine form]\label{lem:CD}
+Let $\tau_f(V) := \min\bigl(2V - 3,\, (V - 3)/2\bigr)$, and define $v_w^f(c)$ by the same bottom-up recursion with $\tau_f$ (using the same live set). A \emph{choice} $s$ assigns $s_y \in \{2, 1/2\}$ to each live vertex $y$. Set $\alpha_w := 1$ and, for each live $y$,
+\[
+\alpha_y := \prod_{z \in [y, w)} s_z, \qquad
+\kappa_y := \begin{cases} 3/2 & \text{if } s_y = 2, \\ 3 & \text{if } s_y = 1/2. \end{cases}
+\]
+Writing $S := \supp(c)$ (every $u \in S \setminus \{w\}$ is live, and every ancestor $z \in [y,w)$ of a live vertex $y$ is live), we have
+\[
+v_w(c) \ge v_w^f(c) = \min_s \left( \sum_{u \in S} \alpha_u c(u) - \beta_s \right), \qquad \beta_s := \sum_{y \text{ live}} \kappa_y \alpha_y.
+\]
+\end{lemma}
+
+\begin{proof}
+Since $\tau_f$ is nondecreasing and $\tau_f(V) \le \tau(V)$ on $\mathbb{Z}$, bottom-up induction gives $v_w(c) \ge v_w^f(c)$. Writing $\tau_f(V) = \min_{s_y \in \{2, 1/2\}} (s_y V - \gamma(s_y))$ with $\gamma(2) = 3$ and $\gamma(1/2) = 3/2$, positivity of $s_y$ lets minima commute with the recursion. Unrolling from $w$ down, each $u \in S$ contributes $\alpha_u c(u)$ and each live $y$ contributes $-\gamma(s_y) \prod_{z \in (y,w)} s_z = -(\gamma(s_y)/s_y)\alpha_y = -\kappa_y \alpha_y$.
+\end{proof}
+
+\begin{lemma}[Comparison with $E_r$]\label{lem:E}
+Fix a choice $s$ and nonempty $S = \supp(c)$, and assume ($w \in L \implies w \in S$). Let $r \in S$ minimize $\alpha_u$ over $u \in S$, and put $\rho_y := \alpha_y / \alpha_r$ for live $y$ and for $y = w$. Then
+\[
+\sum_{y \text{ live}} \kappa_y \rho_y - \sum_{u \in S} (\rho_u - 1) \le E_r.
+\]
+\end{lemma}
+
+\begin{proof}
+Observe that $\rho_u \ge 1$ for all $u \in S$, with $\rho_r = 1$. Let $P = (r = p_0, p_1, \dots, p_k = w)$ be the unique $r$--$w$ path ($k = \dist_T(r,w) \ge 0$).
+
+For $0 \le j \le k$, $\alpha_r = \alpha_{p_j}\prod_{i=0}^{j-1} s_{p_i}$ gives $\rho_{p_j} = \prod_{i=0}^{j-1} s_{p_i}^{-1} \le 2^j = R_r(p_j)$. For any live $y \notin P$, let $m = p_j$ be the first vertex of $P$ on the $y$--$w$ path; then $\dist_T(r,y) = j + \dist_T(m,y)$ and $\rho_y = \rho_m \prod_{z \in [y,m)} s_z \le R_r(y)$, with $\rho_y \le \frac{1}{4} R_r(y)$ whenever $s_y = 1/2$.
+
+Write the left-hand side as $\sum_{y \in V(T)} \ell_y$, where $\ell_y := \kappa_y \rho_y \mathbf{1}[y \text{ live}] - (\rho_y - 1)\mathbf{1}[y \in S]$ ($w$ is never live). Compare against Lemma~\ref{lem:A}:
+\begin{itemize}
+  \item \emph{Off-path ($y \notin P$), not live:} $y \notin S$, so $\ell_y = 0 < e_y$.
+  \item \emph{Off-path, live, internal ($y \notin L$):} $\ell_y \le \kappa_y \rho_y \le \frac{3}{2} R_r(y) = e_y$ (checking $s_y = 2$ and $s_y = 1/2$).
+  \item \emph{Off-path, live leaf ($y \in L$):} liveness forces $y \in S$, so $\ell_y = (\kappa_y - 1)\rho_y + 1 \le \frac{1}{2} R_r(y) + 1 = e_y$ (for $s_y = 2$, $\frac{1}{2}\rho_y + 1$; for $s_y = 1/2$, $2\rho_y + 1 \le \frac{1}{2} R_r(y) + 1$).
+  \item \emph{On-path, $k = 0$ ($r = w$):} $\ell_w = 0$.
+  \item \emph{On-path, $k \ge 1$:} for $0 \le j \le k-2$, $p_{j+1}$ is internal ($p_{j+1} \notin L$) and $\ell_{p_j} \le \kappa_{p_j} \rho_{p_j} \le 3 \cdot 2^j = \frac{3}{2} R_r(p_{j+1}) = e_{p_{j+1}}$. If $w \notin L$, the same gives $\ell_{p_{k-1}} \le e_w$ while $\ell_w \le 0$. If $w \in L$, then $w \in S$ by hypothesis, so $\ell_w = 1 - \rho_w$; since $\rho_w = \rho_{p_{k-1}} s_{p_{k-1}}^{-1}$, both $s_{p_{k-1}} = 2$ and $s_{p_{k-1}} = 1/2$ yield
+  \[
+  \ell_{p_{k-1}} + \ell_w \le \kappa_{p_{k-1}} \rho_{p_{k-1}} - \rho_w + 1 = \rho_{p_{k-1}} + 1 \le 2^{k-1} + 1 = \frac{1}{2} R_r(w) + 1 = e_w.
+  \]
+\end{itemize}
+Summing over all $y \in V(T)$ gives $\sum_{y \in V(T)} \ell_y \le \sum_{y \neq r} e_y = E_r$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:trees}]
+Let $c$ be any configuration on $T$ with $\|c\| \ge \estim(T) \ge 3$, and pick $w \in V(T)$ maximizing $v_w(c)$. Suppose $w \in L$ and $c(w) = 0$, and let $x$ be its unique neighbor. Rooted at $x$, $w$ is not live and every other neighbor of $x$ has the same rooted subtree as when rooted at $w$, so $v_x(c) = V_w(x) =: a$. Rooted at $w$, $B_w(x) = T \setminus \{w\}$ holds $\|c\| > 0$ pebbles, so $x$ is live and $v_w(c) = \tau(a)$. Because $\tau(a) < a$ for every $a \in \mathbb{Z}$, we obtain $v_w(c) < v_x(c)$, contradicting the maximality of $w$.
+
+Thus $w \in L \implies c(w) \ge 1$. If $v_w(c) \le 0$, then by Lemma~\ref{lem:CD} some choice $s$ satisfies $\sum_{u \in S} \alpha_u c(u) \le \beta_s$. Letting $r \in S$ minimize $\alpha_u$ over $S$,
+\[
+\alpha_r(\|c\| - |S|) \le \sum_{u \in S} \alpha_u(c(u) - 1) \le \beta_s - \sum_{u \in S} \alpha_u,
+\]
+and dividing by $\alpha_r > 0$ with Lemma~\ref{lem:E} yields $\|c\| \le E_r \le \estim(T) - 1$, a contradiction. Therefore $v_w(c) \ge 1$, and Lemma~\ref{lem:B} stacks $c$ at $w$.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{CS26}
+T.~Csern\'ak and D.~T.~Soukup, \emph{The Almost Stacked Hypothesis: A Conjectural Analogue of Sj\"ostrand's Cover Pebbling Theorem}, \texttt{arXiv:2610.09650}, October 2026.
+\end{thebibliography}
+
+\end{document}

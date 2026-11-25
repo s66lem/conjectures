@@ -1,0 +1,65 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+
+\title{Counterexamples to the Remoteness-Minimizing Tree Conjecture for Prescribed Segment Sequences}
+\author{}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Allie, Du Preez, Hefty, and Mafunda (\texttt{arXiv:2611.27685}, Conjecture~4.4) conjectured that among all trees with a prescribed segment sequence $D = (\ell_1, \dots, \ell_k)$, the tree minimizing remoteness is always starlike or a $(\Delta, 2)$-$D$-tree. We disprove this conjecture by exhibiting explicit segment sequences (and an infinite scaled family $t \cdot D$, $t \ge 1$) whose remoteness-minimizing $D$-tree has $3$ branch vertices and strictly beats every starlike and every $(\Delta, 2)$-$D$-tree.
+\end{abstract}
+
+\section{Transmission Formula and Counterexamples}
+
+Let $D = (\ell_1, \dots, \ell_k)$ be a segment sequence (segment lengths counted in edges), so every $D$-tree has order $n = 1 + S$ where $S := \sum_{i=1}^k \ell_i$. Minimizing remoteness $\rho(T) = \frac{1}{n-1}\max_{v \in V(T)} \sigma(v, T)$ is equivalent to minimizing the maximum transmission $\sigma_{\max}(T) := \max_{v \in V(T)} \sigma(v, T)$, which is attained at a leaf~\cite[Observation~2.7]{ADHM26}.
+
+For a leaf $v$ at the end of a pendant segment $s$ attached at branch vertex $B$, let $d(B, S_i)$ be the distance from $B$ to the nearer endpoint of segment $S_i$. Counting $B$ with segment $s$ and the remaining $\ell_i$ vertices of each segment $S_i$ ($i \neq s$) yields
+\[
+\sigma(v, T) = C(D) + \ell_s(S - \ell_s) + \sum_{i=1}^k \ell_i \, d(B, S_i), \qquad C(D) := \sum_{i=1}^k \frac{\ell_i(\ell_i + 1)}{2}.
+\]
+
+\begin{theorem}
+Conjecture~4.4 of~\cite{ADHM26} is false. Specifically, for every integer $t \ge 1$, the segment sequence
+\[
+D_t := t \cdot (315,\, 116,\, 25,\, 21,\, 21,\, 1,1,1,1,1,1,1,1)
+\]
+admits a $(9,3)$-$D_t$-tree $T_t^*$ whose maximum transmission is strictly smaller (by at least $102 t^2$) than that of every starlike and every $(\Delta, 2)$-$D_t$-tree. Moreover, for $k = 8$ segments, $D' = (5111, 3694, 79, 15, 15, 1, 1, 1)$ ($n = 8{,}918$) has a $(4,3)$-$D'$-tree strictly beating every starlike and $(\Delta, 2)$-$D'$-tree (by $1{,}123$), so its global remoteness minimizer has $3$ branch vertices.
+\end{theorem}
+
+\begin{proof}
+Because $\sigma(v, T) - C(D)$ is homogeneous of degree $2$ in $(\ell_1, \dots, \ell_k)$, it suffices to verify $t = 1$, where $S = 506$, $n = 507$, and $C(D_1) = 57{,}351$. Define the $(9,3)$-$D_1$-tree $T^*$ with three branch vertices $B_1, B_2, B_3$ joined by internal segments $B_1 \text{--}315\text{--} B_2 \text{--}116\text{--} B_3$ and pendant segments $\{21, 21\}$ at $B_1$, $\{25\}$ at $B_2$, and $\{1^8\}$ at $B_3$. Its leaf values $\sigma(v, T^*) - C(D_1)$ are:
+\begin{itemize}
+  \item $B_1$ (length-$21$ leaf): $21 \cdot 485 + 315 \cdot 141 + 431 \cdot 8 = 10{,}185 + 44{,}415 + 3{,}448 = \mathbf{58{,}048}$;
+  \item $B_2$ (length-$25$ leaf): $25 \cdot 481 + 315 \cdot 42 + 116 \cdot 8 = 26{,}183$;
+  \item $B_3$ (length-$1$ leaf): $1 \cdot 505 + 116 \cdot 340 + 431 \cdot 42 = 58{,}047$.
+\end{itemize}
+Thus $\sigma_{\max}(T^*) = 57{,}351 + 58{,}048 = \mathbf{115{,}399}$.
+
+Now let $T$ be any $D_1$-tree with $h \le 2$ branch vertices:
+\begin{enumerate}
+  \item If $315$ is a pendant segment (including the unique starlike tree), its leaf satisfies $\sigma - C(D_1) \ge 315 \cdot 191 = 60{,}165 > 58{,}048$.
+  \item Otherwise $h = 2$ and $315$ is the unique internal segment joining branch vertices $a$ and $b$. Then $116$ is pendant, say at $a$, and the pendant sums satisfy $W_a + W_b = 191$. The leaf on $116$ at $a$ has $\sigma - C(D_1) = 116 \cdot 390 + 315 W_b = 45{,}240 + 315 W_b$, which is $\ge 58{,}155 > 58{,}048$ if $W_b \ge 41$. If $W_b \le 40$, let $m \in \{1, 21, 25\}$ be the longest pendant segment at $b$:
+  \begin{itemize}
+    \item $m = 1$: $W_b \le 8$, $W_a \ge 183$, so a length-$1$ leaf at $b$ has $\sigma - C(D_1) \ge 505 + 315 \cdot 183 = \mathbf{58{,}150}$;
+    \item $m = 21$: $21+21 > 40$ and $21+25 > 40$ force $W_b \le 29$, $W_a \ge 162$, giving $\sigma - C(D_1) \ge 10{,}185 + 315 \cdot 162 = 61{,}215$;
+    \item $m = 25$: $25+21 > 40$ forces $W_b \le 33$, $W_a \ge 158$, giving $\sigma - C(D_1) \ge 12{,}025 + 315 \cdot 158 = 61{,}795$.
+  \end{itemize}
+\end{enumerate}
+In every case $\sigma_{\max}(T) \ge 57{,}351 + 58{,}150 = \mathbf{115{,}501} > \mathbf{115{,}399} = \sigma_{\max}(T^*)$, with gap $102$.
+
+For $D' = (5111, 3694, 79, 15, 15, 1, 1, 1)$, the $(4,3)$-tree $B_1\{15,15\}\text{--}5111\text{--}B_2\{79\}\text{--}3694\text{--}B_3\{1^3\}$ has $\sigma_{\max} = 39{,}336{,}710$, whereas all $227$ $D'$-trees with $h \le 2$ have $\sigma_{\max} \ge 39{,}337{,}833$ (verified both by the same case split and by explicit graph-level BFS in \texttt{verify.py}). Since a tree with $h$ branch vertices has at least $2h+1$ segments, $k = 8$ forces $h \le 3$, so the global minimizer has $3$ branch vertices.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{ADHM26}
+I.~Allie, B.~Du~Preez, Z.~Hefty, and S.~Mafunda, \emph{Proximity and Remoteness in Trees with given Segment Sequence}, \texttt{arXiv:2611.27685}, November 2026.
+\end{thebibliography}
+
+\end{document}
