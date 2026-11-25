@@ -15,3 +15,4 @@ import Conjectures.StableKneserK3
 import Conjectures.ManabeSubtraction
 import Conjectures.ChenZwickerEF1Outer
 import Conjectures.QuasisymmetricBruhat
+import Conjectures.WachsWeightedBond

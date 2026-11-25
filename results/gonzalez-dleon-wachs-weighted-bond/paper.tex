@@ -1,0 +1,98 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{A Counterexample to Real-Rootedness of Subgraph Differences of Weighted Bond M\"obius Polynomials}
+\author{Salem Levinstein}
+\date{November 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Gonz\'alez D'Le\'on and Wachs (\texttt{arXiv:2608.08692v2}) introduced the weighted bond poset $\mathcal{W}\Pi_G$ and M\"obius polynomial $\mu_G(t)$ of a graph $G$, and conjectured (Conjecture~4.13(2)) that if $G$ has $n$ vertices and $k$ connected components and $H \subseteq G$ is a spanning subgraph with $k$ connected components, then $(-1)^{n-k}(\mu_G(t) - \mu_H(t))$ is real-rooted. We disprove this conjecture at the minimal order $n = 8$ ($k = 2$): for $G = K_3 \sqcup \mathrm{House}$ and $H = P_3 \sqcup C_5$, the difference $(-1)^6(\mu_G(t) - \mu_H(t)) = 8 + 82t + 271t^2 + 396t^3 + 271t^4 + 82t^5 + 8t^6$ has reciprocal cubic $Q(s) = 8s^3 + 82s^2 + 247s + 232$ of negative discriminant $\Delta = -22{,}364 < 0$, and hence has non-real roots. Adjoining isolated vertices and disjoint edges (or a path forest) yields counterexamples for all $n = 8 + r + 2s, k = 2 + r + s$ ($r, s \ge 0$) and every $3 \le k \le n - 6$. The entire disproof, including the weighted bond poset, product formula, exact component polynomials, and algebraic non-real-rootedness proof, is formally verified in Lean~4 without additional axioms.
+\end{abstract}
+
+\section{Introduction}
+
+For a finite simple graph $G = (V, E)$, Gonz\'alez D'Le\'on and Wachs~\cite{GDW2026} defined the \emph{weighted bond poset} $\mathcal{W}\Pi_G$ consisting of weighted partitions $\boldsymbol{\pi} = \{B_1^{v_1}, \dots, B_r^{v_r}\}$ of $V$ whose blocks induce connected subgraphs of $G$ and carry weights $v_i \in \{0, 1, \dots, |B_i| - 1\}$, ordered by refinement with merge-weight increments $v_m - \sum_{r=1}^\ell w_{i_r} \in \{0, 1, \dots, \ell - 1\}$ whenever $B_m = \bigcup_{r=1}^\ell A_{i_r}$. Writing $\hat{0} = \{\{v\}^0 : v \in V\}$ for the minimum element and $w(\boldsymbol{\pi}) = \sum_{B^v \in \boldsymbol{\pi}} v$, the \emph{M\"obius polynomial} of $G$ is
+\[
+  \mu_G(t) := \sum_{\boldsymbol{\pi} \in \mathrm{Max}(\mathcal{W}\Pi_G)} \mu_{\mathcal{W}\Pi_G}(\hat{0}, \boldsymbol{\pi}) \, t^{w(\boldsymbol{\pi})}.
+\]
+By~\cite[Proposition~2.2]{GDW2026}, $\mu_G(t)$ is multiplicative across connected components: if $G = G_1 \sqcup \cdots \sqcup G_k$, then $\mu_G(t) = \prod_{i=1}^k \mu_{G_i}(t)$.
+
+In~\cite[Conjecture~4.13]{GDW2026}, the authors conjectured that for any graph $G$ with $n$ vertices and $k$ connected components: (1) $(-1)^{n-k}\mu_G(t)$ is real-rooted; and (2) if $H$ is a subgraph of $G$ with $n$ vertices and $k$ connected components, then $(-1)^{n-k}(\mu_G(t) - \mu_H(t))$ is real-rooted. While item~(1) and the weaker $\gamma$-positivity and $e$-positivity subgraph conjectures~\cite[Conjectures~4.12(2) and~6.21(2)]{GDW2026} pass cleanly from connected graphs to arbitrary $k$-component graphs, real-rootedness does not survive $f_1 f_2 - g_1 g_2$. We show that Conjecture~4.13(2) fails already at $n = 8, k = 2$.
+
+\section{Counterexample and Infinite Family}
+
+Let $\mathrm{House}$ be the $5$-vertex graph obtained from the $5$-cycle $C_5 = (0\text{--}1\text{--}2\text{--}3\text{--}4\text{--}0)$ by adding the chord $\{1, 4\}$, and set
+\[
+  G = K_3 \sqcup \mathrm{House}, \qquad H = P_3 \sqcup C_5,
+\]
+where $P_3 \subset K_3$ is a spanning path on $3$ vertices. Then $H$ is a spanning subgraph of $G$, and both graphs have $n = 8$ vertices and $k = 2$ connected components.
+
+\begin{proposition}\label{prop:components}
+The M\"obius polynomials of the four components are
+\begin{align*}
+  \mu_{K_3}(t) &= 2 + 5t + 2t^2, &
+  \mu_{P_3}(t) &= 1 + 3t + t^2, \\
+  \mu_{\mathrm{House}}(t) &= 6 + 49t + 92t^2 + 49t^3 + 6t^4, &
+  \mu_{C_5}(t) &= 4 + 34t + 64t^2 + 34t^3 + 4t^4.
+\end{align*}
+Consequently,
+\begin{align*}
+  \mu_G(t) &= 12 + 128t + 441t^2 + 656t^3 + 441t^4 + 128t^5 + 12t^6, \\
+  \mu_H(t) &= 4 + 46t + 170t^2 + 260t^3 + 170t^4 + 46t^5 + 4t^6,
+\end{align*}
+and therefore
+\[
+  P(t) := (-1)^{8-2}\bigl(\mu_G(t) - \mu_H(t)\bigr) = 8 + 82t + 271t^2 + 396t^3 + 271t^4 + 82t^5 + 8t^6.
+\]
+\end{proposition}
+
+\begin{proof}
+The identities for $K_3$ and $P_3$ follow immediately from~\cite[Eq.~(3.4) and Theorem~3.2]{GDW2026}; those for $\mathrm{House}$ and $C_5$ follow from direct evaluation of the weighted bond poset $\mathcal{W}\Pi$ (or the recurrence~\cite[Theorem~3.1]{GDW2026}) on $5$ vertices. Multiplying via~\cite[Proposition~2.2]{GDW2026} and subtracting gives $P(t)$.
+\end{proof}
+
+\begin{theorem}\label{thm:disproof}
+The polynomial $P(t)$ is not real-rooted; consequently, Conjecture~4.13(2) of~\cite{GDW2026} is false.
+\end{theorem}
+
+\begin{proof}
+Let $Q(s) := 8s^3 + 82s^2 + 247s + 232$. Direct expansion shows that for every nonzero $z \in \mathbb{C}$,
+\[
+  z^3 Q(z + z^{-1}) = 8(z^2 + 1)^3 + 82 z(z^2 + 1)^2 + 247 z^2(z^2 + 1) + 232 z^3 = P(z).
+\]
+Over $\mathbb{C}$, write $Q(s) = 8(s - s_1)(s - s_2)(s - s_3)$. If all three roots $s_1, s_2, s_3$ were real, then the cubic discriminant of $Q$ would satisfy $8^4(s_1 - s_2)^2(s_2 - s_3)^2(s_3 - s_1)^2 \ge 0$. However,
+\[
+  \Delta(Q) = 18 \cdot 8 \cdot 82 \cdot 247 \cdot 232 - 4 \cdot 82^3 \cdot 232 + 82^2 \cdot 247^2 - 4 \cdot 8 \cdot 247^3 - 27 \cdot 8^2 \cdot 232^2 = -22{,}364 < 0.
+\]
+(Equivalently, $P(t) = 8(1+t)^6 + 34t(1+t)^4 + 15t^2(1+t)^2 + 2t^3$ has $\gamma$-polynomial $\Gamma(u) = 2u^3 + 15u^2 + 34u + 8$, whose discriminant is also $-22{,}364 < 0$.) Thus some root $s_0 \in \{s_1, s_2, s_3\}$ of $Q$ is non-real. Choosing $z \in \mathbb{C}$ with $z^2 - s_0 z + 1 = 0$, we have $z \ne 0$ and $z + z^{-1} = s_0 \notin \mathbb{R}$, so $\mathrm{Im}(z) \ne 0$ while $P(z) = z^3 Q(s_0) = 0$.
+\end{proof}
+
+\begin{corollary}\label{cor:family}
+For all integers $r, s \ge 0$, the spanning subgraph pair $H_{r,s} = P_3 \sqcup C_5 \sqcup r K_1 \sqcup s K_2 \subseteq K_3 \sqcup \mathrm{House} \sqcup r K_1 \sqcup s K_2 = G_{r,s}$ ($n = 8 + r + 2s$ vertices, $k = 2 + r + s$ components) refutes Conjecture~4.13(2). More generally, for every $n \ge 8$ and every $k$ with $k = 2, n = 8$ or $3 \le k \le n - 6$, there exist $n$-vertex graphs $H \subseteq G$ with $k$ connected components such that $(-1)^{n-k}(\mu_G(t) - \mu_H(t))$ is not real-rooted.
+\end{corollary}
+
+\begin{proof}
+Since $\mu_{K_1}(t) = 1$ and $\mu_{K_2}(t) = -(1 + t)$, Proposition~2.2 of~\cite{GDW2026} yields $(-1)^{n-k}(\mu_{G_{r,s}}(t) - \mu_{H_{r,s}}(t)) = (1 + t)^s P(t)$, which vanishes at the non-real root $z$ of $P(t)$ from Theorem~\ref{thm:disproof}. Likewise, for any $3 \le k \le n - 6$, let $m = n - k - 5 \ge 1$ and adjoin $F = P_m \sqcup (k - 3) K_1$ ($n - 8$ vertices, $k - 2$ components) to both $G$ and $H$; by~\cite[Theorem~3.2]{GDW2026}, $(-1)^{m-1}\mu_{P_m}(t) = N_m(t)$ is the nonzero Narayana polynomial, so $(-1)^{n-k}(\mu_{G \sqcup F}(t) - \mu_{H \sqcup F}(t)) = N_m(t) P(t)$ still has the non-real root $z$.
+\end{proof}
+
+\begin{remark}[Minimality, Connected Case, and Verification]
+Exhaustive enumeration over all $12{,}346$ graphs and $18.1\text{M}$ subgraph pairs on $n \le 8$ vertices shows that $n = 8$ is minimal and that all three failing pairs at $n = 8$ are disconnected. Non-trivial $2$-component pairs $(K_3/P_3) \sqcup (C_m + \text{chord})/C_m$ also fail real-rootedness (verified for $5 \le m \le 10$). The connected restriction ($k = 1$) and the single-edge-deletion case ($H = G - e$) of Conjecture~4.13(2) remain open, as do Conjectures~4.12, 4.13(1), 4.15, 4.16, 6.21, and~7.3 (all verified through $n \le 8$). Proposition~\ref{prop:components}, Theorem~\ref{thm:disproof}, and the isolated-vertex infinite family of Corollary~\ref{cor:family} are formally verified in Lean~4 (\texttt{WachsWeightedBond.lean}, zero \texttt{sorry}, standard axioms only).
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{GDW2026}
+R.~S.~Gonz\'alez D'Le\'on and M.~L.~Wachs, \emph{Weighted bond posets and a new chromatic symmetric function}, arXiv:2608.08692v2 [math.CO], 2026.
+\end{thebibliography}
+
+\end{document}

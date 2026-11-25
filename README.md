@@ -27,6 +27,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **15.** [Manabe Conjecture 57 (purely periodic three-move subtraction games)](results/manabe-subtraction-games/) | Proved in full (strengthened to all $1 \le a < b < c$ at $\mathrm{P}$-position level + Conj. 52 $\iff$ Conj. 56 for all $c > b$ + $100.9\text{M}$ census) | [DOI](https://doi.org/10.5281/zenodo.24536124) | **Lean 4** · Cross-Model Audit · Python |
 | **16.** [Chen–Zwicker Conjecture 1 ($\mathrm{EF1}_{\mathrm{outer}}$ spectrum of connected graphs)](results/chen-zwicker-ef1-outer/) | Disproved (minimal $8$-vertex graph $H$: `NO` at $k=2$, `YES` at $k=3$, `NO` at $k=4$ from common binary up to heterogeneous monotone) | [DOI](https://doi.org/10.5281/zenodo.24536131) | **Lean 4** · Cross-Model Audit · Python |
 | **17.** [Bansal Conjecture C / 6.11 (quasisymmetric Bruhat zigzag shellability)](results/bansal-quasisymmetric-bruhat/) | Disproved for all $m \ge 7$ (minimal $Z = F(1,2,4)$, $(x,Z) \cong C_6 \sqcup C_6$, non-shellable & non-Cohen–Macaulay) | [DOI](https://doi.org/10.5281/zenodo.24536751) | **Lean 4** · Cross-Model Audit · Python |
+| **18.** [González D'León–Wachs Conjecture 4.13(2) (weighted bond Möbius real-rootedness)](results/gonzalez-dleon-wachs-weighted-bond/) | Disproved (minimal $n = 8, k = 2$: $G = K_3 \sqcup \mathrm{House}$, $H = P_3 \sqcup C_5$, $\Delta = -22{,}364 < 0$ + infinite families) | [DOI](https://doi.org/10.5281/zenodo.24540271) | **Lean 4** · Audit · Python |
 
 ## Reproduction
 
@@ -50,6 +51,7 @@ python3 results/arana-haxell-kaiser-stehlik-kneser/verify.py base
 python3 results/manabe-subtraction-games/verify.py
 python3 results/chen-zwicker-ef1-outer/verify.py
 python3 results/bansal-quasisymmetric-bruhat/verify.py
+python3 results/gonzalez-dleon-wachs-weighted-bond/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
