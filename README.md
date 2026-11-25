@@ -31,6 +31,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **19.** [Firoozbakht’s OEIS A086766 conjecture](results/firoozbakht-oeis-a086766/) | Disproved (infinite family $n_k = 10(10^{2k}-1)/99$, minimal $1010$, primitive $104040$, and $78$-digit primitive witness) | [DOI](https://doi.org/10.5281/zenodo.24540581) | **Lean 4** · Audit · Python |
 | **20.** [Capozzoli–Couto–Junchaya Conjecture 1 ($P_3^*$-interval on tournaments)](results/capozzoli-couto-junchaya-p3star-interval/) | Disproved under ETH ($2^{O(\log^4 n)}$ deterministic QP algorithm $\implies$ NP-intermediate on general & strong tournaments) | [DOI](https://doi.org/10.5281/zenodo.24540682) | **Lean 4** · Cross-Model Audit · Python |
 | **21.** [Campbell’s OEIS A189409 squarefree conjecture](results/campbell-oeis-a189409/) | Disproved (minimal counterexample $a(9) = (23\#)^2 + 1 = 29^2 \cdot 53 \cdot 1{,}116{,}604{,}864{,}937$; $a(0)\dots a(8)$ certified squarefree) | [DOI](https://doi.org/10.5281/zenodo.24543512) | **Lean 4** · Cross-Model Audit · Python |
+| **22.** [Fonollosa Problem 4 (unique multiset sums in finite abelian groups)](results/fonollosa-unique-multiset-sums/) | Proved (exact minimum order $|G| = 2^{n-1}$, complete classification as $(\mathbb{Z}/2\mathbb{Z})^{n-1}$ with affine basis, cyclic bound $N \ge 2^{n-1} + \lceil n/\gcd(2,N) \rceil - 1$) | [DOI](https://doi.org/10.5281/zenodo.24544750) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -58,6 +59,7 @@ python3 results/gonzalez-dleon-wachs-weighted-bond/verify.py
 python3 results/firoozbakht-oeis-a086766/verify.py
 python3 results/capozzoli-couto-junchaya-p3star-interval/verify.py
 python3 results/campbell-oeis-a189409/verify.py
+python3 results/fonollosa-unique-multiset-sums/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

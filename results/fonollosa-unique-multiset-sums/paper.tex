@@ -1,0 +1,118 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}{Remark}
+
+\title{Exact Minimum Order and Classification for Unique Multiset Sums in Finite Abelian Groups}
+\author{Salem Levinstein}
+\date{November 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A size-$n$ family $A = (a_0, \dots, a_{n-1})$ in a finite abelian group $G$ has \emph{unique multiset sums} if the all-ones vector is the unique multiplicity vector $m \in \mathbb{N}^n$ satisfying $\sum_i m_i = n$ and $\sum_i m_i a_i = \sum_i a_i$. In recent work on orthogonal discrete Fourier transform schemes for the permanent, Fonollosa (\texttt{arXiv:2607.08366v2}, Problem~4; \texttt{arXiv:2607.09949v2}, Remark~1) asked for the minimum order of a finite abelian group $G$ admitting such a family, having proved the lower bound $\binom{2n}{n}/2^n$ and optimality of $2^{n-1}$ within elementary abelian $2$-groups. We give an elementary proof that $|G| \ge 2^{n-1}$ for every finite abelian group $G$ and every $n \ge 1$, classify all equality cases as precisely the elementary abelian $2$-groups $(\mathbb{Z}/2\mathbb{Z})^{n-1}$ equipped with an affine basis, and deduce the sharpened cyclic lower bound $N \ge 2^{n-1} + \lceil n/\gcd(2,N) \rceil - 1$. All results are formally verified in Lean~4 using only the standard axioms.
+\end{abstract}
+
+\section{Introduction}
+Let $G$ be a finite abelian group written additively, and let $n \ge 1$. A family $A = (a_0, \dots, a_{n-1}) \in G^n$ is called \emph{valid} (has \emph{unique multiset sums}) if the only tuple $m = (m_0, \dots, m_{n-1}) \in \mathbb{N}^n$ satisfying
+\[
+\sum_{i=0}^{n-1} m_i = n \qquad \text{and} \qquad \sum_{i=0}^{n-1} m_i a_i = \sum_{i=0}^{n-1} a_i
+\]
+is $m_0 = \dots = m_{n-1} = 1$.
+
+In~\cite{fonollosa2026minmod,fonollosa2026permanent}, Fonollosa showed that every valid size-$n$ family in a finite abelian group $G$ yields an orthogonal discrete Fourier transform scheme evaluating the $n \times n$ permanent in $|G|$ terms, generalizing Glynn's $2^{n-1}$-term formula over $(\mathbb{Z}/2\mathbb{Z})^{n-1}$. Using the Nisan--Wigderson partial-derivative method, Fonollosa proved $|G| \ge \binom{2n}{n}/2^n \sim 2^n/\sqrt{\pi n}$~\cite[Corollary~1]{fonollosa2026permanent}, proved that $2^{n-1}$ is optimal within elementary abelian $2$-groups~\cite[Proposition~2]{fonollosa2026minmod}, checked $n \le 6$ exhaustively, and posed as Problem~4 in~\cite[\S 8]{fonollosa2026minmod} whether $2^{n-1}$ is the minimum order over all finite abelian groups for every $n \ge 1$.
+
+\begin{theorem}\label{thm:main}
+Let $G$ be a finite abelian group and let $n \ge 1$.
+\begin{enumerate}
+\item \emph{(Exact minimum order.)} If $G$ admits a valid family $A = (a_0, \dots, a_{n-1})$, then $|G| \ge 2^{n-1}$. This bound is achieved for every $n \ge 1$ by $G = (\mathbb{Z}/2\mathbb{Z})^{n-1}$ with $a_0 = 0$ and $a_1, \dots, a_{n-1}$ the standard basis.
+\item \emph{(Equality classification.)} Equality $|G| = 2^{n-1}$ holds if and only if $G \cong (\mathbb{Z}/2\mathbb{Z})^{n-1}$ and $A$ is an affine basis of $G$; explicitly, the map
+\[
+\varphi : (\mathbb{Z}/2\mathbb{Z})^{n-1} \longrightarrow G, \qquad (\varepsilon_1, \dots, \varepsilon_{n-1}) \longmapsto \sum_{i=1}^{n-1} \varepsilon_i (a_i - a_0),
+\]
+is a group isomorphism.
+\item \emph{(Disjoint doubles and cyclic bound.)} Put $b_i = a_i - a_0$ and let $D = \{2b_i : 0 \le i < n\} \setminus \{0\}$. The $2^{n-1}$ subset sums of $\{b_1, \dots, b_{n-1}\}$ are pairwise distinct and disjoint from $D$, so
+\[
+|G| \ge 2^{n-1} + |D|.
+\]
+In particular, if $G = \mathbb{Z}/N\mathbb{Z}$ ($N \ge 1$) admits a valid size-$n$ family, then
+\[
+N \ge 2^{n-1} + \left\lceil \frac{n}{\gcd(2, N)} \right\rceil - 1 = 2^{n-1} + \left\lfloor \frac{n - 1}{\gcd(2, N)} \right\rfloor.
+\]
+\end{enumerate}
+\end{theorem}
+
+\section{Proof of Theorem~\ref{thm:main}}
+For any $c \in G$, replacing $A = (a_i)$ by $(a_i - c)$ preserves validity, because $\sum_i m_i = n$ implies $\sum_i m_i(a_i - c) = \sum_i m_i a_i - nc$. Translating by $a_0$, we may assume without loss of generality that $a_0 = 0$.
+
+\begin{lemma}[Uniqueness at subset targets]\label{lem:subset}
+For every subset $S \subseteq \{0, \dots, n-1\}$ and every $m \in \mathbb{N}^n$ with $\sum_i m_i = |S|$ and $\sum_i m_i a_i = \sum_{i \in S} a_i$, one has $m_i = \mathbf{1}_{i \in S}$ for every $i$. In particular, $a_0, \dots, a_{n-1}$ are pairwise distinct.
+\end{lemma}
+\begin{proof}
+Set $m'_i = m_i + \mathbf{1}_{i \notin S}$. Then $\sum_i m'_i = |S| + (n - |S|) = n$ and
+\[
+\sum_{i=0}^{n-1} m'_i a_i = \sum_{i \in S} a_i + \sum_{i \notin S} a_i = \sum_{i=0}^{n-1} a_i.
+\]
+Validity of $A$ forces $m'_i = 1$ for all $i$, hence $m_i = \mathbf{1}_{i \in S}$. Applying this to singleton sets $S = \{j\}$ shows that $a_0, \dots, a_{n-1}$ are pairwise distinct.
+\end{proof}
+
+\begin{lemma}[Distinct subset sums]\label{lem:distinct}
+The $2^{n-1}$ subset sums $\sum_{i \in S} a_i$ for $S \subseteq \{1, \dots, n-1\}$ are pairwise distinct.
+\end{lemma}
+\begin{proof}
+Suppose $S, T \subseteq \{1, \dots, n-1\}$ satisfy $\sum_{i \in S} a_i = \sum_{i \in T} a_i$, with $|S| \le |T|$ without loss of generality. Define $m \in \mathbb{N}^n$ by $m_0 = |T| - |S|$ and $m_i = \mathbf{1}_{i \in S}$ for $i \ge 1$. Since $a_0 = 0$, we have $\sum_i m_i = |T|$ and $\sum_i m_i a_i = \sum_{i \in S} a_i = \sum_{i \in T} a_i$. By Lemma~\ref{lem:subset}, $m_i = \mathbf{1}_{i \in T}$ for every $i$, so $S = T$.
+\end{proof}
+
+\begin{lemma}[Disjointness of nonzero doubles]\label{lem:doubles}
+Let $U = \{\sum_{i \in S} a_i : S \subseteq \{1, \dots, n-1\}\}$. If $0 \le i < n$ and $2a_i \ne 0$, then $2a_i \notin U$.
+\end{lemma}
+\begin{proof}
+Suppose $2a_i = \sum_{j \in S} a_j$ with $S \subseteq \{1, \dots, n-1\}$. Because $2a_i \ne 0$ and $a_0 = 0$, we have $i \ne 0$ and $|S| \ge 1$. Define $m \in \mathbb{N}^n$ by $m_i = 2$, $m_0 = |S| - 1$, and $m_j = 0$ for $j \notin \{0, i\}$. Then $\sum_j m_j = |S| + 1 = |S \cup \{0\}|$ and $\sum_j m_j a_j = 2a_i = \sum_{j \in S \cup \{0\}} a_j$. Lemma~\ref{lem:subset} requires $m_i \le 1$, contradicting $m_i = 2$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $D = \{2a_i : 0 \le i < n\} \setminus \{0\}$. By Lemmas~\ref{lem:distinct} and~\ref{lem:doubles}, $|U| = 2^{n-1}$ and $U \cap D = \emptyset$, so $|G| \ge 2^{n-1} + |D| \ge 2^{n-1}$.
+
+If $G = \mathbb{Z}/N\mathbb{Z}$ ($N \ge 1$), the kernel of $x \mapsto 2x$ has order $g = \gcd(2, N) \in \{1, 2\}$. Because $a_0, \dots, a_{n-1}$ are pairwise distinct (Lemma~\ref{lem:subset}), the image $I = \{2a_i : 0 \le i < n\}$ contains $0 = 2a_0$ and satisfies $n \le g|I|$. Hence $|D| = |I| - 1 \ge \lceil n/g \rceil - 1 = \lfloor (n - 1)/g \rfloor$, proving~(3).
+
+Now suppose $|G| = 2^{n-1}$. Then $U = G$ and $D = \emptyset$, so $2a_i = 0$ for all $i$. Every $x \in G = U$ is a sum of elements among $a_1, \dots, a_{n-1}$, so $2x = 0$ for all $x \in G$. Consequently, the map $\varphi : (\mathbb{Z}/2\mathbb{Z})^{n-1} \to G$ sending $(\varepsilon_1, \dots, \varepsilon_{n-1}) \mapsto \sum_{i=1}^{n-1} \varepsilon_i a_i$ is a group homomorphism. Lemma~\ref{lem:distinct} shows that $\varphi$ is injective; since both groups have order $2^{n-1}$, $\varphi$ is an isomorphism.
+
+Conversely, let $G = (\mathbb{Z}/2\mathbb{Z})^{n-1}$ with $a_0 = 0$ and $a_i = e_i$ ($1 \le i \le n-1$). If $\sum_{i=0}^{n-1} m_i = n$ and $\sum_{i=0}^{n-1} m_i a_i = (1, \dots, 1)$, then each $m_i$ ($i \ge 1$) is odd, so $m_i \ge 1$. If some $m_j \ge 3$, then $\sum_{i=1}^{n-1} m_i \ge (n - 2) + 3 = n + 1 > n$, a contradiction. Therefore $m_1 = \dots = m_{n-1} = 1$, and $\sum_{i=0}^{n-1} m_i = n$ forces $m_0 = 1$. Translating preserves validity, completing~(1) and~(2).
+\end{proof}
+
+\begin{remark}[Relation to Waring rank]
+Over $\mathbb{C}$, character orthogonality for a valid family $A = (a_0, \dots, a_{n-1})$ with $t = \sum_i a_i$ gives
+\[
+x_0 \cdots x_{n-1} = \frac{1}{n!\,|G|} \sum_{\chi \in \widehat{G}} \overline{\chi(t)} \left(\sum_{i=0}^{n-1} \chi(a_i) x_i\right)^n.
+\]
+Hence the numerical inequality $|G| \ge 2^{n-1}$ alone also follows from the complex Waring rank $\mathrm{rk}_{\mathbb{C}}(x_0 \cdots x_{n-1}) = 2^{n-1}$~\cite[Corollary~3.3]{ccg2012}. The combinatorial proof above requires no characters or algebraic geometry and additionally establishes the equality classification~(2) and the cyclic strengthening~(3).
+\end{remark}
+
+\section{Formal Verification in Lean~4}
+In Lean~4 (Mathlib~v4.33.1), the module \texttt{FonollosaUniqueMultisetSums.lean} formally verifies Theorem~\ref{thm:main} via the following exported theorems:
+\begin{itemize}
+\item \texttt{order\_lower\_bound} and \texttt{valid\_at\_lower\_bound} (Part~1),
+\item \texttt{equality\_classification} (Part~2),
+\item \texttt{order\_lower\_bound\_with\_doubles} (Part~3, general abelian groups),
+\item \texttt{cyclic\_modulus\_lower\_bound} (Part~3, cyclic groups $\mathbb{Z}/N\mathbb{Z}$).
+\end{itemize}
+The proof uses no \texttt{sorry} and no \texttt{native\_decide}, depending solely on the standard axioms \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}.
+
+\begin{thebibliography}{9}
+\bibitem{ccg2012}
+E.~Carlini, M.~V. Catalisano, and A.~V. Geramita, \emph{The solution to the Waring problem for monomials and the sum of coprime monomials}, J. Algebra \textbf{370} (2012), 5--14, arXiv:1110.0745.
+
+\bibitem{fonollosa2026minmod}
+J.~A.~R. Fonollosa, \emph{Minimum modulus for the unique multiset-sum problem}, arXiv:2607.08366v2 (2026).
+
+\bibitem{fonollosa2026permanent}
+J.~A.~R. Fonollosa, \emph{Ryser, Glynn, and the discrete Fourier transform: orthogonal schemes for the permanent}, arXiv:2607.09949v2 (2026).
+\end{thebibliography}
+
+\end{document}
