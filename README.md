@@ -22,6 +22,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **10.** [Notik Singer Golomb ruler chamber-uniqueness conjecture](results/notik-singer-golomb/) | Proved for all prime powers (every cyclic PDS) | [PDF](results/notik-singer-golomb/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 | **11.** [Rofa regular spider 0-rotatability conjecture](results/rofa-spider-rotatability/) | Proved for all $k \ge 1, \ell \ge 1$ | [PDF](results/rofa-spider-rotatability/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 | **12.** [Benedetti–Menara Conjecture 7.1 ($r = 2$, flag $1$-layered families)](results/benedetti-menara-flag-layered/) | Proved $r = 2$ sharp bound $m - 1$ + halved Larman–Barnette + unconditional Thm. E(a) at $p = d - 2$ | [PDF](results/benedetti-menara-flag-layered/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
+| **13.** [Sinclair Conjecture C (radial-derivative Hilbert series front-loading)](results/sinclair-radial-mobius/) | Disproved ($M(K_{1,1,4}+e)$: $h_2^\beta = 31 < 32 = h_3^\beta$, family $m=4..7$ + binary example) | [PDF](results/sinclair-radial-mobius/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -40,6 +41,7 @@ python3 results/kalmanovich-nivasch-alleven/verify.py
 python3 results/notik-singer-golomb/verify.py
 python3 results/rofa-spider-rotatability/verify.py
 python3 results/benedetti-menara-flag-layered/verify.py
+python3 results/sinclair-radial-mobius/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

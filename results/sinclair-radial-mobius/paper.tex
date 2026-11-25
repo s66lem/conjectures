@@ -1,0 +1,96 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\rk}{rk}
+
+\title{A Graphic Counterexample to Front-Loading of the Radial-Derivative Hilbert Series}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a simple rank-$r$ matroid $M$, Sinclair (\texttt{arXiv:2608.18519}) introduced a canonical radial lowering operator $D_\beta$ on the graded M\"obius algebra $B(M)$ and studied the Hilbert series $H_{\beta, M}(q) = \sum_{k=0}^r h_k^\beta(M) q^k$ of the cyclic module generated from the top flat under $D_\beta$ and the coordinate derivatives. Sinclair conjectured (Conjecture~C) that $H_{\beta, M}$ is front-loaded: $h_k^\beta(M) \ge h_{r-k}^\beta(M)$ for all $k \le r/2$. We refute Conjecture~C with the simple rank-$5$ graphic matroid $M(K_{1,1,4} + e)$ on $10$ elements, which has $H_\beta = (1, 11, 31, 32, 10, 1)$ and therefore $h_2^\beta = 31 < 32 = h_3^\beta$. The violation persists with growing gaps along $M(K_{1,1,m} + e)$ for $m = 4, 5, 6, 7$, and also occurs for a $12$-element non-graphic binary matroid. The primary counterexample is formally verified over $\mathbb{Q}$ in Lean~4 without additional axioms.
+\end{abstract}
+
+\section{Introduction}
+
+Let $M$ be a simple matroid of rank $r$ on an $n$-element ground set $E$, with lattice of flats $\mathcal{L}(M) = \bigsqcup_{j=0}^r \mathcal{L}_j(M)$ and Whitney numbers $W_j = |\mathcal{L}_j(M)|$. For each flat $x \in \mathcal{L}(M)$, let $\beta_x = \rk(x)! \cdot \#\{\text{bases of } M|x\}$ denote the number of ordered atom bases of $x$. Following Section~2 of Sinclair~\cite{Sinclair2026}, on the graded M\"obius algebra $B(M) = \bigoplus_{j=0}^r \mathbb{Q}\mathcal{L}_j(M)$ with flat basis $\{e_x : x \in \mathcal{L}(M)\}$, the coordinate lowering operators $L_a^\beta$ ($a \in E$, \cite[Proposition~2.2]{Sinclair2026}) act by
+\[
+L_a^\beta(e_y) = \sum_{\substack{x \lessdot y \\ x \vee a = y}} \frac{\beta_x}{\beta_y}\, e_x.
+\]
+Setting $U^\beta = \sum_{a \in E} L_a^\beta$, $K(e_y) = \rk(y) e_y$, and $S(e_x) = (n - |x|) e_x$, the \emph{radial derivative} (\cite[Proposition~2.3]{Sinclair2026}) is $D_\beta = S^{-1} U^\beta K$ on proper flats, satisfying $D_\beta(v_j) = j v_{j-1}$ for $v_j = \sum_{x \in \mathcal{L}_j(M)} \beta_x e_x$.
+
+The graded cyclic module $\mathcal{C}(M) = \bigoplus_{k=0}^r \mathcal{C}_k(M)$, graded by operator word length $k$ with $\mathcal{C}_k(M) \subseteq \mathbb{Q}\mathcal{L}_{r-k}(M)$, is defined recursively by
+\[
+\mathcal{C}_0(M) = \mathbb{Q} v_r, \qquad \mathcal{C}_{k+1}(M) = D_\beta(\mathcal{C}_k(M)) + \sum_{a \in E} L_a^\beta(\mathcal{C}_k(M)),
+\]
+with Hilbert coefficients $h_k^\beta(M) = \dim_{\mathbb{Q}} \mathcal{C}_k(M)$. The coordinate-only submodule $\mathcal{C}^0(M)$ (omitting $D_\beta$) has symmetric Hilbert coefficients $h_k^0(M) = h_{r-k}^0(M)$, and the defect is $\delta_k(M) = h_k^\beta(M) - h_k^0(M)$.
+
+Sinclair~\cite[Section~1]{Sinclair2026} verified on all $950$ simple matroids on $8$ elements (Proposition~5.1) and $400$ sampled $9$-element matroids that $H_{\beta, M}$ is log-concave (Conjecture~B) and \emph{front-loaded} (Conjecture~C):
+\[
+\delta_k(M) \ge \delta_{r-k}(M) \quad \Longleftrightarrow \quad h_k^\beta(M) \ge h_{r-k}^\beta(M) \qquad \text{for all } k \le r/2.
+\]
+We show that Conjecture~C fails already on $10$ elements.
+
+\section{Counterexample and Graphic Family}
+
+For $m \ge 2$, define the simple graph $G_m = K_{1,1,m} + e$ on vertex set $\{0, 1, 2, \dots, m + 1\}$ with $n = 2m + 2$ edges
+\[
+E(G_m) = \bigl\{\{0, 1\},\, \{2, 3\}\bigr\} \cup \bigl\{\{0, j\},\, \{1, j\} : 2 \le j \le m + 1\bigr\}.
+\]
+Since $G_m$ is connected with $m + 2$ vertices and no loops or parallel edges, its cycle matroid $M(G_m)$ is a simple graphic matroid of rank $r = m + 1$ on $n = 2m + 2$ elements.
+
+\begin{theorem}\label{thm:counterexample}
+Conjecture~C of~\cite{Sinclair2026} is false. For $G_4 = K_{1,1,4} + e$ ($n = 10$, $r = 5$), the exact Hilbert vectors of $M(G_4)$ over $\mathbb{Q}$ are
+\[
+H^0(M(G_4)) = (1, 10, 27, 27, 10, 1), \qquad H_\beta(M(G_4)) = (1, 11, 31, 32, 10, 1).
+\]
+In particular, $h_2^\beta(M(G_4)) = 31 < 32 = h_3^\beta(M(G_4))$ (equivalently $\delta_2 = 4 < 5 = \delta_3$), violating Conjecture~C at $k = 2 \le 5/2$.
+\end{theorem}
+
+Note that $H_\beta(M(G_4))$ is neither front-loaded nor back-loaded: $h_1^\beta = 11 > 10 = h_4^\beta$, whereas $h_2^\beta = 31 < 32 = h_3^\beta$.
+
+Exact rational computation shows that the violation persists along the family $G_m$ with growing gaps:
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{cccllc}
+\toprule
+$m$ & $n$ & $r$ & $H^0(M(G_m))$ & $H_\beta(M(G_m))$ & Failing $k$ \\
+\midrule
+$4$ & $10$ & $5$ & $(1,10,27,27,10,1)$ & $(1,11,\mathbf{31},\mathbf{32},10,1)$ & $2$ \\
+$5$ & $12$ & $6$ & $(1,12,42,62,42,12,1)$ & $(1,13,\mathbf{48},74,\mathbf{49},12,1)$ & $2$ \\
+$6$ & $14$ & $7$ & $(1,14,60,117,117,60,14,1)$ & $(1,15,\mathbf{68},\mathbf{143},\mathbf{149},\mathbf{69},14,1)$ & $2, 3$ \\
+$7$ & $16$ & $8$ & $(1,16,81,196,260,196,81,16,1)$ & $(1,17,\mathbf{91},\mathbf{236},330,\mathbf{246},\mathbf{92},16,1)$ & $2, 3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+By contrast, $K_{1,1,m}$ itself has $H_\beta = H^0$ (symmetric). Adding the single edge $\{2, 3\}$ creates a dense low-rank flat region in which $D_\beta$ generates greater defect in higher differential degree than in the complementary lower degree.
+
+Non-graphic counterexamples also exist: for instance, the simple rank-$6$ binary matroid on $12$ elements whose columns over $\mathbb{F}_2$ are
+\begin{align*}
+&011010,\; 001101,\; 000100,\; 001000,\; 100000,\; 011111, \\
+&010010,\; 010000,\; 111111,\; 010111,\; 010011,\; 000111
+\end{align*}
+has $H^0 = (1, 12, 44, 66, 44, 12, 1)$ and $H_\beta = (1, 13, 50, 94, 51, 12, 1)$, failing at $k = 2$ ($50 < 51$).
+
+\begin{remark}[Verification and Conjecture~B]
+Theorem~\ref{thm:counterexample} is formally verified in Lean~4 (file \texttt{SinclairRadialMobius.lean}, zero \texttt{sorry}, standard axioms only), proving directly from the rank-function definition of $M(G_4)$ and Propositions~2.2--2.3 of~\cite{Sinclair2026} that $h_2^\beta(M(G_4)) = 31$ and $h_3^\beta(M(G_4)) = 32$. An independent Python~3 exact-rational verifier reproduces Example~3.2 ($M(K_5)$), verifies $D_\beta(v_j) = j v_{j-1}$ on every layer, and confirms all counterexamples above. Screening approximately $25{,}000$ simple matroids across graphic, representable, direct-sum, and projective/affine families uncovered no counterexample to log-concavity (Conjecture~B).
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{Sinclair2026}
+T.~Sinclair, \emph{The radial derivative on the graded M\"obius algebra}, arXiv:2608.18519 [math.CO], 2026.
+\end{thebibliography}
+
+\end{document}

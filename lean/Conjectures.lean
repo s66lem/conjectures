@@ -10,3 +10,4 @@ import Conjectures.KalmanovichNivaschAllEven
 import Conjectures.SingerGolombChamber
 import Conjectures.SpiderRotatability
 import Conjectures.FlagLayeredR2
+import Conjectures.SinclairRadialMobius
