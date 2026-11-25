@@ -4,6 +4,8 @@ message: "If you cite these proofs, counterexamples, or verifiers, please use th
 type: dataset
 authors:
   - alias: s66lem
+version: "0.1.0"
+doi: "10.5281/zenodo.24519466"
 repository-code: "https://github.com/s66lem/conjectures"
 date-released: "2026-11-24"
 keywords:
