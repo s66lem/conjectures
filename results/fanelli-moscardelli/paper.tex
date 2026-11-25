@@ -9,7 +9,7 @@
 \newtheorem{proposition}[theorem]{Proposition}
 
 \title{A Disproof of the Fanelli--Moscardelli Stability Threshold Conjecture for Odd Markets}
-\author{}
+\author{Salem Levinstein\thanks{Companion verification code and internal audit: \url{https://github.com/s66lem/conjectures/tree/main/results/fanelli-moscardelli}. Assisted by AI systems during search, proof drafting, and verification.}}
 \date{November 2026}
 
 \begin{document}
@@ -76,9 +76,12 @@ Suppose no choice of $u \in W$ and pairing of $W \setminus \{u\}$ yields an $m$-
 \end{enumerate}
 
 For each $y \in J$, let $C_y$ be its component in $G[J]$, and define
-\[
-d_y := \max_{u \in N(y)} \mathrm{rank}_y(u) \le m, \quad A_y := \{z \neq y : \mathrm{rank}_y(z) \le d_y + m - 1\}, \quad \varepsilon_y := |A_y \cap I|, \quad \beta_y := \min_{w \in I} \mathrm{rank}_y(w).
-\]
+\begin{align*}
+d_y &:= \max_{u \in N(y)} \mathrm{rank}_y(u) \le m, &
+A_y &:= \{z \neq y : \mathrm{rank}_y(z) \le d_y + m - 1\}, \\
+\varepsilon_y &:= |A_y \cap I|, &
+\beta_y &:= \min_{w \in I} \mathrm{rank}_y(w).
+\end{align*}
 Since $d_y + m - 1 \le 2m - 1 < N$, we have $|A_y| = d_y + m - 1$.
 
 \section{Augmenting Constructions and Property $(\ast)$}

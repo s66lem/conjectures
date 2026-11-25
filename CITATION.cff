@@ -3,7 +3,9 @@ title: "Solved conjectures in combinatorics, graph theory, and number theory"
 message: "If you cite these proofs, counterexamples, or verifiers, please use this metadata."
 type: dataset
 authors:
-  - alias: s66lem
+  - family-names: Levinstein
+    given-names: Salem
+    alias: s66lem
 version: "0.1.0"
 doi: "10.5281/zenodo.24519466"
 repository-code: "https://github.com/s66lem/conjectures"

@@ -3,7 +3,7 @@
 Complete proposed unconditional proof of [Conjecture 5.6](https://arxiv.org/html/2610.09650) (`stack(T) = estim(T)` for every finite connected tree T) together with explicit counterexamples disproving both parts of the literal [Hypothesis 3.2 (Almost Stacked Hypothesis)](https://arxiv.org/html/2610.09650) of Csernák and Soukup (`arXiv:2610.09650`, October 2026). The tree proof avoids ASH entirely via a bottom-up greedy potential and fractional relaxation, yielding an explicit O(n²) stacking algorithm. Literal Hypothesis 3.2 fails on P₄ for stacking (least almost-stacked threshold 12 vs. `stack(P₄) = 15`, witness `(9,0,0,3)`) and on the triangle with a two-edge tail G₅ for clearing (least almost-stacked threshold 16 vs. `clear(G₅) = 22`, witness `(0,0,0,2,14)`).
 
 - [Complete proof and disproof](PROOF.md)
-- [LaTeX manuscript](paper.tex)
+- [Preprint PDF](paper.pdf) · [LaTeX source](paper.tex) · [Zenodo preprint (DOI: 10.5281/zenodo.24519570)](https://doi.org/10.5281/zenodo.24519570)
 - [Exact verifier](verify.py)
 - [Internal mathematical and source audit](AUDIT.md)
 
