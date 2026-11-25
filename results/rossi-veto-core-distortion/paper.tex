@@ -1,0 +1,160 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\SC}{\mathrm{SC}}
+\newcommand{\pos}{\mathrm{pos}}
+\newcommand{\unif}{\mathsf{unif}}
+
+\title{Exact Metric Distortion of the Rank Score Veto Core}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove the conjecture of M.~August Rossi (\emph{Regularizing the Veto Core}, arXiv:2610.26535) that the worst-case metric distortion of the rank score veto core $(\mathbf{p}^{\unif}, \mathbf{q}^{\mathbf{s}})$ is independent of the last-position score $s_m$. Specifically, for every non-increasing scoring vector $\mathbf{s} = (s_1, \dots, s_m) \in \mathbb{R}^m$ with $1 = s_1 \ge s_2 \ge \dots \ge s_m \ge 0$, every preference profile, every consistent pseudometric $d$, every candidate $a$ in the $(\mathbf{p}^{\unif}, \mathbf{q}^{\mathbf{s}})$-veto core, and every candidate $b$,
+\[
+\SC_d(a) \le \bigl(1 + 2(\|\mathbf{s}\|_1 - s_m)\bigr)\,\SC_d(b).
+\]
+Combined with Rossi's matching lower bound, the exact worst-case distortion is $1 + 2(s_1 + \dots + s_{m-1})$ (attained on a finite election for all rational scoring vectors, and exact as a supremum for real scoring vectors).
+\end{abstract}
+
+\section{Introduction}
+
+In the metric distortion framework~\cite{ABEPS2018}, $n \ge 1$ voters $\mathcal{V}$ and $m \ge 2$ candidates $\mathcal{C}$ occupy a shared pseudometric space $(\mathcal{V} \cup \mathcal{C}, d)$. Each voter $u \in \mathcal{V}$ submits a strict total order $\succ_u$ on $\mathcal{C}$ consistent with $d$: whenever $d(u, x) < d(u, y)$, we have $x \succ_u y$ (equivalently, $x \succcurlyeq_u y \implies d(u, x) \le d(u, y)$, with arbitrary tie-breaking at equal distances). Let $\pos_u(c) \in \{1, \dots, m\}$ denote the position of candidate $c$ on voter $u$'s ballot ($1$ is top-ranked and $m$ is bottom-ranked), and let $\SC_d(c) := \sum_{u \in \mathcal{V}} d(u, c)$ denote the utilitarian social cost of $c$.
+
+To analyze regularized veto cores, Rossi~\cite{Rossi2026} introduced the \emph{rank score veto core}. Given a non-increasing scoring vector $\mathbf{s} = (s_1, \dots, s_m)$ scaled so that $1 = s_1 \ge s_2 \ge \dots \ge s_m \ge 0$, write $S := \|\mathbf{s}\|_1 = \sum_{j=1}^m s_j$ and $T := S - s_m = \sum_{j=1}^{m-1} s_j$. Define uniform voter weights $\mathbf{p}^{\unif}(u) = 1/n$ and normalized rank-score candidate weights
+\[
+\mathbf{q}^{\mathbf{s}}(c) := \frac{1}{nS} \sum_{u \in \mathcal{V}} s_{\pos_u(c)}, \qquad c \in \mathcal{C}.
+\]
+A coalition $S' \subseteq \mathcal{V}$ \emph{blocks} candidate $a \in \mathcal{C}$ if there exists a proper subset $\mathcal{D} \subsetneq \mathcal{C}$ such that every voter in $S'$ prefers every candidate in $\mathcal{D}$ to $a$ and $|S'|/n > 1 - \mathbf{q}^{\mathbf{s}}(\mathcal{D})$. The \emph{$(\mathbf{p}^{\unif}, \mathbf{q}^{\mathbf{s}})$-veto core} consists of all unblocked candidates.
+
+Rossi~\cite[Theorem~3.1]{Rossi2026} proved that the worst-case distortion of the $(\mathbf{p}^{\unif}, \mathbf{q}^{\mathbf{s}})$-veto core lies in $[1 + 2(\|\mathbf{s}\|_1 - s_m),\, 1 + 2\|\mathbf{s}\|_1]$, deriving the upper bound from Berger et~al.~\cite{BFGT2024} and the lower bound via a one-dimensional construction (Lemma~5), and conjectured that the lower bound is always tight—equivalently, that the distortion does not depend on $s_m$. We confirm this conjecture in full generality.
+
+\begin{theorem}\label{thm:main}
+Let $m \ge 2$, $n \ge 1$, and let $\mathbf{s} = (s_1, \dots, s_m) \in \mathbb{R}^m$ satisfy $1 = s_1 \ge s_2 \ge \dots \ge s_m \ge 0$. Set $T := \|\mathbf{s}\|_1 - s_m = \sum_{j=1}^{m-1} s_j$. For every preference profile on $(\mathcal{V}, \mathcal{C})$, every consistent pseudometric $d$, every candidate $a$ in the $(\mathbf{p}^{\unif}, \mathbf{q}^{\mathbf{s}})$-veto core, and every candidate $b \in \mathcal{C}$,
+\[
+\SC_d(a) \le (1 + 2T)\,\SC_d(b).
+\]
+\end{theorem}
+
+\begin{corollary}
+For every rational scoring vector $\mathbf{s}$ as in~\cite[Definition~1]{Rossi2026}, the worst-case metric distortion of the $(\mathbf{p}^{\unif}, \mathbf{q}^{\mathbf{s}})$-veto core is attained on a finite election and equals $1 + 2(\|\mathbf{s}\|_1 - s_m)$. For any real non-increasing scoring vector with $s_1 = 1$ and $s_m \ge 0$, the supremum distortion over finite elections equals $1 + 2(\|\mathbf{s}\|_1 - s_m)$.
+\end{corollary}
+
+\begin{remark}
+Stating Theorem~\ref{thm:main} in multiplicative form avoids any $0/0$ convention when $\SC_d(b) = 0$: if an optimal candidate has zero social cost, every veto-core candidate also has zero social cost. For irrational $T$, Rossi's Lemma~5 construction with $n_2 = \lfloor n_1 T \rfloor$ yields distortion $1 + 2\lfloor n_1 T \rfloor / n_1 \to 1 + 2T$ as $n_1 \to \infty$.
+\end{remark}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+Write $\mathbf{q} := \mathbf{q}^{\mathbf{s}}$, $S := \|\mathbf{s}\|_1 \ge 1$, $T := S - s_m \ge 1$, and $\delta := d(a, b) \ge 0$.
+
+If $\delta = 0$ (which includes the case $a = b$), then $|d(u, a) - d(u, b)| \le d(a, b) = 0$ for every $u \in \mathcal{V}$, so $\SC_d(a) = \SC_d(b) \le (1 + 2T)\SC_d(b)$. Assume henceforth that $\delta > 0$, so $a \neq b$, and partition $\mathcal{V}$ into
+\[
+A := \{u \in \mathcal{V} : a \succ_u b\}, \qquad B := \{u \in \mathcal{V} : b \succ_u a\}.
+\]
+For each $c \in \mathcal{C}$ and $u \in \mathcal{V}$, set
+\begin{align*}
+N_a(u) &:= \{c \in \mathcal{C} : a \succcurlyeq_u c\}, &
+\rho_c &:= \min\bigl(d(b, c),\, \delta\bigr) \in [0, \delta], \\
+m_u &:= \min_{c \in N_a(u)} \rho_c, &
+M_u &:= \max_{e \succcurlyeq_u c} (\rho_e - \rho_c), &
+W_u &:= \sum_{c \in \mathcal{C}} s_{\pos_u(c)}\,\rho_c.
+\end{align*}
+Note that $\rho_a = \delta$, $\rho_b = 0$, $a \in N_a(u)$, and $M_u \ge 0$ (taking $e = c$).
+
+\paragraph{Step 1 (Upper bound on $\SC_d(a)$).}
+For $u \in A$, consistency gives $d(u, a) \le d(u, b)$. For $u \in B$ and any $c \in N_a(u)$, consistency and the triangle inequality give
+\[
+d(u, a) \le d(u, c) \le d(u, b) + d(b, c).
+\]
+Since $a \in N_a(u)$, we have $\min_{c \in N_a(u)} d(b, c) \le d(b, a) = \delta$, so capping at $\delta$ preserves the minimum: $\min_{c \in N_a(u)} d(b, c) = m_u$. Summing over $u \in A \cup B$ yields
+\begin{equation}\label{eq:step1}
+\SC_d(a) \le \SC_d(b) + \sum_{u \in B} m_u.
+\end{equation}
+
+\paragraph{Step 2 (Lower bound on $\SC_d(b)$).}
+Whenever $e \succcurlyeq_u c$, consistency gives $d(u, e) \le d(u, c)$, and two applications of the triangle inequality give
+\[
+d(b, e) \le d(b, u) + d(u, e) \le d(b, u) + d(u, c) \le 2d(u, b) + d(b, c).
+\]
+Since $x \mapsto \min(x, \delta)$ is non-decreasing and $1$-Lipschitz, $\rho_e - \rho_c \le \max(0, d(b, e) - d(b, c)) \le 2d(u, b)$. Maximizing over $e \succcurlyeq_u c$ and summing over $u \in \mathcal{V}$ gives
+\begin{equation}\label{eq:step2}
+\sum_{u \in \mathcal{V}} M_u \le 2\,\SC_d(b).
+\end{equation}
+
+\paragraph{Step 3 (Layer-cake core bound).}
+For each $t \in [0, \delta)$, set $U_t := \{c \in \mathcal{C} : \rho_c > t\}$, $\mathcal{D}_t := \mathcal{C} \setminus U_t$, and $S_t := \{u \in \mathcal{V} : m_u > t\}$. Then $b \in \mathcal{D}_t$ and $a \notin \mathcal{D}_t$, so $\mathcal{D}_t \subsetneq \mathcal{C}$ is a nonempty proper subset. Moreover, $u \in S_t \iff N_a(u) \subseteq U_t$, which implies $S_t \subseteq B$ (as $b \notin U_t$) and $c \succ_u a$ for all $u \in S_t$ and $c \in \mathcal{D}_t$. Since $a$ is unblocked in the $(\mathbf{p}^{\unif}, \mathbf{q})$-veto core,
+\[
+\frac{|S_t|}{n} \le 1 - \mathbf{q}(\mathcal{D}_t) = \mathbf{q}(U_t) \qquad \forall t \in [0, \delta).
+\]
+Integrating over $t \in [0, \delta)$ (equivalently, taking a finite telescoping sum over the sorted distinct values of $\rho_c$) yields
+\[
+\frac{1}{n}\sum_{u \in B} m_u = \int_0^\delta \frac{|S_t|}{n}\,dt \le \int_0^\delta \mathbf{q}(U_t)\,dt = \sum_{c \in \mathcal{C}} \mathbf{q}(c)\,\rho_c = \frac{1}{nS}\sum_{u \in \mathcal{V}} W_u,
+\]
+and therefore
+\begin{equation}\label{eq:step3}
+S \sum_{u \in B} m_u \le \sum_{u \in \mathcal{V}} W_u.
+\end{equation}
+
+\paragraph{Step 4 (Per-voter inequalities).}
+By positive homogeneity in $\delta > 0$, rescale so that $\delta = 1$; then $\rho_c \in [0, 1]$, $\rho_a = 1$, and $\rho_b = 0$.
+
+\emph{Case (A): $u \in A$.} Since $\rho_b = 0$, $\rho_c \le 1$, and $s_{\pos_u(b)} \ge s_m$,
+\[
+W_u = \sum_{c \neq b} s_{\pos_u(c)} \rho_c \le S - s_{\pos_u(b)} \le S - s_m = T.
+\]
+Also $M_u \ge \rho_a - \rho_b = 1$, so $W_u \le T M_u$.
+
+\emph{Case (B): $u \in B$.} Let $p := \pos_u(b)$, $P := \sum_{j < p} s_j$, and $M := M_u \in [0, 1]$. Every candidate $c$ ranked above $b$ satisfies $\rho_c = \rho_c - \rho_b \le M$ and $\rho_c \le 1$, so $\rho_c \le \min(1, M)$. Since $\rho_b = 0$ and $\rho_c \le 1$ below $b$,
+\[
+W_u \le \min(1, M)\,P + (S - P - s_p).
+\]
+Every $c \in N_a(u)$ satisfies $1 - \rho_c = \rho_a - \rho_c \le M$, so $m_u \ge \max(0, 1 - M)$. Since $S - 1 = \sum_{j=2}^m s_j \ge 0$, we check $W_u - (S - 1)m_u \le TM$ in two subcases:
+\begin{itemize}
+\item If $M \ge 1$ (so $M = 1$), then $W_u - (S - 1)m_u \le W_u \le S - s_p \le T \le TM$.
+\item If $M < 1$, then $W_u - (S - 1)m_u \le MP + S - P - s_p - (S - 1)(1 - M)$, and using $T = S - s_m$ the difference is
+\[
+TM - \bigl[MP + S - P - s_p - (S - 1)(1 - M)\bigr] = M(1 - s_m - P) + P + s_p - 1.
+\]
+When $p = 1$, $P = 0$ and $s_p = s_1 = 1$, so this equals $M(1 - s_m) \ge 0$. When $p \ge 2$, $P \ge s_1 = 1$, and rewriting gives $(P - 1)(1 - M) + (s_p - Ms_m) \ge 0$ because $P - 1 \ge 0$, $1 - M > 0$, and $s_p \ge s_m \ge Ms_m \ge 0$.
+\end{itemize}
+Thus $W_u - (S - 1)m_u \le TM_u$ for every $u \in B$.
+
+\paragraph{Step 5 (Conclusion).}
+Subtracting $(S - 1)\sum_{u \in B} m_u$ from~\eqref{eq:step3} and applying Step~4 and~\eqref{eq:step2},
+\[
+\sum_{u \in B} m_u = S\sum_{u \in B} m_u - (S - 1)\sum_{u \in B} m_u
+\le \sum_{u \in A} W_u + \sum_{u \in B}\bigl(W_u - (S - 1)m_u\bigr)
+\le T \sum_{u \in \mathcal{V}} M_u
+\le 2T\,\SC_d(b).
+\]
+Combining with~\eqref{eq:step1} yields $\SC_d(a) \le (1 + 2T)\,\SC_d(b)$. \hfill$\square$
+
+\begin{thebibliography}{9}
+\bibitem{ABEPS2018}
+E.~Anshelevich, O.~Bhardwaj, E.~Elkind, J.~Postl, and P.~Skowron,
+\emph{Approximating optimal social choice under metric preferences},
+Artificial Intelligence \textbf{264} (2018), 27--51.
+
+\bibitem{BFGT2024}
+B.~Berger, M.~Feldman, V.~Gkatzelis, and X.~Tan,
+\emph{Learning-augmented metric distortion via $(p,q)$-veto core},
+Proceedings of the 25th ACM Conference on Economics and Computation (EC '24), 2024, p.~984.
+
+\bibitem{Rossi2026}
+M.~A.~Rossi,
+\emph{Regularizing the Veto Core},
+arXiv:2610.26535 (2026).
+\end{thebibliography}
+
+\end{document}
