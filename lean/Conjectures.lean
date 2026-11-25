@@ -2,3 +2,4 @@ import Conjectures.FiroozbakhtA108569
 import Conjectures.RossiVetoCore
 import Conjectures.FanelliMoscardelli
 import Conjectures.TogniRadio
+import Conjectures.CsernakSoukupTreeStacking
