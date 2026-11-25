@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Algebraic Counterexamples to Firoozbakht's OEIS A086766 Conjecture}
+\author{Salem Levinstein}
+\date{November 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a positive integer $n$ with $d$ decimal digits, let $f_n(r)$ denote the integer formed by concatenating $n$ with itself $r$ times in base $10$, multiplying by $10$, and adding $1$, and let $a(n)$ be the least $r \ge 1$ for which $f_n(r)$ is prime (or $0$ if none exists), recorded as OEIS~A086766. In 2015, Farideh Firoozbakht proved that $a(10^m) = 0$ for many $m \ge 2$ and conjectured that $a(n) \ne 0$ for every $n > 0$ not of the form $10^m$ (formalized as \texttt{OeisA86766.conjecture2} in \texttt{google-deepmind/formal-conjectures}). We disprove this conjecture with an explicit infinite family $n_k = 10(10^{2k} - 1)/99$ ($k \ge 2$, starting at $n = 1010$) and a general difference-of-squares construction producing primitive (non-periodic) counterexamples of arbitrarily large digit length, including $n = 104040$ ($6$ digits) and a $78$-digit primitive witness. All results are formally verified in Lean~4 without additional axioms.
+\end{abstract}
+
+\section{Introduction}
+
+For $n \ge 1$ with decimal digit length $d = \lfloor \log_{10} n \rfloor + 1$, define
+\[
+  f_n(r) := 10 n \sum_{i=0}^{r-1} 10^{di} + 1 = 10 n \cdot \frac{10^{dr} - 1}{10^d - 1} + 1 \qquad (r \ge 1).
+\]
+OEIS sequence A086766~\cite{OEIS-A086766} defines $a(n)$ as the least $r \ge 1$ such that $f_n(r)$ is prime, or $0$ if $f_n(r)$ is composite for all $r \ge 1$. On January~7, 2015, Farideh Firoozbakht showed that $a(10^m) = 0$ for $2 \le m \le 275$ (refuting an earlier conjecture that no term is zero) and conjectured that if $n > 0$ is not of the form $10^m$, then $a(n) \ne 0$. This statement is recorded as an open problem in~\cite{OEIS-A086766} and in~\cite{FC}. We construct explicit algebraic factorizations showing that $a(n) = 0$ occurs for infinitely many non-powers of $10$, including primitive (non-periodic) integers of arbitrary even digit length.
+
+\section{Infinite Family and Primitive Difference-of-Squares Construction}
+
+\begin{theorem}\label{thm:rep10}
+For every integer $k \ge 2$, let $n_k := 10(10^{2k} - 1)/99$. Then $n_k$ has $2k$ decimal digits, $n_k$ is not a power of $10$, and $f_{n_k}(r)$ is composite for every $r \ge 1$. Consequently $a(n_k) = 0$; in particular, $a(1010) = 0$.
+\end{theorem}
+
+\begin{proof}
+Since $100 \equiv 1 \pmod{99}$, $n_k$ is an integer satisfying $10^{2k-1} < n_k < 10^{2k}$, so $n_k$ has $2k$ decimal digits and $n_k \ne 10^m$ for all $m \ge 0$. For any $r \ge 1$,
+\[
+  f_{n_k}(r) = 10 n_k \cdot \frac{10^{2kr} - 1}{10^{2k} - 1} + 1 = \frac{10^{2(kr+1)} - 1}{99} = \frac{(10^{kr+1} - 1)(10^{kr+1} + 1)}{99}.
+\]
+Because $k \ge 2$ and $r \ge 1$, we have $kr + 1 \ge 3$ and $10^{kr+1} \ge 1000$. If $kr$ is even, then $kr + 1$ is odd, so $9 \mid (10^{kr+1} - 1)$ and $11 \mid (10^{kr+1} + 1)$, giving two integer factors $\ge 111$ and $\ge 91$. If $kr$ is odd, then $kr + 1$ is even, so $99 \mid (10^{kr+1} - 1)$, giving the two integer factors $(10^{kr+1} - 1)/99 \ge 101$ and $10^{kr+1} + 1 \ge 10001$. In every case $f_{n_k}(r)$ is composite.
+\end{proof}
+
+\begin{theorem}\label{thm:diffsq}
+Let $k \ge 1$ and $M := 10^{2k} - 1$. Suppose integers $n, c, e, g_{1,\mathrm{o}}, g_{2,\mathrm{o}}, g_{1,\mathrm{e}}, g_{2,\mathrm{e}}$ satisfy $10^{2k-1} < n < 10^{2k}$, $10n = c^2$, $c^2 - e^2 = M$ with $0 \le e < c$, $g_{1,\mathrm{o}} g_{2,\mathrm{o}} = g_{1,\mathrm{e}} g_{2,\mathrm{e}} = M$,
+\[
+  g_{1,\mathrm{o}} \mid (c \cdot 10^k - e),\quad g_{2,\mathrm{o}} \mid (c \cdot 10^k + e),\quad g_{1,\mathrm{e}} \mid (c - e),\quad g_{2,\mathrm{e}} \mid (c + e),
+\]
+with $g_{1,\mathrm{o}} < c \cdot 10^k - e$, $g_{2,\mathrm{o}} < c \cdot 10^k + e$, $g_{1,\mathrm{e}} < c \cdot 10^{2k} - e$, and $g_{2,\mathrm{e}} < c \cdot 10^{2k} + e$. Then $n \ne 10^m$ for all $m$, and $a(n) = 0$.
+\end{theorem}
+
+\begin{proof}
+Since $10^{2k-1} < n < 10^{2k}$, $n$ has $2k$ digits and is not a power of $10$. For any $r \ge 1$,
+\[
+  M \cdot f_n(r) = 10n(10^{2kr} - 1) + M = c^2 \cdot 10^{2kr} - e^2 = (c \cdot 10^{kr} - e)(c \cdot 10^{kr} + e).
+\]
+Because $10^{2k} \equiv 1 \pmod M$, we have $10^{2kj} \equiv 1 \pmod d$ for every $d \mid M$ and $j \ge 0$. For even $r = 2j$ ($j \ge 1$), $10^{kr} \equiv 1 \pmod{g_{1,\mathrm{e}}, g_{2,\mathrm{e}}}$ gives $g_{1,\mathrm{e}} \mid (c \cdot 10^{kr} - e)$ and $g_{2,\mathrm{e}} \mid (c \cdot 10^{kr} + e)$ with both quotients $> 1$. For odd $r = 2j + 1$, $10^{kr} \equiv 10^k \pmod{g_{1,\mathrm{o}}, g_{2,\mathrm{o}}}$ gives $g_{1,\mathrm{o}} \mid (c \cdot 10^{kr} - e)$ and $g_{2,\mathrm{o}} \mid (c \cdot 10^{kr} + e)$ with both quotients $> 1$. Hence $f_n(r)$ is composite for all $r \ge 1$.
+\end{proof}
+
+\begin{corollary}
+Both the $6$-digit primitive (non-periodic) integer $n = 104040$ ($k = 3, c = 1020, e = 201$, $(g_{1,\mathrm{o}}, g_{2,\mathrm{o}}) = (99, 10101)$, $(g_{1,\mathrm{e}}, g_{2,\mathrm{e}}) = (819, 1221)$) and the $78$-digit primitive integer ($k = 39$)
+\begin{align*}
+  n &= 100558839880907801793259217884670002826017800775406752876641328923179557019040, \\
+  c &= 1002790306499358826910734486514389551480, \\
+  e &= 74755593831351630382001287234042424799
+\end{align*}
+satisfy $a(n) = 0$ and refute Firoozbakht's conjecture.
+\end{corollary}
+
+\begin{remark}[Formal Verification]
+Theorems~\ref{thm:rep10} and~\ref{thm:diffsq} and the explicit instances $n = 1010$, $n = 104040$, and the $78$-digit witness are formally verified in Lean~4 (\texttt{FiroozbakhtA086766.lean}, zero \texttt{sorry}, standard axioms only).
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{OEIS-A086766}
+OEIS Foundation Inc., \emph{Entry A086766 in The On-Line Encyclopedia of Integer Sequences}, \url{https://oeis.org/A086766}.
+\bibitem{FC}
+Google DeepMind, \emph{Formal Conjectures}, \texttt{FormalConjectures/OEIS/86766.lean}, \url{https://github.com/google-deepmind/formal-conjectures}.
+\end{thebibliography}
+
+\end{document}
