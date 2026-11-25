@@ -1,0 +1,8 @@
+# Internal publication audit (2026-11-24)
+
+**Disposition:** pass for the explicit odd counterexample and infinite family refuting Firoozbakht’s parity conjecture on OEIS A108569; publication as an unrefereed, non-Lean-verified result is appropriate. No claim of external acceptance or exclusive priority.
+
+- Source: read directly from [OEIS A108569](https://oeis.org/A108569) (comment by Farideh Firoozbakht, Jul 5, 2005), cross-checked against [OEIS A346277](https://oeis.org/A346277) and `google-deepmind/formal-conjectures` (`FormalConjectures/OEIS/108569.lean`). The statement is that every n > 1 solving `φ(n) = φ(n + φ(n))` is even.
+- Arithmetic check: `n = 5,095,354,107 = 3 · 1033 · 1644193` is odd and > 1, with `φ(n) = 2 · 1032 · 1644192 = 3,393,612,288`. Then `n + φ(n) = 8,488,966,395 = 3 · 5 · 7 · 13 · 19 · 327317`, whose totient is `2 · 4 · 6 · 12 · 18 · 327316 = 3,393,612,288 = φ(n)`. Since `3 | n` and `3 | φ(n)`, `φ(3^j n) = 3^j φ(n)` and `3^j n + φ(3^j n) = 3^j(n + φ(n))`, while `3 | (n + φ(n))` gives `φ(3^j(n + φ(n))) = 3^j φ(n + φ(n)) = φ(3^j n)` for all `j ≥ 0`.
+- Computational verification: replayed `verify.py` (Python 3 standard library). Every listed prime factor (`3, 5, 7, 13, 19, 1033, 327317, 1644193`) passes deterministic trial division up to its square root, both products match exactly, and the identity holds for `j = 0..5`.
+- Priority: checked OEIS A108569, OEIS A346277, `google-deepmind/formal-conjectures` (`main` and open PRs), and web searches for `5095354107` as of 2026-11-24; no prior odd counterexample > 1 was found. This is a bounded search, not exhaustive archive coverage.

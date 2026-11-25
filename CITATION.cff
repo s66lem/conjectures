@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+title: "Solved conjectures in combinatorics, graph theory, and number theory"
+message: "If you cite these proofs, counterexamples, or verifiers, please use this metadata."
+type: dataset
+authors:
+  - alias: s66lem
+repository-code: "https://github.com/s66lem/conjectures"
+date-released: "2026-11-24"
+keywords:
+  - combinatorics
+  - graph theory
+  - number theory
+  - stable roommates
+  - graph pebbling
+  - tree remoteness
