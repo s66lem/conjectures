@@ -1,0 +1,127 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newcommand{\Ldim}{\operatorname{Ldim}}
+\newcommand{\RL}{\operatorname{RL}}
+\newcommand{\Int}{\operatorname{Int}}
+
+\title{Resolution of Two Conjectures on Exact Littlestone Dimensions of Intervals}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve both open conjectures posed by Daga and Ramu (\emph{How many mistakes does it take to learn an interval? Exact Littlestone dimensions of intervals and their unions}, arXiv:2611.28727). First, for every odd switch budget $k \ge 1$ and domain size $n \ge 1$, a signed cyclic rotation $(f_1, \dots, f_n) \mapsto (f_2, \dots, f_n, 1 - f_1)$ preserves the free-path class $C_{n,k}$ and identifies every first-query slice with the fixed-endpoint gap family $G_k(n)$, yielding $\Ldim(C_{n,k}) = 1 + \Ldim(G_k(n)) = 1 + v_k(n)$. Second, we prove Conjecture~31: decomposing greedy rewards across dyadic scales $h = 2^j$ and applying a $1/2$-Lipschitz packing inequality shows that the greedy value $G(S)$ is a Bellman supersolution of Equation~(2) at every finite multiset position $S$ and every legal cut, proving $V(S) = G(S)$ and hence $\RL(\Int_m) = R(m + 1)$ for all $m \ge 0$.
+\end{abstract}
+
+\section{Odd Switch Budgets on a Free Path}
+
+Following Daga and Ramu~\cite{DR2026}, for $n, k \ge 1$ let $C_{n,k} \subseteq \{0, 1\}^n$ be the concept class of binary words $f = (f_1, \dots, f_n)$ with at most $k$ switches $t(f) := |\{1 \le i \le n - 1 : f_i \neq f_{i+1}\}| \le k$, and let $G_k(n)$ be the gap family of words $(0, g_2, \dots, g_n, 1)$ with fixed endpoints $0, 1$, $n - 1$ free coordinates, and $n$ edges having at most $k$ switches, viewed as a class on the $n - 1$ free points. Theorem~4 of~\cite{DR2026} establishes $\Ldim(G_k(n)) = v_k(n) := \max\{d \ge 0 : Q_k(d) \le n\}$.
+
+\begin{theorem}\label{thm:odd}
+For every odd integer $k \ge 1$ and every $n \ge 1$,
+\[
+\Ldim(C_{n,k}) = 1 + \Ldim(G_k(n)) = 1 + v_k(n).
+\]
+\end{theorem}
+
+\begin{proof}
+For $f = (f_1, \dots, f_n) \in \{0, 1\}^n$, append the bit $f_{n+1} := 1 - f_1$. The resulting $n$ consecutive pairs $(f_1, f_2), \dots, (f_{n-1}, f_n), (f_n, 1 - f_1)$ have switch count
+\[
+a(f) := t(f) + \mathbf{1}_{f_n = f_1} = t(f) + \mathbf{1}_{t(f)\text{ even}},
+\]
+the least odd integer at least $t(f)$. Since $k$ is odd, $a(f) \le k \iff t(f) \le k$.
+
+Define the signed rotation $T : \{0, 1\}^n \to \{0, 1\}^n$ by $T(f_1, \dots, f_n) := (f_2, \dots, f_n, 1 - f_1)$. Its appended sequence is $(f_2, \dots, f_n, 1 - f_1, 1 - f_2)$. For $n \ge 2$, the final pair $(1 - f_1, 1 - f_2)$ switches if and only if $(f_1, f_2)$ switches, so $T$ cyclically shifts the $n$ edge-switch indicators; for $n = 1$, $a(f) = 1 = a(T(f))$. Thus $T$ is a bijection preserving $a$, hence $T(C_{n,k}) = C_{n,k}$.
+
+A coordinate permutation together with fixed coordinatewise bit flips preserves shattered binary tree depth (relabel queries by the permutation and swap the two subtrees at flipped coordinates). For any first query $p \in \{1, \dots, n\}$, $T^{p-1}$ identifies the slice $\{f \in C_{n,k} : f_p = 0\}$ with $\{f \in C_{n,k} : f_1 = 0\}$, and global complementation $f \mapsto \mathbf{1} - f$ identifies $\{f \in C_{n,k} : f_p = 1\}$ with $\{f \in C_{n,k} : f_p = 0\}$. Both slices are nonempty (the constant words belong to $C_{n,k}$).
+
+In $\{f \in C_{n,k} : f_1 = 0\}$, appending the fixed bit $1 - f_1 = 1$ yields precisely the words $(0, f_2, \dots, f_n, 1)$ with at most $k$ switches; deleting the constant coordinate $f_1 = 0$ preserves shattered-tree depth and identifies this slice with $G_k(n)$. By the first-query recursion $\Ldim(\mathcal{H}) = \max_{x} (1 + \min(\Ldim(\mathcal{H}_x^0), \Ldim(\mathcal{H}_x^1)))$ over all splitting queries $x$, we obtain $\Ldim(C_{n,k}) = 1 + \Ldim(G_k(n)) = 1 + v_k(n)$.
+\end{proof}
+
+\section{Conjecture 31: Greedy Optimality in the Discounted Cutting Game}
+
+For an integer $z \ge 1$ with $t = \lfloor \log_2 z \rfloor$, write $L(z) := \widetilde{\lambda}(z) = t + (z/2^t - 1)$. A position is a finite multiset $S$ of positive integer piece measures (unit pieces are inert). A legal cut splits a piece $p \in S$ ($p \ge 2$) into $u, v \in \mathbb{Z}_{\ge 1}$ with $u + v = p$, leaving $S' = (S \setminus \{p\}) \cup \{u, v\}$ and earning undiscounted reward $r(p; u, v) := 1 + \frac{1}{2}(L(u) + L(v))$. The Bellman equation~\cite[Equation~(2)]{DR2026} is
+\begin{equation}\label{eq:bellman}
+V(S) = \max\left(0,\; \max_{\substack{p \in S,\; p = u + v \\ u, v \ge 1}} \frac{r(p; u, v) + V(S')}{2}\right),
+\end{equation}
+with $V(S) = 0$ when all pieces have measure~$1$. Let $G(S) \ge 0$ be the value of the greedy schedule, which repeatedly cuts the largest piece $p \ge 2$ via $u = \max(2^{t-1}, p - 2^t)$, $v = p - u$, earning step reward $L(p)$~\cite[Theorem~30, Step~1]{DR2026}.
+
+\begin{theorem}[Conjecture~31]\label{thm:conj31}
+For every finite multiset $S$ of positive integers and every legal cut $p = u + v$ ($u, v \ge 1$) producing $S'$,
+\[
+2 G(S) - G(S') \ge 1 + \frac{L(u) + L(v)}{2}.
+\]
+Consequently $V(S) = G(S)$ for every $S$, and $\RL(\Int_m) = R(m + 1)$ for every $m \ge 0$.
+\end{theorem}
+
+Throughout, sums over $h$ range over dyadic powers $h \in \{1, 2, 4, \dots\}$ (finitely supported). Set $X_h(z) := \max(0, z/h - 1)$ and $b_h(z) := \min(1, X_h(z))$.
+
+\begin{lemma}\label{lem:identities}
+For every integer $z \ge 1$, $\sum_h b_h(z) = L(z)$ and $\sum_h X_h(z) = 2z - 2 - L(z)$.
+\end{lemma}
+
+\begin{proof}
+With $t = \lfloor \log_2 z \rfloor$, $b_{2^j}(z) = 1$ for $0 \le j < t$, $b_{2^t}(z) = z/2^t - 1$, and $b_{2^j}(z) = 0$ for $j > t$, giving $\sum_h b_h(z) = L(z)$. Likewise $\sum_h X_h(z) = \sum_{j=0}^t (z/2^j - 1) = z(2 - 2^{-t}) - (t + 1) = 2z - 2 - L(z)$.
+\end{proof}
+
+For $x \ge 0$, let $P(x)$ denote the multiset of $\lfloor x \rfloor$ ones together with $x - \lfloor x \rfloor$ (if positive). For a finite multiset $D$ of nonnegative reals, write $D_1^\downarrow \ge D_2^\downarrow \ge \dots$ in non-increasing order (padded with zeros), $F(D) := \sum_{i \ge 1} 2^{-i} D_i^\downarrow$, and $D + E$ for multiset union.
+
+\begin{lemma}\label{lem:scale}
+At each dyadic scale $h$, the nonzero values $b_h(z)$ across all cuts in the greedy tree of a rod $p \ge 1$ form the multiset $P(X_h(p))$. Consequently,
+\[
+G(S) = \sum_h G_h(S), \qquad G_h(S) := F\!\left(\sum_{p \in S} P(X_h(p))\right).
+\]
+\end{lemma}
+
+\begin{proof}
+Induct on $p$. For $p = 1$, no cuts occur and $X_h(1) = 0$. For $p \ge 2$ with greedy children $a, b$ ($t = \lfloor \log_2 p \rfloor$): if $p \le h$ then $X_h(p) = X_h(a) = X_h(b) = 0$; if $h < p < 2h$ then $2^t = h$, giving $a = \max(h/2, p - h) < h$ and $b \le h$, so only the root contributes $b_h(p) = X_h(p) \in (0, 1)$, matching $P(X_h(p))$. If $p \ge 2h$, then $a, b \ge h$ and at least one of $a, b$ is a dyadic power divisible by $h$, so $X_h(a) + X_h(b) = X_h(p) - 1$ with at most one fractional part; adding the root unit $b_h(p) = 1$ yields $P(X_h(p))$.
+
+Since greedy play cuts in descending measure order and each $b_h$ is non-decreasing, the greedy order sorts $b_h$ descending at every scale simultaneously. Summing $L(z) = \sum_h b_h(z)$ over all cuts gives $G(S) = \sum_h G_h(S)$.
+\end{proof}
+
+\begin{lemma}\label{lem:lists}
+For finite multisets $A, D, E$ of nonnegative reals:
+\begin{enumerate}
+\item $F(D)$ maximizes $\sum_{i \ge 1} 2^{-i} D_{\pi(i)}$ over all orderings $\pi$ of $D$ (allowing zero padding).
+\item If every entry of $E$ lies in $[0, 1]$ and $\sum_{e \in E} e = x$, then $F(A + E) \le F(A + P(x))$.
+\item For $0 \le y \le z$, $F(A + P(z)) - F(A + P(y)) \le (z - y)/2$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Swapping any inversion increases the weighted sum. (2) With $s_j(D) := \sum_{i=1}^j D_i^\downarrow$, summation by parts gives $F(D) = \sum_{j \ge 1} 2^{-(j+1)} s_j(D)$. Since $s_j(E) \le \min(j, x) = s_j(P(x))$ for every $j$ and $s_j(A + D) = \max_{a+b=j}(s_a(A) + s_b(D))$, we have $s_j(A + E) \le s_j(A + P(x))$ for all $j$, yielding $F(A + E) \le F(A + P(x))$. (3) In an optimal ordering of $A + P(z)$, replace each ranked entry of $P(z)$ in place by the corresponding entry of $P(y)$ (zero-padded). Each entry decreases nonnegatively with total decrease $z - y$, and every slot weight is at most $1/2$, so the value drops by at most $(z - y)/2$; re-sorting only increases the value by~(1).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:conj31}]
+Fix $S$ and a legal cut $p = u + v$ ($p \in S$, $u, v \ge 1$) yielding $S'$. At a fixed scale $h$, write $X = X_h(p)$, $b = b_h(p) = \min(1, X)$, and $\delta_h = X - X_h(u) - X_h(v)$. If $p \le h$, then $X = \delta_h = b = 0$; if $p > h$, then $\delta_h = \min(u/h, 1) + \min(v/h, 1) - 1 \in [0, 1]$ and $\delta_h \le X$ since $X_h(u), X_h(v) \ge 0$. Hence $0 \le \delta_h \le b$ in all cases.
+
+Let $A := \sum_{q \in S \setminus \{p\}} P(X_h(q))$. Since $P(X_h(u)) + P(X_h(v))$ has entries in $[0, 1]$ summing to $X - \delta_h$ and $0 \le X - b \le X - \delta_h$, Lemma~\ref{lem:lists}(2)–(3) give
+\[
+G_h(S') \le F\bigl(A + P(X - \delta_h)\bigr) \le F\bigl(A + P(X - b)\bigr) + \frac{b - \delta_h}{2}.
+\]
+Because $P(X) = \{b\} + P(X - b)$ (up to zero padding when $X = 0$), placing $b$ first and sorting $A + P(X - b)$ afterward gives $2G_h(S) \ge b + F(A + P(X - b))$ by Lemma~\ref{lem:lists}(1). Combining the two displays yields $2G_h(S) - G_h(S') \ge (b + \delta_h)/2$.
+
+Summing over all dyadic $h$ and applying Lemma~\ref{lem:identities} with $p = u + v$ gives $\sum_h \delta_h = 2 + L(u) + L(v) - L(p)$ and $\sum_h b_h(p) = L(p)$, whence
+\[
+2G(S) - G(S') \ge \sum_h \frac{b_h(p) + \delta_h}{2} = 1 + \frac{L(u) + L(v)}{2} = r(p; u, v).
+\]
+Since $G(S) \ge 0$ everywhere and $G(S) = 0$ at terminal states, induction on $\sum_{p \in S}(p - 1)$ proves $V(S) \le G(S)$ in~\eqref{eq:bellman}. Greedy play is admissible and attains $G(S)$, so $V(S) = G(S)$ for all $S$, and~\cite[Theorem~30]{DR2026} yields $\RL(\Int_m) = R(m + 1)$.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{DR2026}
+M.~Daga and S.~P.~Ramu,
+\emph{How many mistakes does it take to learn an interval? Exact Littlestone dimensions of intervals and their unions},
+arXiv:2611.28727 (2026).
+\end{thebibliography}
+
+\end{document}
