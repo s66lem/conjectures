@@ -1,0 +1,143 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\fd}{fd}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\lk}{lk}
+
+\title{Flag $1$-Layered Families of $2$-Sets Have at Most $m - 1$ Layers}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Benedetti and Menara (\texttt{arXiv:2611.08071}, Conjecture~7.1) conjectured that every flag $1$-layered family of $r$-subsets of an $m$-element set has at most $m - r + 1$ layers, noting that the conjecture was open already at $r = 2$ (triangle-free graphs), where the Larman--Barnette bound yields only $2m - 3$ layers. We prove the sharp bound $m - 1$ for $r = 2$. The proof adapts the monotone-path counting method of Asratian and Kamalian to non-proper interval edge labelings and closes the global induction via downward reachability from the top layer. As immediate consequences, every flag $1$-layered family of $r$-sets ($r \ge 2$) has at most $2^{r-2}(m - r) + 1$ layers (halving the Larman--Barnette bound), and Lemma~7.2 and Main Theorem~E(a) of Benedetti--Menara hold unconditionally at parameter $p = r - 2$ and $p = d - 2$, respectively. The $r = 2$ theorem is formally verified in Lean~4 without additional axioms.
+\end{abstract}
+
+\section{Introduction}
+
+Following Sections~2 and~7 of Benedetti and Menara~\cite{BM2026}, a \emph{$1$-layered family of $r$-sets} on an $m$-element ground set $X$ is a family $\mathcal{F}$ of $r$-subsets of $X$, partitioned into nonempty disjoint layers $L_0, L_1, \dots, L_N$, such that for every nonempty $S \subseteq X$ the index set $\{t \in \{0, \dots, N\} : \exists F \in L_t,\; S \subseteq F\}$ is a (possibly empty) interval of consecutive integers. The family $\mathcal{F}$ is \emph{flag} if its $1$-skeleton contains no $(r + 1)$-clique of co-occurring pairs. Conjecture~7.1 of~\cite{BM2026} asserts that every flag $1$-layered family of $r$-sets on $m$ vertices has at most $m - r + 1$ layers, and remarks that this was open already for $r = 2$.
+
+At $r = 2$, a flag $1$-layered family is a simple triangle-free graph $G = (V, E)$ on the set $V \subseteq X$ of used vertices ($|V| \le m$) equipped with a surjective edge labeling $\lambda : E \to \{0, \dots, N\}$ (setting $L_t = \lambda^{-1}(t)$) such that for every $v \in V$, the incident label set $I_v := \{\lambda(e) : v \in e\}$ is an interval of consecutive integers. Neither connectivity nor properness is assumed: multiple edges at a vertex may carry the same label. (Without flagness, $K_4$ admits $4 > 4 - 1$ layers via $L_0 = \{12\}$, $L_1 = \{13, 24\}$, $L_2 = \{14, 23\}$, $L_3 = \{34\}$.)
+
+\begin{theorem}\label{thm:main}
+Every flag $1$-layered family of $2$-subsets of an $m$-element set ($m \ge 2$) has at most $m - 1$ layers. Equality is attained by a path on $m$ vertices with one edge per layer.
+\end{theorem}
+
+\section{Monotone Path Counting Lemma}
+
+The lemma below extends Theorem~1 of Asratian and Kamalian~\cite{AK1987} from proper interval edge colorings to arbitrary (possibly non-proper) interval edge labelings.
+
+\begin{lemma}\label{lem:ak}
+Let $G = (V, E)$ be a finite simple triangle-free graph with an interval edge labeling $\lambda : E \to \mathbb{Z}$. If $G$ contains a simple path $x_0 x_1 \dots x_k$ ($k \ge 1$) whose edge labels $\lambda_i := \lambda(x_{i-1} x_i)$ satisfy $\lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_k$, then $|V| \ge \lambda_1 - \lambda_k + 2$.
+\end{lemma}
+
+\begin{proof}
+Set $p = \lambda_1$ and $q = \lambda_k$. Among all simple paths in $G$ with non-increasing edge labels, first label $p$, and last label $q$, choose a path $P = x_0 x_1 \dots x_k$ of minimum length $k$, and among those of length $k$, choose one whose label sequence $(\lambda_1, \dots, \lambda_k)$ is lexicographically maximal.
+
+For each $i \in \{1, \dots, k - 1\}$, put
+\[
+A(i) := \{y \in N_G(x_i) : \lambda_{i+1} < \lambda(x_i y) < \lambda_i\}.
+\]
+Since $I_{x_i}$ is an interval containing $\lambda_i$ and $\lambda_{i+1}$, every integer strictly between $\lambda_{i+1}$ and $\lambda_i$ occurs on some edge incident to $x_i$; distinct labels force distinct edges and hence distinct neighbors because $G$ is simple. Therefore $|A(i)| \ge \lambda_i - \lambda_{i+1} - 1$ (including when $\lambda_i = \lambda_{i+1}$, since $0 \ge -1$).
+
+\smallskip\noindent\emph{Claim 1: $A(i) \cap V(P) = \emptyset$.}
+Clearly $x_i, x_{i-1}, x_{i+1} \notin A(i)$. Suppose $x_j \in A(i)$ for some other $j$, and put $g = \lambda(x_i x_j)$, so $\lambda_{i+1} < g < \lambda_i$.
+\begin{itemize}
+\item If $i + 2 \le j \le k - 1$, then $x_0 \dots x_i x_j \dots x_k$ is a shorter non-increasing simple path ($\lambda_i > g > \lambda_{i+1} \ge \lambda_{j+1}$) with end labels $p, q$.
+\item If $j = k$, triangle-freeness rules out $i = k - 2$, so $i \le k - 3$. Then $x_0 \dots x_i x_k x_{k-1}$ has length $i + 2 < k$, non-increasing labels $\lambda_1, \dots, \lambda_i, g, \lambda_k$, and end labels $p, q$.
+\item If $1 \le j \le i - 2$, then $x_0 \dots x_j x_i \dots x_k$ is a shorter non-increasing simple path ($\lambda_j \ge \lambda_i > g > \lambda_{i+1}$) with end labels $p, q$.
+\item If $j = 0$, triangle-freeness rules out $i = 2$, so $i \ge 3$. Then $x_1 x_0 x_i \dots x_k$ has length $k - i + 2 < k$, non-increasing labels $\lambda_1, g, \lambda_{i+1}, \dots, \lambda_k$, and end labels $p, q$.
+\end{itemize}
+Each case contradicts the minimality of $k$.
+
+\smallskip\noindent\emph{Claim 2: $A(i) \cap A(j) = \emptyset$ for $1 \le i < j \le k - 1$.}
+Suppose $v \in A(i) \cap A(j)$. By Claim~1, $v \notin V(P)$; by triangle-freeness, $j \ge i + 2$. The simple path $P' = x_0 \dots x_i v x_j \dots x_k$ has labels satisfying
+\[
+\lambda_i > \lambda(x_i v) > \lambda_{i+1} \ge \lambda_j > \lambda(v x_j) > \lambda_{j+1},
+\]
+so $P'$ is non-increasing with end labels $p, q$ and length $k - (j - i - 2)$. If $j - i \ge 3$, this contradicts minimality of $k$; if $j - i = 2$, $P'$ has length $k$, matches $P$ on its first $i$ labels, and has $(i + 1)$-st label $\lambda(x_i v) > \lambda_{i+1}$, contradicting lexicographic maximality.
+
+By Claims~1 and~2, $V(P), A(1), \dots, A(k - 1)$ are pairwise disjoint subsets of $V$, whence
+\[
+|V| \ge (k + 1) + \sum_{i=1}^{k-1} (\lambda_i - \lambda_{i+1} - 1) = \lambda_1 - \lambda_k + 2. \qedhere
+\]
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+Unlike proper connected interval edge colorings, a non-proper triangle-free $1$-layered family need not admit a monotone path from layer $N$ to layer $0$ (for example, $L_0 = \{23\}$, $L_1 = \{02, 15\}$, $L_2 = \{12, 56\}$, $L_3 = \{45\}$ on $7$ vertices). We therefore isolate the downward-reachable component from layer $N$ and induct on $N$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+We prove $|V| \ge N + 2$ by strong induction on $N \ge 0$, where $V \subseteq X$ is the set of used vertices. For $N = 0$, $L_0$ contains an edge, so $|V| \ge 2 = N + 2$.
+
+Assume $N \ge 1$. On the time-expanded node set $\{(v, t) : v \in V,\; t \in I_v\}$, let $D$ be the smallest subset containing every $(v, N)$ ($N \in I_v$) that is closed under horizontal moves ($(u, t) \in D$ and $\lambda(uv) = t \implies (v, t) \in D$) and downward moves ($(v, t) \in D$ and $t - 1 \in I_v \implies (v, t - 1) \in D$). Let $c := \min\{t : \exists v,\, (v, t) \in D\}$ and $W := \{w \in V : \exists t,\, (w, t) \in D\}$. By downward closure, $D$ meets each column $w \in W$ in $[\min I_w, h_w]$ for some $h_w$, so $\min I_w \ge c$ for every $w \in W$.
+
+Let $F_D := \{e = uv \in E : (u, \lambda(e)) \in D\}$. By horizontal closure in both directions, $(u, \lambda(e)) \in D \iff (v, \lambda(e)) \in D$. For each $w \in W$ and $t \in [\min I_w, h_w] \subseteq I_w$, any incident edge of label $t$ belongs to $F_D$; hence the $F_D$-labels at $w$ form the interval $[\min I_w, h_w]$, and $F_D$ is a triangle-free interval-labeled graph on vertex set $W$.
+
+Pick $(z, c) \in D$ and a sequence of horizontal and downward moves from some $(v_0, N) \in D$ to $(z, c)$. Prepending an $F_D$-edge of label $N$ at $v_0$, taking the horizontal edges of the sequence, and appending an $F_D$-edge of label $c$ at $z$ gives a non-increasing walk in $F_D$ from first label $N$ to last label $c$. Let $w_0 w_1 \dots w_s$ ($s \ge 1$) be a shortest such walk. It must be a simple path: if $w_a = w_b$ with $0 \le a < b \le s$, then
+\begin{itemize}
+\item if $a \ge 1$ and $b \le s - 1$, $w_0 \dots w_a w_{b+1} \dots w_s$ is shorter;
+\item if $a = 0$ and $b \le s - 1$, then $b \ge 2$ and $w_1 w_0 w_{b+1} \dots w_s$ has length $s - b + 1 < s$;
+\item if $a \ge 1$ and $b = s$, then $a \le s - 2$ and $w_0 \dots w_a w_{s-1}$ has length $a + 1 < s$;
+\item if $a = 0, b = s$, and $s = 2$, then $N = c$ and $w_0 w_1$ has length $1 < 2$;
+\item if $a = 0, b = s$, and $s \ge 3$, then $w_1 w_0 w_{s-1}$ has length $2 < s$ and edge labels $N, c$.
+\end{itemize}
+Applying Lemma~\ref{lem:ak} to $F_D$ gives $|W| \ge N - c + 2$.
+
+If $c = 0$, then $|V| \ge |W| \ge N + 2$. If $c \ge 1$, the prefix $F_{\mathrm{low}} := \{e \in E : \lambda(e) < c\}$ is a flag $1$-layered family with $c \le N$ nonempty layers on its used vertex set $V_{\mathrm{low}}$. By the induction hypothesis, $|V_{\mathrm{low}}| \ge c + 1$. Since $\min I_w \ge c$ for every $w \in W$, we have $W \cap V_{\mathrm{low}} = \emptyset$, and hence
+\[
+|V| \ge |V_{\mathrm{low}}| + |W| \ge (c + 1) + (N - c + 2) = N + 3 > N + 2.
+\]
+Thus $N + 1 \le |V| - 1 \le m - 1$. The path $0 - 1 - \dots - (m - 1)$ with $\lambda(i, i + 1) = i$ attains $m - 1$ layers.
+\end{proof}
+
+\section{Consequences for Higher Rank}
+
+Links of flag $1$-layered families and contiguous layer ranges remain flag $1$-layered~\cite[Section~7]{BM2026}. Substituting Theorem~\ref{thm:main} as the $r = 2$ base case in the recursions of~\cite{BM2026} yields two unconditional consequences.
+
+\begin{corollary}\label{cor:lb}
+For all $m \ge r \ge 2$, every flag $1$-layered family of $r$-subsets of an $m$-set has at most $2^{r-2}(m - r) + 1$ layers.
+\end{corollary}
+
+\begin{proof}
+The base case $r = 2$ is Theorem~\ref{thm:main}. For $r \ge 3$, set $A = 2^{r-3}$ and decompose the layers into $k \ge 1$ blocks as in the first proof of~\cite[Theorem~2.1]{BM2026}, so each block $i$ has a common vertex whose link is a flag $1$-layered family of $(r - 1)$-sets on at most $n_i - 1$ vertices, with $\sum_{i=1}^k n_i \le 2m - r$. By induction,
+\[
+N + 1 \le \sum_{i=1}^k \bigl(A(n_i - r) + 1\bigr) \le A(2m - r - kr) + k = 2A(m - r) + 1 - (k - 1)(Ar - 1) \le 2^{r-2}(m - r) + 1. \qedhere
+\]
+\end{proof}
+
+\begin{corollary}\label{cor:mainE}
+Every $1$-layered family $\mathcal{F}$ of $r$-subsets of an $m$-set ($m \ge r \ge 2$) with flag deficiency $\fd(\mathcal{F}) \le r - 2$ has at most $(m - r + 1)\binom{\lfloor \log_2(m - r + 1) \rfloor + r - 2}{r - 2}$ layers. Consequently, Main Theorem~E(a) of~\cite{BM2026} holds unconditionally at $p = d - 2$: every pure normal $(d - 1)$-complex $\Delta$ ($d \ge 2$) on $n$ vertices with $\fd(\Delta) \le d - 2$ satisfies
+\[
+\diam(\Delta) < (n - d + 1)\binom{\lfloor \log_2(n - d + 1) \rfloor + d - 2}{d - 2}.
+\]
+\end{corollary}
+
+\begin{proof}
+Carry the upper bound $p = r - 2$ as the induction parameter in~\cite[Lemma~7.2]{BM2026}. Outer ranges keep $(r, p)$ with reduced vertex budget, while a middle vertex link reduces $(r, p)$ to $(r - 1, p - 1)$ (as $\lk_{\lk_{\mathcal{F}}(v)}(T) = \lk_{\mathcal{F}}(T \cup \{v\})$), preserving $p = r - 2$. Hence the sole flag base case ($p = 0$) occurs at $r = 2$, which is Theorem~\ref{thm:main}; $m = r$ is trivial. Taking the distance layering of a pure normal complex from a diameter endpoint gives the diameter bound.
+\end{proof}
+
+\begin{remark}[Formal and computational verification]
+Theorem~\ref{thm:main} (both in graph form and in the verbatim \texttt{Finset (Finset V)} formulation of~\cite{BM2026}, together with tightness) is formally verified in Lean~4 (\texttt{FlagLayeredR2.lean}, standard axioms \texttt{[propext, Classical.choice, Quot.sound]} only, zero \texttt{sorry}). An independent Python~3 verifier exhaustively checks all $13{,}017$ nonempty triangle-free $1$-layered families on $5$ vertices, tight paths up to $m = 20$, the $K_4$ non-flag control, the explicit $c \ge 1$ examples, and $10{,}000$ randomly grown families.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{AK1987}
+A.~S.~Asratian and R.~R.~Kamalian, \emph{Interval colorings of edges of a multigraph}, Appl.\ Math.\ \textbf{5} (1987), 25--34 (in Russian); see also arXiv:1401.8079 [math.CO].
+
+\bibitem{BM2026}
+B.~Benedetti and G.~Menara, \emph{Diameter bounds for complexes that are close to flag or close to normal}, arXiv:2611.08071 [math.CO], 2026.
+\end{thebibliography}
+
+\end{document}

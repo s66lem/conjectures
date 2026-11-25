@@ -9,3 +9,4 @@ import Conjectures.LittlestoneIntervals
 import Conjectures.KalmanovichNivaschAllEven
 import Conjectures.SingerGolombChamber
 import Conjectures.SpiderRotatability
+import Conjectures.FlagLayeredR2
