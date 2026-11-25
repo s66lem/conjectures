@@ -20,7 +20,7 @@ $$n + \varphi(n) = 5{,}095{,}354{,}107 + 3{,}393{,}612{,}288 = 8{,}488{,}966{,}3
 All six factors ($3, 5, 7, 13, 19, 327{,}317$) are prime and distinct, hence:
 $$\varphi(n + \varphi(n)) = 2 \times 4 \times 6 \times 12 \times 18 \times 327{,}316 = 3{,}393{,}612{,}288 = \varphi(n).$$
 
-Since $1 \in A$, $n \in A$, $1 < n$, and $A$ is infinite (containing $2^m$ for all $m \ge 2$), $n = a_k$ for $k = |\{x \in A : x < n\}| \ge 1$, directly refuting $\forall k > 0,\ \operatorname{Even}(a_k)$.
+Since $1 \in A$, $n \in A$, $1 < n$, and $A$ is infinite (containing $2^m$ for all $m \ge 2$), $n = a_k$ for $k = |\{x \in A : x < n\}| \ge 1$, directly refuting $\forall k > 0,\ \mathrm{Even}(a_k)$.
 
 ### Infinite Family of Odd Solutions
 Since $3 \mid n$ and $3 \mid (n + \varphi(n))$, multiplying by $3^j$ ($j \ge 0$) scales both sides by $3^j$:
