@@ -8,3 +8,4 @@ import Conjectures.AllieRemoteness
 import Conjectures.LittlestoneIntervals
 import Conjectures.KalmanovichNivaschAllEven
 import Conjectures.SingerGolombChamber
+import Conjectures.SpiderRotatability

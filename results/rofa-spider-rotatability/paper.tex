@@ -1,0 +1,149 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Every Regular Spider Tree Is $0$-Rotatable}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A tree $T$ with $q$ edges is $0$-rotatable if for every vertex $v \in V(T)$ there exists a graceful labeling $f : V(T) \to \{0, 1, \dots, q\}$ with $f(v) = 0$. Let $T(k, \ell)$ denote the regular (symmetric) spider tree consisting of $k \ge 1$ paths of uniform length $\ell \ge 1$ sharing a single root vertex. Rofa (2023) proved that $T(k, \ell)$ is $0$-rotatable for $\ell \le 3$ and conjectured that all symmetric spiders are $0$-rotatable; the case $\ell = 4$ was settled recently (\texttt{arXiv:2611.29448}). We prove that $T(k, \ell)$ is $0$-rotatable for every $k \ge 1$ and every $\ell \ge 1$. The proof combines a general $\alpha$-labeled leg-attachment lemma with self-contained constructive proofs of Rosa's path $\alpha$-labeling theorem and the arbitrary-start graceful path theorem via odd-sum permutations and the Walecki map. The entire argument, including both path theorems, is formally verified in Lean~4 without additional axioms.
+\end{abstract}
+
+\section{Introduction}
+
+Let $G = (V, E)$ be a finite simple graph with $|E| = q$ edges and $|V| = q + 1$ vertices. A \emph{graceful labeling} of $G$ is a bijection $f : V \to \{0, 1, \dots, q\}$ whose induced edge weights $w_f(uv) = |f(u) - f(v)|$ form a bijection onto $\{1, 2, \dots, q\}$. An \emph{$\alpha$-labeling} is a graceful labeling together with an integer threshold $a \in \{0, \dots, q - 1\}$ such that every edge $uv \in E$ has one endpoint labeled at most $a$ and the other strictly greater than $a$. The complementary labeling $\bar{f}(v) = q - f(v)$ preserves gracefulness and transforms an $\alpha$-labeling with threshold $a$ into an $\alpha$-labeling with threshold $q - 1 - a$.
+
+Chung and Hwang~\cite{ChungHwang1981} introduced \emph{$0$-rotatability}: a tree $T$ is $0$-rotatable if for every vertex $v \in V(T)$ there exists a graceful labeling $f$ of $T$ with $f(v) = 0$. For $k, \ell \ge 1$, the \emph{regular} (or \emph{symmetric}) \emph{spider tree} $T(k, \ell)$ consists of a root $v_0$ and $k$ pairwise internally disjoint paths (legs) $L_1, \dots, L_k$ of uniform length $\ell$, so $|E(T(k, \ell))| = k\ell$. Rofa~\cite{Rofa2023} established that $T(k, \ell)$ is $0$-rotatable for all $k \ge 1$ when $\ell \le 3$, and conjectured (\cite{Rofa2023}, Section~1 item~2 and Summary) that all symmetric spider trees are $0$-rotatable (while also posing the broader question for irregular spiders in the abstract). The case $\ell = 4$ was resolved in~\cite{SpiderL4}. Our main result settles all regular spiders at once.
+
+\begin{theorem}\label{thm:main}
+For every $k \ge 1$ and $\ell \ge 1$, the regular spider tree $T(k, \ell)$ is $0$-rotatable.
+\end{theorem}
+
+Section~\ref{sec:paths} gives unified, self-contained constructive proofs of the two path theorems needed. Section~\ref{sec:attach} proves a general leg-attachment lemma for arbitrary $\alpha$-labeled finite graphs. Section~\ref{sec:main} completes the proof of Theorem~\ref{thm:main}.
+
+\section{Odd-Sum Permutations and Two Path Theorems}\label{sec:paths}
+
+A permutation $\pi = (\pi_0, \dots, \pi_{n-1})$ of $\{0, \dots, n - 1\}$ is an \emph{odd-sum path} of length $n \ge 1$ if the adjacent sums $\{\pi_i + \pi_{i+1} : 0 \le i \le n - 2\}$ equal $\{1, 3, \dots, 2n - 3\}$. Define the \emph{Walecki bijection} $W_n : \{0, \dots, n - 1\} \to \{0, \dots, n - 1\}$ by $W_n(2u) = u$ and $W_n(2u + 1) = n - 1 - u$. If $x + y = 2r + 1$ with $x, y < n$, then $x$ and $y$ have opposite parity, $|W_n(x) - W_n(y)| = n - 1 - r$, and one of $W_n(x), W_n(y)$ is at most $\lfloor (n - 1)/2 \rfloor$ while the other is strictly larger. Hence $W_n \circ \pi$ is an $\alpha$-labeling of the path $P_n$ ($n - 1$ edges) with threshold $\lfloor (n - 1)/2 \rfloor$, mapping $0 \mapsto 0$ and $1 \mapsto n - 1$.
+
+Odd-sum paths are closed under:
+\begin{enumerate}
+\item \emph{Identity:} $(0, 1, \dots, n - 1)$.
+\item \emph{Reversal:} $(\pi_{n-1}, \dots, \pi_0)$.
+\item \emph{Mirror:} $(n - 1 - \pi_0, \dots, n - 1 - \pi_{n-1})$.
+\item \emph{Pair-flip (for even $n$):} replacing each $x$ by $\phi(x) = 2\lfloor x/2 \rfloor + (1 - x \bmod 2)$ preserves every odd sum $x + y$.
+\item \emph{Block splice:} if $\pi$ (length $p \ge 1$) and $\sigma$ (length $s \ge 1$) are odd-sum paths with $\pi_{p-1} + \sigma_0 = p - 1$, then concatenating $\pi$ with $p + \sigma$ yields an odd-sum path of length $p + s$, since the bridge sum is $2p - 1$.
+\end{enumerate}
+
+Call $(n, i)$ \emph{admissible} if $0 \le i < n$ and either $n$ is even, or $i$ is even with $n \ne 2i + 1$ or $n = 1$.
+
+\begin{lemma}\label{lem:block-start}
+For every admissible pair $(n, i)$, there exists an odd-sum path of length $n$ with $\pi_0 = i$.
+\end{lemma}
+
+\begin{proof}
+We proceed by induction on $(n, i)$ lexicographically. For $n = 1$, take $(0)$. If $2i \ge n$, apply mirror to $(n, n - 1 - i)$. If $i$ is odd (forcing $n$ even), apply pair-flip to $(n, i - 1)$. Otherwise $i$ is even and $2i < n$.
+If $n$ is even and $2i + 2 < n$, put $p = i + 2$ and splice the pair-flipped reversed identity of length $p$ (which starts at $\phi(i + 1) = i$ and ends at $\phi(0) = 1$) with an odd-sum path of length $n - p$ starting at $i$; the bridge sum is $1 + i = p - 1$, and $(n - p, i)$ is admissible.
+Otherwise put $p = i + 1$ and splice the reversed identity of length $p$ (starting at $i$ and ending at $0$) with an odd-sum path of length $n - p$ starting at $i$; the bridge sum is $i = p - 1$, and $(n - p, i)$ is again admissible.
+\end{proof}
+
+\begin{theorem}[Rosa~\cite{Rosa1977}]\label{thm:rosa}
+For every $\ell \ge 1$ and $0 \le d \le \ell$ with $(\ell, d) \ne (4, 2)$, the path $P_{\ell+1}$ ($\ell$ edges) admits an $\alpha$-labeling $f$ with $f(d) = 0$.
+\end{theorem}
+
+\begin{proof}
+Set $n = \ell + 1 \ge 2$. It suffices to construct an odd-sum path $\pi$ of length $n$ with $\pi_d \in \{0, 1\}$, since $W_n \circ \pi$ (or its complement when $\pi_d = 1$) gives an $\alpha$-labeling with $0$ at $d$. By reversal, assume $2d < n$. If $d \le 1$, take the identity path. If $n = 9$ and $d \in \{3, 4\}$, take the explicit odd-sum path $(2, 5, 4, 1, 0, 3, 8, 7, 6)$, which has $\pi_3 = 1$ and $\pi_4 = 0$.
+
+If $n = 2d + 1$ and $d$ is even, then $d = 4$ is covered by the $n = 9$ seed above, and $d = 6$ is covered by $(2, 5, 8, 7, 4, 1, 0, 3, 6, 11, 12, 9, 10)$ ($\pi_6 = 0$). For even $d \ge 8$, set $p = d + 2$, splice the odd-sum path $(3, 0, 1, 4, 5, 2)$ with a length-$(p - 6)$ odd-sum path starting at $3$ (admissible since $p - 6 = d - 4$ is even; bridge sum $2 + 3 = 5$), reverse the resulting length-$p$ path (placing $0$ at index $p - 2 = d$ and $3$ at index $p - 1$), and splice with a length-$(n - p)$ odd-sum path starting at $p - 4 = d - 2$ (admissible since $p - 4$ is even and $n - p = d - 1 < 2(d - 2) + 1$; bridge sum $3 + (p - 4) = p - 1$).
+
+In all remaining cases with $2d < n$, $d \ge 2$, and $(n, d) \ne (5, 2)$, at least one $p \in \{d + 1, d + 2\}$ satisfies either that $(n - p, p - 1)$ is admissible (splice the reversed identity of length $p$ with a length-$(n - p)$ path starting at $p - 1$) or that $p$ is even and $(n - p, p - 2)$ is admissible (splice the pair-flipped reversed identity of length $p$ with a length-$(n - p)$ path starting at $p - 2$). In every case $\pi_d \in \{0, 1\}$.
+\end{proof}
+
+\begin{theorem}[Flandrin--Fournier--Germa~\cite{FFG1983}; Cattell~\cite{Cattell2007}]\label{thm:start}
+For every $\ell \ge 1$ and $1 \le b \le \ell$, there exists a permutation $(b_1, \dots, b_\ell)$ of $\{1, \dots, \ell\}$ with $b_1 = b$ whose successive absolute differences $\{|b_{j+1} - b_j| : 1 \le j \le \ell - 1\}$ equal $\{1, \dots, \ell - 1\}$.
+\end{theorem}
+
+\begin{proof}
+Work with $0$-based labels $\{0, \dots, \ell - 1\}$ and target start $b_0 = b - 1$; by complementation $x \mapsto \ell - 1 - x$, assume $2b_0 < \ell$. If $(\ell, 2b_0)$ is admissible, Lemma~\ref{lem:block-start} yields an odd-sum path $\pi$ starting at $2b_0$, so $W_\ell \circ \pi$ is a graceful path starting at $W_\ell(2b_0) = b_0$.
+
+The sole non-admissible case with $2b_0 < \ell$ is $\ell = 4b_0 + 1$ with $b_0 \ge 1$. Put $p = 2b_0 + 1$ and $s = 2b_0$. Let the prefix be $(W_\ell(p - 1), W_\ell(p - 2), \dots, W_\ell(0))$, which starts at $W_\ell(2b_0) = b_0$, ends at $0$, covers $\{0, \dots, b_0\} \cup \{3b_0 + 1, \dots, 4b_0\}$, and realizes edge weights $\{2b_0 + 1, \dots, 4b_0\}$. Since $(2b_0, 2(b_0 - 1))$ is admissible, there is a graceful path $g$ of length $s$ starting at $b_0 - 1$. Appending $b_0 + 1 + g$ covers $\{b_0 + 1, \dots, 3b_0\}$ and edge weights $\{1, \dots, 2b_0 - 1\}$, while the bridge from $0$ to $b_0 + 1 + (b_0 - 1) = 2b_0$ supplies the remaining weight $2b_0$. Adding $1$ to all entries yields the required permutation of $\{1, \dots, \ell\}$.
+\end{proof}
+
+\section{General Leg-Attachment Lemma}\label{sec:attach}
+
+\begin{lemma}\label{lem:attach}
+Let $H$ be a finite graph with $s \ge 1$ edges and $s + 1$ vertices admitting an $\alpha$-labeling $f$ with threshold $a \in \{0, \dots, s - 1\}$. Let $v_0 \in V(H)$ satisfy $c := f(v_0) \le a$, and let $\ell \ge 1$ satisfy $0 \le a - c \le \ell - 1$. For any $m \ge 0$, let $H'$ be obtained by attaching $m$ pairwise internally disjoint paths of length $\ell$ at $v_0$. Then $H'$ admits a graceful labeling $g$ with $g(v) = f(v)$ for $f(v) \le a$ and $g(v) = f(v) + m\ell$ for $f(v) > a$. In particular, the vertex labeled $0$ keeps $0$, and the vertex labeled $s$ receives $s + m\ell$.
+\end{lemma}
+
+\begin{proof}
+Set $M = m\ell$; the case $m = 0$ is trivial, so assume $m \ge 1$. On $V(H)$, leave labels $\le a$ unchanged and increase labels $> a$ by $M$. Since every edge of $H$ crosses $a$, old edge weights become $\{M + 1, \dots, M + s\}$, leaving the vertex interval $\{a + 1, \dots, a + M\}$ unused.
+
+Because $0 \le a - c \le \ell - 1$, we have $1 \le \ell - a + c \le \ell$. By Theorem~\ref{thm:start}, choose a graceful permutation $(b_1, \dots, b_\ell)$ of $\{1, \dots, \ell\}$ with $b_1 = \ell - a + c$. Indexing the new legs by $i = 0, \dots, m - 1$ and depths by $j = 1, \dots, \ell$, set
+\[
+g(v_{i,j}) = a + b_j + \ell \cdot
+\begin{cases}
+m - 1 - i & \text{if } j \text{ is odd},\\
+i & \text{if } j \text{ is even}.
+\end{cases}
+\]
+For each fixed $j$, the multiplier runs through $\{0, \dots, m - 1\}$, and $b_j$ runs through $\{1, \dots, \ell\}$, so the new vertices bijectively fill $\{a + 1, \dots, a + M\}$.
+
+The $m$ root-incident new edges have weights
+\[
+g(v_{i,1}) - c = a + (\ell - a + c) + \ell(m - 1 - i) - c = (m - i)\ell,
+\]
+covering $\{\ell, 2\ell, \dots, m\ell\}$. For each consecutive depth pair $(j, j + 1)$ ($1 \le j \le \ell - 1$), let $\delta_j$ be the $b$-value at the odd depth minus the $b$-value at the even depth, so $r_j = |\delta_j| = |b_{j+1} - b_j|$ runs bijectively over $\{1, \dots, \ell - 1\}$. Across the $m$ legs, the corresponding edges realize
+\[
+|t\ell + \delta_j|, \qquad t \in S := \{m - 1, m - 3, \dots, 1 - m\}.
+\]
+Since $S = -S$, replacing $\delta_j$ by $r_j$ preserves this multiset. For $t \in S$ with $t \ge 0$, $t\ell + r_j$ covers $\{t\ell + 1, \dots, (t + 1)\ell - 1\}$ for all $t \in [0, m - 1]$ of the same parity as $m - 1$. For $t \in S$ with $t < 0$, setting $u = -t - 1$ gives $|t\ell + r_j| = u\ell + (\ell - r_j)$, covering $\{u\ell + 1, \dots, (u + 1)\ell - 1\}$ for all $u \in [0, m - 1]$ of the opposite parity. Thus the internal edges cover every non-multiple of $\ell$ in $[1, M]$ bijectively (both sets are empty when $\ell = 1$). Finally, $0 \le a$ stays $0$ and $s > a$ becomes $s + M$.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}\label{sec:main}
+
+By leg symmetry, let $v$ lie at depth $d \in \{0, \dots, \ell\}$ on leg $L_1$ (with $d = 0$ being the root $v_0$).
+
+\medskip\noindent\textbf{Case 1: $(\ell, d) \ne (4, 2)$.}
+Let $H$ be the single leg $L_1$ including $v_0$ ($s = \ell$ edges). By Theorem~\ref{thm:rosa}, $H$ admits an $\alpha$-labeling $f$ with threshold $a$ such that $f(v) = 0$. If $f(v_0) > a$, complement $f$ to $\ell - f$ (and $a$ to $\ell - 1 - a$), so that $f(v_0) \le a$ and $f(v) \in \{0, \ell\}$. Since $H$ is connected and bipartite and every edge crosses $a$, the low class $\{u : f(u) \le a\}$ consists exactly of the even-depth vertices $\{0, 2, \dots, 2\lfloor \ell/2 \rfloor\}$, which has size $\lfloor \ell/2 \rfloor + 1$. Since the low labels are $\{0, \dots, a\}$, we have $a = \lfloor \ell/2 \rfloor$, hence $c := f(v_0)$ satisfies $0 \le a - c \le \lfloor \ell/2 \rfloor \le \ell - 1$. Applying Lemma~\ref{lem:attach} with $m = k - 1$ produces a graceful labeling $g$ of $T(k, \ell)$ with $g(v) \in \{0, k\ell\}$. If $g(v) = k\ell$, complementing $g$ to $k\ell - g$ puts $0$ at $v$.
+
+\medskip\noindent\textbf{Case 2: $(\ell, d) = (4, 2)$.}
+For $k = 1$, the path labeling $(1, 4, 0, 2, 3)$ from $v_0$ is graceful (edge weights $3, 4, 2, 1$) with $0$ at depth $2$. For $k \ge 2$, let $H = T(2, 4)$ ($s = 8$ edges) be labeled along its two legs from the common root $v_0$ by
+\[
+(2, 6, 0, 8, 1), \qquad (2, 7, 4, 5, 3).
+\]
+This uses labels $\{0, \dots, 8\}$ once each, induces edge weights $\{4, 6, 8, 7\} \cup \{5, 3, 1, 2\} = \{1, \dots, 8\}$, and has every edge crossing $a = 4$, with root label $c = 2$ ($a - c = 2 \le 3$) and $0$ at depth $2$ on leg $1$. Applying Lemma~\ref{lem:attach} with $m = k - 2$ gives a graceful labeling of $T(k, 4)$ with $0$ at $v$. \qed
+
+\begin{remark}[Formal and computational verification]
+The complete proof of Theorem~\ref{thm:main}---including Lemma~\ref{lem:block-start}, Theorem~\ref{thm:rosa}, Theorem~\ref{thm:start}, and Lemma~\ref{lem:attach}---has been formally verified in Lean~4 (\texttt{SpiderRotatability.lean}, standard axioms \texttt{[propext, Classical.choice, Quot.sound]} only, zero \texttt{sorry}). An independent Python~3 verifier checks the explicit constructive algorithm across all $14{,}850$ triples with $1 \le k, \ell \le 30$ and $0 \le d \le \ell$, plus $333$ larger cases up to $k = 256$ and $\ell = 64$.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{Cattell2007}
+R.~Cattell, \emph{Graceful labellings of paths}, Discrete Math.\ \textbf{307} (2007), 3161--3176.
+
+\bibitem{ChungHwang1981}
+F.~R.~K.~Chung and F.~K.~Hwang, \emph{Rotatable graceful graphs}, Ars Combin.\ \textbf{11} (1981), 239--250.
+
+\bibitem{FFG1983}
+E.~Flandrin, I.~Fournier, and A.~Germa, \emph{Num\'erotations gracieuses des chemins}, Ars Combin.\ \textbf{16} (1983), 149--181.
+
+\bibitem{Rofa2023}
+R.~I.~Rofa, \emph{$0$-rotatability of classes of rooted symmetric trees. Are rooted symmetric trees $0$-rotatable?}, arXiv:2312.16235 [math.CO], 2023.
+
+\bibitem{Rosa1977}
+A.~Rosa, \emph{Labelling snakes}, Ars Combin.\ \textbf{3} (1977), 67--74.
+
+\bibitem{SpiderL4}
+\emph{On the $0$-rotatability of regular spider trees of leg length $4$}, arXiv:2611.29448 [math.CO], 2026.
+\end{thebibliography}
+
+\end{document}
