@@ -1,0 +1,86 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Planar All-Even Sets Without Monotonically Contagious Triangles}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We disprove Conjecture~9.1 of Kalmanovich and Nivasch (\emph{All-even sets in $\mathbb{R}^2$ and $\mathbb{R}^3$}, arXiv:2610.38864): there exists a $36$-point planar all-even set $S \subset \mathbb{R}^2$, lying on the vertices of a regular $210$-gon, that contains no monotonically contagious triangle. We show that $S$ is nevertheless height-rigid (rank~$33$) and satisfies non-monotone contagion (Property~$\mathcal{C}$), separating Property~$\mathcal{M}$ from Property~$\mathcal{C}$ among planar all-even sets. Extending the layered cyclotomic construction yields an infinite family of planar all-even sets requiring arbitrarily many initial seed vertices under monotone contagion.
+\end{abstract}
+
+\section{Introduction and Main Results}
+
+A finite nonempty set $S \subset \mathbb{R}^2$ is \emph{all-even}~\cite{KN2026} if for every nonzero direction vector $u \in \mathbb{R}^2$, the number of distinct values $m_S(u) := |\{\langle p, u \rangle : p \in S\}|$ is even. In their study of height-rigidity of planar all-even sets, Kalmanovich and Nivasch~\cite[\S5]{KN2026} define the \emph{monotone contagion} process starting from a non-collinear triangle $T \subset S$: iteratively add a point $y \in S \setminus U$ whenever there exist $x, p, q \in U$ with $p \neq q$ such that the secant $xy$ is parallel to $pq$. A triangle $T$ is \emph{monotonically contagious} if this process eventually reaches all of~$S$. They conjectured~\cite[Conjecture~9.1]{KN2026} that every planar all-even set admits a monotonically contagious triangle.
+
+\begin{theorem}\label{thm:36}
+Let $G := \mathbb{Z}/210\mathbb{Z}$ and identify $j \in G$ with $p_j := (\cos(2\pi j/210), \sin(2\pi j/210)) \in \mathbb{R}^2$. Define the $36$-point set $S := \{p_j : j \in A \cup B\}$, where
+\[
+A := 15 \cdot \{4, 5, 7, 8, 9, 10, 12, 13\}, \qquad
+B := \{1 + 6j : 0 \le j < 35,\; 5 \nmid j\}.
+\]
+Then:
+\begin{enumerate}
+\item $S$ is a planar all-even set (with $m_S(u) \in \{22, 26, 32, 34, 36\}$ for every $u \neq 0$);
+\item $S$ contains no monotonically contagious triangle (every triangle closes within at most $28$ points);
+\item $S$ is height-rigid ($\operatorname{rank}_{\mathbb{R}} R(S) = 33$).
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}\label{thm:family}
+For every integer $k \ge 2$, there exists a finite planar all-even set $S_k \subset \mathbb{R}^2$ (lying on the unit circle) such that under the one-vertex-at-a-time monotone contagion rule, every seed subset $T \subseteq S_k$ whose monotone closure equals $S_k$ has cardinality $|T| \ge k + 1$. In particular, for all $k \ge 3$, $S_k$ has no monotonically contagious triangle.
+\end{theorem}
+
+\section{Proof of Theorem~\ref{thm:36}}
+
+Because $A \equiv 0 \pmod 3$ and $B \equiv 1 \pmod 3$, we have $A \cap B = \emptyset$ and $|S| = 8 + 28 = 36$.
+
+\paragraph{All-evenness.}
+Writing $\zeta = e^{2\pi i / 210}$, the chord identity $\zeta^j - \zeta^i = 2i\sin(\pi(j-i)/210)e^{\pi i(i+j)/210}$ implies that two nondegenerate chords $p_i p_j$ and $p_k p_l$ are parallel if and only if $i + j \equiv k + l \pmod{210}$. Since a line meets the unit circle in at most two points, $m_S(u) = 36$ for directions not orthogonal to any chord of $S$, and $m_S(u) = 36 - c_s$ when $u$ is orthogonal to chords of sum $s \in G$, where $c_s$ counts unordered distinct pairs in $A \cup B$ summing to $s$. Decomposing $c_s = c_s^{AA} + c_s^{BB} + c_s^{AB}$:
+\begin{itemize}
+\item \emph{Within $A$:} scaling by $1/15$ in $\mathbb{Z}/14\mathbb{Z}$, the set $\{4,5,7,8,9,10,12,13\}$ has unordered pair counts
+\[(2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2)\]
+over residues $0,\dots,13$, all even.
+\item \emph{Within $B$:} removing the shift $1$ and factor $6$ leaves $(\mathbb{Z}/35\mathbb{Z}) \setminus K$, where $K = 5\mathbb{Z}/35\mathbb{Z}$ has order $7$. Each residue in $\mathbb{Z}/35\mathbb{Z}$ has $17$ distinct pairs; removing $K$ eliminates $3$ pairs for sums in $K$ (leaving $14$) and $7$ pairs for sums outside $K$ (leaving $10$), both even.
+\item \emph{Mixed pairs:} let $H = 30\mathbb{Z}/210\mathbb{Z}$. Then $B + H = B$, while $A$ meets exactly two $H$-cosets ($15\{4,8,10,12\}$ and $15\{5,7,9,13\}$) with $4$ points each. Hence $c_s^{AB} \in \{0, 4, 8\}$ is always even.
+\end{itemize}
+Thus $c_s$ is even for all $s \in G$, so $S$ is all-even.
+
+\paragraph{Obstruction to monotone contagion.}
+Since all points lie on a circle, no three are collinear, and every allowed monotone move adds $y = p + q - x \in G$ for $x, p, q \in U$ ($p \neq q$). Let $\lambda(z) := z \bmod 3 \in \{0, 1\}$. The three unordered pairs from $\{0, 1\}$ have distinct sums modulo $3$ ($0, 1, 2$), so $x + y = p + q$ forces $\{\lambda(x), \lambda(y)\} = \{\lambda(p), \lambda(q)\}$ as multisets.
+\begin{itemize}
+\item If a triangle $T$ lies wholly in $A$ (or $B$), every move stays in $A$ (or $B$), so its closure has size at most $28 < 36$.
+\item If $T$ meets both layers, let $u_1, u_2$ be the two seed points in the doubled layer, let $D := \langle u_1 - u_2 \rangle \le G$, and let $c_0, c_1 \in G$ represent the $D$-cosets of $T \cap A$ and $T \cap B$. Set $U^* := (A \cap (c_0 + D)) \cup (B \cap (c_1 + D)) \supseteq T$. For any $x, p, q \in U^*$ and $y = p + q - x \in S$, multiset preservation gives $c_{\lambda(p)} + c_{\lambda(q)} - c_{\lambda(x)} = c_{\lambda(y)}$, so $y \in c_{\lambda(y)} + D$ and $U^*$ is monotonically closed. If the doubled layer is $A$, then $D \subseteq 15G$, whereas $7, 13 \in B$ differ by $6 \notin 15G$, so $U^* \subsetneq S$. If the doubled layer is $B$, then $D \subseteq 6G$, whereas $60, 75 \in A$ differ by $15 \notin 6G$, so $U^* \subsetneq S$.
+\end{itemize}
+Hence no triangle in $S$ is monotonically contagious.
+
+\paragraph{Height-rigidity.}
+For each direction $s \in G$ with a reference chord $(k, l)$, every parallel chord $(i, j)$ gives a row $e(\mathbf{e}_j - \mathbf{e}_i) - d(\mathbf{e}_l - \mathbf{e}_k)$ over $\mathbb{Z}[\zeta]$ with $d = \zeta^j - \zeta^i$, $e = \zeta^l - \zeta^k$, which is a nonzero complex multiple of a real admissibility row since $d/e \in \mathbb{R}$. Because $211$ is prime and $2$ has exact order $210$ modulo $211$, the ring map $\mathbb{Z}[\zeta] \to \mathbb{F}_{211}$ ($\zeta \mapsto 2$) is well-defined; Gaussian elimination over $\mathbb{F}_{211}$ finds a nonzero $33 \times 33$ minor, proving $\operatorname{rank}_{\mathbb{R}} R(S) \ge 33 = 36 - 3$. Since affine functions contribute a $3$-dimensional kernel, $\operatorname{rank}_{\mathbb{R}} R(S) = 33$ and $S$ is height-rigid. \hfill$\square$
+
+\section{Proof of Theorem~\ref{thm:family}}
+
+For $k \ge 2$ and $0 \le i \le k$, let $H_i \subset \mathbb{R}/\mathbb{Z}$ be the subgroup of order $3 \cdot 5^i$. Put $M := 2^{k+2}$ and define the $k$ layers
+\[
+L_i := \frac{2^{i-1}}{M |H_k|} + (H_i \setminus H_{i-1}), \qquad 1 \le i \le k,
+\]
+embedded on the unit circle via $t \mapsto e^{2\pi i t}$. For each $i$, $h := |H_{i-1}| = 3 \cdot 5^{i-1} \equiv 3 \pmod 4$. Inside $H_i \setminus H_{i-1}$: sums in $H_{i-1}$ have $2h$ unordered distinct pairs (even), and sums in $H_i \setminus H_{i-1}$ have $(5h - 1)/2 - h = (3h - 1)/2$ unordered distinct pairs (even since $3h - 1 \equiv 0 \pmod 4$). For $i < j$, $H_i \subseteq H_{j-1}$ makes $L_j$ invariant under $H_i$, so each mixed sum has either $0$ or $|L_i| = 4h$ pairs. Hence $S_k := \bigcup_{i=1}^k L_i$ is all-even.
+
+Multiplying angles by $M|H_k|$ and reducing modulo $M$ assigns layer $L_i$ the binary tag $2^{i-1} \in \mathbb{Z}/M\mathbb{Z}$. All pairwise sums $2^{i-1} + 2^{j-1} \le 2^k < M$ are distinct by binary representation, so every move $x + y = p + q$ preserves the multiset of layer tags. Thus every layer must contain a seed point, and with at most one seed per layer no move can add a new point (matching the layer of $x$ forces $x \in \{p, q\}$, returning the other seed point). Therefore at least $k + 1$ seed points are required. \hfill$\square$
+
+\begin{thebibliography}{9}
+\bibitem{KN2026}
+D.~Kalmanovich and G.~Nivasch,
+\emph{All-even sets in $\mathbb{R}^2$ and $\mathbb{R}^3$},
+arXiv:2610.38864 (2026).
+\end{thebibliography}
+
+\end{document}
