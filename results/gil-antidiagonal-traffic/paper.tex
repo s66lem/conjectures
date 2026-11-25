@@ -1,0 +1,146 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Resolution of the Antidiagonal Traffic Anomaly Conjecture on Grids with an Obstruction}
+\author{Salem Levinstein}
+\date{November 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+In \cite{gil2026traffic}, Gil, Liang, Odetola, and Weiner studied lattice-path traffic on the $n \times n$ grid with a single obstruction $B$ on the antidiagonal $x+y=n$. They showed that the points of maximal traffic migrate away from $(1,1)$ and $(n-1,n-1)$ to boundary points for all $8 \le n \le 375$ and intermittently up to $n = 495$, and conjectured (Conjecture~7.4) that the anomaly disappears for all $n \ge 496$, equivalently $R_n(a) < 1$ for all $n \ge 496$ and $1 \le a < n/2$. We prove Conjecture~7.4 completely. Our argument avoids Stirling's approximation and $\pi$: for $n \ge 800$ we combine exact polynomial monotonicity of $(n+1)W(n)^2$ with an elementary exponential tail bound and a quadratic-exponential inequality to obtain $R_n(a)^2 < 0.996968 < 1$, while for $496 \le n \le 799$ we establish unimodality of $R_n(a)$ in $a$ and certify each peak via exact integer arithmetic. The entire proof and the sharpness witness $R_{495}(240) > 1$ are formally verified in Lean~4 using only the standard axioms.
+\end{abstract}
+
+\section{Introduction}
+Let $n \ge 2$ and consider monotone lattice paths from $(0,0)$ to $(n,n)$ avoiding a single obstruction $B = (a, n-a)$ on the antidiagonal $x+y=n$. In~\cite{gil2026traffic}, Gil, Liang, Odetola, and Weiner define for $1 \le a < n/2$:
+\[
+D(n) := \frac{1}{n}\binom{2n-2}{n-1}, \qquad G(n,a) := \frac{n-2a+1}{n-a}\binom{n}{a}\binom{n-2}{a-1},
+\]
+\[
+R_n(a) := \frac{G(n,a)}{D(n)}, \qquad \rho(n) := \max_{1 \le a < n/2} R_n(a).
+\]
+By Lemma~2.1, Theorem~5.1, Section~6, and Propositions~7.1--7.2 of~\cite{gil2026traffic}, for every $n \ge 9$ and every obstruction $B = (a, n-a)$ on the antidiagonal $x+y=n$, the maximum of the traffic function $f_B$ on $\mathrm{Grid}(n) \setminus \{(0,0),(n,n)\}$ is attained at $(1,1)$ and $(n-1,n-1)$ whenever $a \in \{0, n\}$ or $2a = n$, while for $1 \le a < n/2$ (and symmetrically $n/2 < a \le n-1$) one has $f_B(1,0) - f_B(1,1) = G(n,a) - D(n) = D(n)(R_n(a) - 1)$. Consequently, the antidiagonal anomaly disappears at size $n \ge 9$ if and only if $\rho(n) < 1$. The authors observed that $R_{495}(240) \approx 1.0000240709 > 1$ and posed Conjecture~7.4: $\rho(n) < 1$ for every $n \ge 496$.
+
+\begin{theorem}\label{thm:main}
+For every integer $n \ge 496$ and every integer $a$ with $1 \le a < n/2$, we have $R_n(a) < 1$, equivalently
+\[
+2(2n-1)\,a\,(n-2a+1)\binom{n}{a}^2 < n(n-1)\binom{2n}{n}.
+\]
+Hence $\rho(n) < 1$ for all $n \ge 496$, and for every obstruction $B$ on the antidiagonal $x+y=n$, the maximum of $f_B$ on $\mathrm{Grid}(n)\setminus\{(0,0),(n,n)\}$ is attained at $(1,1)$ and $(n-1,n-1)$. Moreover, $496$ is sharp since $R_{495}(240) > 1$.
+\end{theorem}
+
+\section{Analytic Bound for $n \ge 800$}
+Asymptotically $\rho(n) \to \sqrt{8/(\pi e)} \approx 0.96788 < 1$. To obtain a completely elementary and formalizable bound without Stirling's formula or $\pi$, set $m := \lfloor n/2 \rfloor$, $d := n - 2a \ge 1$, and $W(n) := \binom{n}{m}^2 / \binom{2n}{n}$.
+
+\begin{lemma}[Exact refactorization]\label{lem:ref}
+For all $n \ge 2$ and $1 \le a < n/2$,
+\[
+R_n(a) = \frac{2(2n-1)\,a\,(n-2a+1)}{n(n-1)}\frac{\binom{n}{a}^2}{\binom{2n}{n}} = \frac{2n-1}{n-1}\cdot \frac{(n-d)(d+1)}{n}\cdot W(n)\cdot \left(\frac{\binom{n}{a}}{\binom{n}{m}}\right)^2.
+\]
+\end{lemma}
+\begin{proof}
+This follows immediately from the binomial absorption identities $\binom{n-2}{a-1} = \frac{a(n-a)}{n(n-1)}\binom{n}{a}$ and $\binom{2n-2}{n-1} = \frac{n}{2(2n-1)}\binom{2n}{n}$, together with $2a = n - d$.
+\end{proof}
+
+\begin{lemma}[Central binomial ratio bound]\label{lem:W}
+For every integer $n \ge 200$,
+\[
+(n+1)\,W(n)^2 \le 201\,W(200)^2 < \frac{51}{40}.
+\]
+\end{lemma}
+\begin{proof}
+For $m \ge 1$, standard binomial recurrences give
+\[
+\frac{(2m+3)\,W(2m+2)^2}{(2m+1)\,W(2m)^2} = \frac{4(2m+3)(2m+1)^5}{(m+1)^2(4m+1)^2(4m+3)^2}.
+\]
+With $u = m - 1 \ge 0$, denominator minus numerator equals $32u^4 + 160u^3 + 281u^2 + 196u + 40 > 0$, so $(2m+1)W(2m)^2$ is strictly decreasing in $m \ge 1$. Similarly, for $m \ge 0$,
+\[
+\frac{(2m+2)\,W(2m+1)^2}{(2m+1)\,W(2m)^2} = \frac{(2m+1)^5}{2(m+1)^3(4m+1)^2},
+\]
+and $2(m+1)^3(4m+1)^2 - (2m+1)^5 = 32m^4 + 66m^3 + 46m^2 + 12m + 1 > 0$. Hence $(n+1)W(n)^2 \le 201\,W(200)^2$ for all $n \ge 200$. Exact integer arithmetic confirms $40 \cdot 201 \cdot \binom{200}{100}^4 < 51 \cdot \binom{400}{200}^2$, giving $201\,W(200)^2 < 51/40$.
+\end{proof}
+
+\begin{lemma}[Exponential tail bound]\label{lem:tail}
+For every real $x \ge 0$, $\frac{1-x}{1+x} \le e^{-2x}$. Consequently, for every $n \ge 2$ and $1 \le a \le m = \lfloor n/2 \rfloor$ with $d = n - 2a$,
+\[
+\left(\frac{\binom{n}{a}}{\binom{n}{m}}\right)^2 \le \exp\!\left(-\frac{d^2 - 1}{n + 1}\right).
+\]
+\end{lemma}
+\begin{proof}
+Let $g(x) = (1+x)e^{-2x} - (1-x)$. Then $g(0) = 0$ and $g'(x) = 1 - (1+2x)e^{-2x} \ge 0$ for all $x \ge 0$ since $1+2x \le e^{2x}$, proving $\frac{1-x}{1+x} \le e^{-2x}$. Write $k = m - a \ge 0$. If $n = 2m$ (so $d = 2k$), then
+\[
+\frac{\binom{2m}{m-k}}{\binom{2m}{m}} = \prod_{j=1}^k \frac{m-j+1}{m+j} = \prod_{j=1}^k \frac{1 - \frac{2j-1}{2m+1}}{1 + \frac{2j-1}{2m+1}} \le \exp\!\left(-\frac{2\sum_{j=1}^k(2j-1)}{2m+1}\right) = \exp\!\left(-\frac{2k^2}{n+1}\right),
+\]
+whose square is $\exp\!\left(-\frac{d^2}{n+1}\right) \le \exp\!\left(-\frac{d^2-1}{n+1}\right)$. If $n = 2m+1$ (so $d = 2k+1$), then
+\[
+\frac{\binom{2m+1}{m-k}}{\binom{2m+1}{m}} = \prod_{j=1}^k \frac{m-j+1}{m+j+1} = \prod_{j=1}^k \frac{1 - \frac{2j}{2m+2}}{1 + \frac{2j}{2m+2}} \le \exp\!\left(-\frac{2\sum_{j=1}^k 2j}{2m+2}\right) = \exp\!\left(-\frac{2k(k+1)}{n+1}\right),
+\]
+whose square is $\exp\!\left(-\frac{4k(k+1)}{n+1}\right) = \exp\!\left(-\frac{d^2-1}{n+1}\right)$.
+\end{proof}
+
+\begin{lemma}[Quadratic-exponential bound]\label{lem:quad}
+For every $t \in \mathbb{R}$ and every $\varepsilon > 0$,
+\[
+\bigl(t + \varepsilon(1 - t^2)\bigr)e^{-t^2} \le e^{-1/2}\left(\frac{1}{\sqrt{2}} + \frac{\varepsilon}{2} + 2\varepsilon^2\right).
+\]
+\end{lemma}
+\begin{proof}
+Set $c = \frac{1}{\sqrt{2}} + \frac{\varepsilon}{2} + 2\varepsilon^2 > 0$. Direct expansion yields
+\[
+2c^2 - 2c\varepsilon - 4\varepsilon^2 = 1 + \left(4\sqrt{2} - \frac{9}{2}\right)\varepsilon^2 + 8\varepsilon^4 > 1,
+\]
+since $(4\sqrt{2})^2 = 32 > 81/4 = (9/2)^2$. Completing the square gives
+\[
+4(c+\varepsilon)\!\left((c+\varepsilon)t^2 - t + \frac{c}{2} - \varepsilon\right) = \bigl(2(c+\varepsilon)t - 1\bigr)^2 + \bigl(2c^2 - 2c\varepsilon - 4\varepsilon^2 - 1\bigr) \ge 0,
+\]
+so $t + \varepsilon(1-t^2) \le c(t^2 + \frac{1}{2}) \le c\,e^{t^2 - 1/2}$. Multiplying by $e^{-t^2} > 0$ completes the proof.
+\end{proof}
+
+\begin{lemma}[All $n \ge 800$]\label{lem:ge800}
+For every $n \ge 800$ and $1 \le a < n/2$, we have $R_n(a) < 1$.
+\end{lemma}
+\begin{proof}
+Put $d = n - 2a \ge 1$, $\varepsilon = (n+1)^{-1/2}$, and $t = d\varepsilon$. Then
+\[
+\frac{(n-d)(d+1)}{n\sqrt{n+1}} < t + \varepsilon(1 - t^2),
+\]
+because the right-hand side minus the left-hand side equals $\bigl(\frac{d^2}{n+1} + d\bigr)/(n\sqrt{n+1}) > 0$. By Lemmas~\ref{lem:ref}--\ref{lem:quad},
+\[
+R_n(a) < \frac{2n-1}{n-1}\cdot \sqrt{\frac{51}{40}}\cdot e^{\varepsilon^2}\cdot e^{-1/2}\cdot \left(\frac{1}{\sqrt{2}} + \frac{\varepsilon}{2} + 2\varepsilon^2\right).
+\]
+For $n \ge 800$, we have $\frac{2n-1}{n-1} \le \frac{1599}{799}$, $\varepsilon^2 \le \frac{1}{801}$, $\varepsilon < \frac{1}{28}$ (since $28^2 = 784 < 801$), $e^{\varepsilon^2} \le e^{1/801} \le \frac{801}{800}$ (from $1 - \frac{1}{801} \le e^{-1/801}$), $e^{1/2} > \sum_{k=0}^5 \frac{(1/2)^k}{k!} = \frac{6331}{3840} > \frac{211}{128}$, and $\sqrt{2} > \frac{14142}{10000}$. Squaring the resulting rational upper bound gives
+\[
+R_n(a)^2 < \left(\frac{1599}{799}\right)^2 \cdot \frac{51}{40} \cdot \left(\frac{801}{800}\right)^2 \cdot \left(\frac{128}{211}\right)^2 \cdot \left(\frac{10000}{14142} + \frac{1}{56} + \frac{2}{801}\right)^2 < 0.996968 < 1. \qedhere
+\]
+\end{proof}
+
+\section{Unimodality and Finite Range $496 \le n \le 799$}
+For fixed $n$ and $1 \le a < n/2$, define $F(n,a) := a(n-2a+1)\binom{n}{a}^2$. For $2(a+1) < n$, using $(a+1)\binom{n}{a+1} = (n-a)\binom{n}{a}$, we obtain
+\[
+F(n,a+1) \le F(n,a) \iff (n-2a-1)(n-a)^2 \le a(a+1)(n-2a+1).
+\]
+Writing $d = n - 2a$, the identity $(d-3)(d+1) = d^2 - 2d - 3 < (d-1)^2$ shows that whenever the step inequality holds at $a$ and $2(a+2) < n$, multiplying by $d-3$, canceling $d-1 > 0$, and using $(n-a-1)^2 \le (n-a)^2$ and $a(a+1) \le (a+1)(a+2)$ yields the step inequality at $a+1$; symmetrically, the reverse inequality propagates downward. Hence $a \mapsto F(n,a)$ is unimodal on $1 \le a < n/2$: any integer $a^*(n)$ satisfying the upward step condition at $a^*(n)-1$ and the downward step condition at $a^*(n)$ maximizes $R_n(a)$ over all $1 \le a < n/2$.
+
+Starting from the exact base values $\binom{496}{240}$ and $\binom{992}{496}$, an incremental recurrence updates $\binom{2n}{n}$ and $\binom{n}{a^*(n)}$ across all $304$ integers $496 \le n \le 799$, verifying the peak conditions and the exact integer inequality $2(2n-1)F(n,a^*(n)) < n(n-1)\binom{2n}{n}$ at every step (with overall maximum $R_{497}(241) \approx 0.9999552841 < 1$). Combining this with Lemma~\ref{lem:ge800} proves Theorem~\ref{thm:main}.
+
+\section{Formal Verification in Lean~4}
+In Lean~4 (Mathlib~v4.33.1), the module \texttt{GilAntidiagonalTraffic.lean} formally verifies Theorem~\ref{thm:main} via the following exported theorems:
+\begin{itemize}
+\item \texttt{R\_paper\_eq\_trafficRatio} (Lemma~\ref{lem:ref}, exact match to $G(n,a)/D(n)$),
+\item \texttt{conjecture74\_proved} and \texttt{conjecture74\_paper} (Theorem~\ref{thm:main} for all $n \ge 496$),
+\item \texttt{sharpness\_495\_240} and \texttt{sharpness\_R\_paper\_495\_240} (sharpness at $n = 495, a = 240$).
+\end{itemize}
+The formalization uses no \texttt{sorry} and no \texttt{native\_decide}, depending solely on the standard axioms \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}.
+
+\begin{thebibliography}{9}
+\bibitem{gil2026traffic}
+J.~Gil, Z.~Liang, A.~Odetola, and M.~Weiner, \emph{Points of maximal traffic on a grid with obstruction}, arXiv:2609.01562v1 (2026).
+\end{thebibliography}
+
+\end{document}

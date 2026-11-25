@@ -20,3 +20,4 @@ import Conjectures.FiroozbakhtA086766
 import Conjectures.TournamentP3StarQP
 import Conjectures.CampbellA189409
 import Conjectures.FonollosaUniqueMultisetSums
+import Conjectures.GilAntidiagonalTraffic

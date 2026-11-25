@@ -32,6 +32,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **20.** [Capozzoli–Couto–Junchaya Conjecture 1 ($P_3^*$-interval on tournaments)](results/capozzoli-couto-junchaya-p3star-interval/) | Disproved under ETH ($2^{O(\log^4 n)}$ deterministic QP algorithm $\implies$ NP-intermediate on general & strong tournaments) | [DOI](https://doi.org/10.5281/zenodo.24540682) | **Lean 4** · Cross-Model Audit · Python |
 | **21.** [Campbell’s OEIS A189409 squarefree conjecture](results/campbell-oeis-a189409/) | Disproved (minimal counterexample $a(9) = (23\#)^2 + 1 = 29^2 \cdot 53 \cdot 1{,}116{,}604{,}864{,}937$; $a(0)\dots a(8)$ certified squarefree) | [DOI](https://doi.org/10.5281/zenodo.24543512) | **Lean 4** · Cross-Model Audit · Python |
 | **22.** [Fonollosa Problem 4 (unique multiset sums in finite abelian groups)](results/fonollosa-unique-multiset-sums/) | Proved (exact minimum order $|G| = 2^{n-1}$, complete classification as $(\mathbb{Z}/2\mathbb{Z})^{n-1}$ with affine basis, cyclic bound $N \ge 2^{n-1} + \lceil n/\gcd(2,N) \rceil - 1$) | [DOI](https://doi.org/10.5281/zenodo.24544750) | **Lean 4** · Cross-Model Audit · Python |
+| **23.** [Gil–Liang–Odetola–Weiner Conjecture 7.4 (antidiagonal grid traffic anomaly)](results/gil-antidiagonal-traffic/) | Proved for all $n \ge 496$ ($\rho(n) < 1$, sharp at $R_{495}(240) \approx 1.000024 > 1$; Stirling-free analytic bound $n \ge 800$ + unimodal peak certificate $496 \le n \le 799$) | [DOI](https://doi.org/10.5281/zenodo.24545619) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -60,6 +61,7 @@ python3 results/firoozbakht-oeis-a086766/verify.py
 python3 results/capozzoli-couto-junchaya-p3star-interval/verify.py
 python3 results/campbell-oeis-a189409/verify.py
 python3 results/fonollosa-unique-multiset-sums/verify.py
+python3 results/gil-antidiagonal-traffic/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
