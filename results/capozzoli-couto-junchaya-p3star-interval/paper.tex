@@ -1,0 +1,139 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{A Quasi-Polynomial Algorithm for the $P_3^*$-Interval Number of Tournaments}
+\author{Salem Levinstein}
+\date{November 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Capozzoli, Couto, and Junchaya (\texttt{arXiv:2609.22640v1}) proved that deciding whether the $P_3$-interval number of an $n$-vertex tournament satisfies $\mathrm{in}_{P_3}(T) \le k$ is $\mathsf{NP}$-intermediate under the Exponential Time Hypothesis (ETH), via a simple $n^{O(\log n)}$ brute-force bound. For distance-two convexity ($P_3^*$-convexity), they constructed strong tournaments with $\mathrm{in}_{P_3^*}(T) = \Theta(n)$, proved $\mathsf{W[2]}$-completeness and an $f(k)n^{o(k)}$ ETH lower bound, and conjectured (Conjecture~1) that \emph{$P_3^*$-interval on Tournaments} is $\mathsf{NP}$-complete. We refute this conjecture under ETH by giving a deterministic quasi-polynomial algorithm running in $2^{O(\log^4 n)} = n^{O(\log^3 n)}$ time. After multiplicative greedy preprocessing, the residual uncovered demand set $U$ forces a $1$-dimensional band decomposition of $V(T)$ by $U$-out-degree with strictly bounded triangle radius ($\le 2$), $4$-band decoupling, and empty-band gap ($\le 3$), enabling recursive divide-and-conquer with branching $2^{O(\log^2 n)}$ and depth $O(\log^2 n)$. Consequently, both \emph{$P_3^*$-interval on Tournaments} and its restriction to strong tournaments are $\mathsf{NP}$-intermediate under ETH. The structural decomposition, exact algorithm correctness, and $2^{O(\log^4 n)}$ step bound are formally verified in Lean~4 without additional axioms.
+\end{abstract}
+
+\section{Introduction}
+
+Let $T = (V, A)$ be an $n$-vertex tournament, writing $u \to v$ for $(u, v) \in A$, $N^+(v) = \{w : v \to w\}$, and $N^-(v) = \{u : u \to v\}$. In distance-two convexity ($P_3^*$-convexity), the one-step interval operator $I_{P_3^*}(S)$ returns $S$ together with all vertices lying on a shortest directed path of length $2$ between two vertices of $S$. By~\cite[Lemma~4]{CCJ2026}, on a tournament $T$ a directed $2$-path $u \to v \to w$ is shortest if and only if $w \to u \in A$, i.e., $u \to v \to w \to u$ is an oriented triangle:
+\[
+  I_{P_3^*}(S) = S \cup \bigcup_{\substack{u, w \in S \\ w \to u \in A}} \bigl(N^+(u) \cap N^-(w)\bigr).
+\]
+A set $S \subseteq V$ is a \emph{$P_3^*$-interval set} if $I_{P_3^*}(S) = V$, and the \emph{$P_3^*$-interval number} is $\mathrm{in}_{P_3^*}(T) = \min\{|S| : I_{P_3^*}(S) = V\}$.
+
+Capozzoli, Couto, and Junchaya~\cite{CCJ2026} showed that for $P_3$-convexity, every tournament satisfies $\mathrm{in}_{P_3}(T) = O(\log n)$, yielding an $n^{O(\log n)}$ algorithm and $\mathsf{NP}$-intermediateness under ETH. For $P_3^*$-convexity, however, they constructed strong tournaments with $\mathrm{in}_{P_3^*}(T) = \Theta(n)$~\cite[Proposition~1]{CCJ2026}, established $\mathsf{W[2]}$-completeness and an $f(k)n^{o(k)}$ ETH lower bound~\cite[Theorem~4.1, Corollary~3]{CCJ2026}, and conjectured~\cite[Conjecture~1]{CCJ2026} that deciding $\mathrm{in}_{P_3^*}(T) \le k$ is $\mathsf{NP}$-complete.
+
+We show that the opposite holds under ETH: any tournament with large $\mathrm{in}_{P_3^*}(T)$ cannot avoid low-coverage structure, which induces a $1$-dimensional band decomposition enabling quasi-polynomial divide-and-conquer.
+
+\section{Structural Band Decomposition}
+
+Let $T = (V, A)$ be an $n$-vertex tournament, $U \subseteq V$ a nonempty subset of size $m = |U|$, and $r \ge 6$ an integer satisfying the \emph{low-coverage condition}
+\begin{equation}\label{eq:lowcov}
+  \forall (w \to u) \in A, \qquad |N^+(u) \cap N^-(w) \cap U| < \frac{m}{r}.
+\end{equation}
+For each $x \in V$, set $f(x) := |N^+(x) \cap U| \in \{0, 1, \dots, m\}$, and partition $V$ into $r$ bands:
+\begin{align*}
+  C_i &:= \Bigl\{x \in V : \frac{r - i}{r} m < f(x) \le \frac{r - i + 1}{r} m\Bigr\} \qquad (1 \le i \le r - 1), \\
+  C_r &:= \Bigl\{x \in V : 0 \le f(x) \le \frac{1}{r} m\Bigr\},
+\end{align*}
+with $C_j := \emptyset$ for $j \notin \{1, \dots, r\}$, $C_{\le b} = \bigcup_{i \le b} C_i$, and $C_{\ge a} = \bigcup_{i \ge a} C_i$.
+
+\begin{lemma}[Lipschitz bound and forward bands]\label{lem:AB}
+Under~\eqref{eq:lowcov}:
+\begin{enumerate}
+  \item[\emph{(A)}] For every arc $w \to u \in A$, $f(u) - f(w) \le |N^+(u) \cap N^-(w) \cap U| < m/r$.
+  \item[\emph{(B)}] For all $1 \le i < j \le r$ with $j \ge i + 2$, every $x \in C_i$ and $y \in C_j$ satisfy $x \to y \in A$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For (A), let $X = N^+(u) \cap U$ and $Y = N^+(w) \cap U$. Any $v \in X \setminus Y$ satisfies $u \to v$ and $w \not\to v$; since $w \to u$ in a tournament, $v \ne w$, so $v \to w$. Thus $X \setminus Y \subseteq N^+(u) \cap N^-(w) \cap U$, giving $f(u) - f(w) \le |X \setminus Y| < m/r$. For (B), $i \le r - 2$ gives $f(x) > \frac{r - i}{r} m$ while $f(y) \le \frac{r - j + 1}{r} m \le \frac{r - i - 1}{r} m$, so $f(x) - f(y) > m/r$, precluding $y \to x$ by (A).
+\end{proof}
+
+\begin{lemma}[Local triangle radius and $4$-band decoupling]\label{lem:EC}
+Under~\eqref{eq:lowcov}:
+\begin{enumerate}
+  \item[\emph{(E)}] Every oriented triangle $\{u, v, w\}$ in $T$ with $v \in C_i$ satisfies $u, w \in \bigcup_{|j - i| \le 2} C_j$.
+  \item[\emph{(C)}] For any $t \in \{2, \dots, r - 4\}$, setting $L_t = C_{\le t-1}$, $W_t = C_t \cup C_{t+1} \cup C_{t+2} \cup C_{t+3}$, and $R_t = C_{\ge t+4}$, every oriented triangle containing a vertex of $L_t \cup C_t \cup C_{t+1}$ lies in $L_t \cup W_t$, and every oriented triangle containing a vertex of $C_{t+2} \cup C_{t+3} \cup R_t$ lies in $W_t \cup R_t$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+If $u \in C_j$ with $j \le i - 3$, Lemma~\ref{lem:AB}(B) gives $u \to v$, forcing the cycle $u \to v \to w \to u$; then $w \to u$ forces $w \in C_{\le j+1} \subseteq C_{\le i-2}$ while $v \to w$ forces $w \in C_{\ge i-1}$, a contradiction. The case $j \ge i + 3$ is symmetric, proving (E). Statement (C) is immediate from (E) since indices in $C_{\le t+1}$ and $C_{\ge t+4}$ (resp.\ $C_{\le t-1}$ and $C_{\ge t+2}$) differ by at least $3$.
+\end{proof}
+
+\begin{lemma}[Empty-band gap bound]\label{lem:D}
+Assume~\eqref{eq:lowcov} and $2m/r > 1$. Then:
+\begin{enumerate}
+  \item $U \cap (C_1 \cup C_2) \ne \emptyset$ and $U \cap (C_{r-1} \cup C_r) \ne \emptyset$.
+  \item If $1 \le i_1 < i_2 \le r$ satisfy $U \cap C_{i_1} \ne \emptyset$, $U \cap C_{i_2} \ne \emptyset$, and $U \cap C_i = \emptyset$ for all $i_1 < i < i_2$, then $i_2 - i_1 - 1 \le 3$.
+  \item Consequently, among any $4$ consecutive bands $C_j, \dots, C_{j+3}$ ($1 \le j \le r - 3$), at least one intersects $U$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Consider any partition $U = A \sqcup B$ with $A \to B$ and $s = |B|$.
+\emph{Claim 1:} If $B \ne \emptyset$, then $\max_{w \in B} f(w) > s - 2m/r$. Indeed, $f(w) = d^+_{T[B]}(w)$ for $w \in B$. Pick $w^* \in B$ maximizing $d^+_{T[B]}(w)$, and put $M_B = d^+_{T[B]}(w^*)$, $O = N^+_{T[B]}(w^*)$, $I = N^-_{T[B]}(w^*)$ ($|I| = s - 1 - M_B$). If $|I| = 0$, then $M_B = s - 1 > s - 2m/r$. Otherwise, for each $y \in I$, $y \to w^*$ and
+\[
+  M_B \ge d^+_{T[B]}(y) = 1 + d^+_{T[I]}(y) + M_B - |N^+_{T[B]}(w^*) \cap N^-_{T[B]}(y)| > 1 + d^+_{T[I]}(y) + M_B - \frac{m}{r},
+\]
+so $d^+_{T[I]}(y) < m/r - 1$. Summing over $y \in I$ yields $\frac{|I|(|I|-1)}{2} < |I|(m/r - 1)$, whence $|I| < 2m/r - 1$ and $M_B > s - 2m/r$.
+
+\emph{Claim 2:} Symmetrically, if $A \ne \emptyset$, then $\min_{u \in A} f(u) < s + 2m/r$. Indeed, $f(u) = s + d^+_{T[A]}(u)$ for $u \in A$. Choosing $u^* \in A$ minimizing $d^+_{T[A]}(u)$ (equivalently maximizing $d^-_{T[A]}(u)$) with $O_A = N^+_{T[A]}(u^*)$, $I_A = N^-_{T[A]}(u^*)$, and $m_A = |O_A|$, if $m_A \ge 1$ then every $z \in O_A$ satisfies $d^-_{T[O_A]}(z) < m/r - 1$, giving $m_A < 2m/r - 1$ and $f(u^*) < s + 2m/r$.
+
+Taking $(A, B) = (\emptyset, U)$ and $(U, \emptyset)$ gives (1). For (2), if $g = i_2 - i_1 - 1 \ge 1$, then $A = U \cap C_{\le i_1}$ and $B = U \cap C_{\ge i_2}$ satisfy $U = A \sqcup B$ and $A \to B$ by Lemma~\ref{lem:AB}(B); Claims 1 and 2 yield $u^* \in A, w^* \in B$ with $f(u^*) - f(w^*) < 4m/r$, while band boundaries give $f(u^*) - f(w^*) > gm/r$, so $g \le 3$. Finally, for (3), if $C_j, \dots, C_{j+3}$ were disjoint from $U$, then $j \in \{1, r - 3\}$ contradicts (1), whereas $2 \le j \le r - 4$ implies via (1) that $U$ meets both $C_{\le j-1}$ and $C_{\ge j+4}$, yielding a gap $\ge 4$ contradicting (2).
+\end{proof}
+
+\section{Quasi-Polynomial Algorithm and Disproof of Conjecture 1}
+
+Consider the generalized problem $\textsc{Solve}(T, D, F, k)$: given an $n$-vertex tournament $T = (V, A)$, demand set $D \subseteq V$, fixed set $F \subseteq V$, and integer $k \ge 0$, decide whether there exists $S \subseteq V$ with $|S| \le k$ and $D \subseteq I_{P_3^*}(S \cup F)$. Set $\ell := \lfloor \log_2 n \rfloor + 1$ and $K_0 := 8000 \ell$ (for $n \le 2$, decide directly in $O(1)$ time).
+
+\begin{enumerate}
+  \item If $k \ge n$, return \textsc{Yes}. If $k \le K_0$, test all $S \subseteq V$ with $|S| \le k$ and return \textsc{Yes} iff some $S$ satisfies $D \subseteq I_{P_3^*}(S \cup F)$.
+  \item Otherwise ($K_0 < k < n$), set $r := \lfloor k / (40 \ell) \rfloor \ge 200$, $S_{\mathrm{greedy}} \leftarrow \emptyset$, and $U \leftarrow D \setminus I_{P_3^*}(F)$. While $U \ne \emptyset$ and some arc $w \to u \in A$ satisfies $|N^+(u) \cap N^-(w) \cap U| \cdot r \ge |U|$, update $S_{\mathrm{greedy}} \leftarrow S_{\mathrm{greedy}} \cup \{u, w\}$ and $U \leftarrow U \setminus (\{u, w\} \cup (N^+(u) \cap N^-(w)))$. If $|S_{\mathrm{greedy}}| + |U| \le k$, return \textsc{Yes}.
+  \item Otherwise, set $m := |U|$ and build the bands $C_1, \dots, C_r$. Let $t_q := \lceil r/3 \rceil + 4q$ ($0 \le q < Q$) be all starting indices with $t_q \le \lfloor 2r/3 \rfloor - 4$, and set $s_{\max} := \lfloor 15k/r \rfloor$ and $\delta := \lceil r/30 \rceil$. For each $q$, put $D_L = D \cap (L_{t_q} \cup C_{t_q} \cup C_{t_q+1})$ and $D_R = D \cap (C_{t_q+2} \cup C_{t_q+3} \cup R_{t_q})$. For every $S_W \subseteq W_{t_q}$ with $|S_W| \le s_{\max}$ and every $k_L, k_R \ge 0$ with $k_L + |S_W| + k_R \le k$ and $k_L, k_R \le k - \delta$, return \textsc{Yes} if both $\textsc{Solve}(T, D_L, F \cup S_W, k_L)$ and $\textsc{Solve}(T, D_R, F \cup S_W, k_R)$ return \textsc{Yes}. Return \textsc{No} if no branch succeeds.
+\end{enumerate}
+
+\begin{theorem}\label{thm:qp}
+For every $n$-vertex tournament $T$, subsets $D, F \subseteq V(T)$, and integer $k \ge 0$, $\textsc{Solve}(T, D, F, k)$ decides whether there exists $S \subseteq V(T)$ with $|S| \le k$ and $D \subseteq I_{P_3^*}(S \cup F)$ in deterministic time $2^{O(\log^4 n)} = n^{O(\log^3 n)}$ (after reading the input). In particular, \emph{$P_3^*$-interval on Tournaments} is solvable in $2^{O(\log^4 n)}$ time.
+\end{theorem}
+
+\begin{proof}
+We argue correctness by strong induction on $k$. Soundness is immediate: $S = V$ witnesses $k \ge n$, $S = S_{\mathrm{greedy}} \cup U$ witnesses an early \textsc{Yes} in Step~2, and $S = S_1 \cup S_W \cup S_2$ witnesses \textsc{Yes} in Step~3 by monotonicity of $I_{P_3^*}$ and $D = D_L \cup D_R$.
+
+For completeness, suppose $S^* \subseteq V$ satisfies $|S^*| \le k$ and $D \subseteq I_{P_3^*}(S^* \cup F)$ with $K_0 < k < n$, and Step~2 does not return \textsc{Yes}. Because $(1 - 1/r)^r < 1/2$ for $r \ge 2$, every $r$ greedy iterations halve $|U|$; since initially $|U| \le n < 2^\ell$, at most $r \ell$ iterations occur, so $|S_{\mathrm{greedy}}| \le 2r\ell \le k/20 < k/10$. Hence $m = |U| > \frac{9}{10}k$, giving $m/r > 36\ell \ge 72$ and ensuring~\eqref{eq:lowcov} and $2m/r > 1$, so Lemmas~\ref{lem:AB}--\ref{lem:D} apply.
+
+Since $r \ge 200$, the number of pairwise disjoint $4$-band windows satisfies $Q > \frac{r - 16}{12} > \frac{r}{15}$, so by pigeonhole some $q^*$ satisfies $|S^* \cap W_{t_{q^*}}| \le \lfloor k/Q \rfloor \le s_{\max}$. Write $t = t_{q^*}$. Whenever $v \in U \cap C_i$, since $v \notin I_{P_3^*}(F)$ and $v \in I_{P_3^*}(S^* \cup F)$, either $v \in S^*$ or $v$ belongs to an oriented triangle with an endpoint in $S^*$; by Lemma~\ref{lem:EC}(E), $S^*$ intersects $C_{i-2} \cup \dots \cup C_{i+2}$. Taking $\lfloor (t-1)/8 \rfloor$ disjoint full blocks of $8$ consecutive bands in $L_t$, Lemma~\ref{lem:D}(3) ensures that the middle $4$ bands of each block meet $U$, so each block meets $S^*$. Thus $|S^* \cap L_t| \ge \lfloor (t-1)/8 \rfloor > \frac{r - 27}{24} > \frac{r}{30}$, giving $|S^* \cap L_t| \ge \delta$, and symmetrically $|S^* \cap R_t| \ge \delta$. Putting $S_L = S^* \cap L_t$, $S_W = S^* \cap W_t$, $S_R = S^* \cap R_t$, Lemma~\ref{lem:EC}(C) shows that no vertex of $R_t$ (even in $F \cap R_t$) lies in an oriented triangle with a vertex of $D_L$, so $D_L \subseteq I_{P_3^*}(S_L \cup S_W \cup F)$ and symmetrically $D_R \subseteq I_{P_3^*}(S_R \cup S_W \cup F)$, with $|S_L|, |S_R| \le k - \delta$. Hence Step~3 returns \textsc{Yes}.
+
+For the runtime, let $\tau(k)$ denote the maximum running time over budgets $\le k$ on $n$-vertex tournaments ($n \ge 3$). Clearly $\tau(K_0) \le O(n^3)(n+1)^{8000\ell} = 2^{O(\log^2 n)}$. For $K_0 < k < n$, $r > k/(41\ell)$ yields $s_{\max} \le 615\ell$ and $\delta \ge k/(1230\ell)$. The number of branches is $B \le Q(n+1)^{s_{\max}}(k+1)^2 = 2^{O(\log^2 n)}$, each incurring $O(n^2)$ overhead plus two recursive calls of budget $\le \lfloor k(1 - \frac{1}{1230\ell}) \rfloor$. Thus the recursion depth is at most $h = \lceil 1230 \ell^2 \rceil = O(\log^2 n)$, giving $\tau(n) \le (2B)^h (O(n^4) + \tau(K_0)) = 2^{O(\log^4 n)} = n^{O(\log^3 n)}$.
+\end{proof}
+
+\begin{corollary}\label{cor:eth}
+Assuming ETH, Conjecture~1 of~\cite{CCJ2026} is false: both \emph{$P_3^*$-interval on Tournaments} and \emph{$P_3^*$-interval on Strong Tournaments} are $\mathsf{NP}$-intermediate (neither in $\mathsf{P}$ nor $\mathsf{NP}$-complete).
+\end{corollary}
+
+\begin{proof}
+If \emph{$P_3^*$-interval on Tournaments} were $\mathsf{NP}$-complete, then by the Sparsification Lemma~\cite{IPZ2001}, for every $\varepsilon > 0$ any $v$-variable $3$-SAT instance reduces to at most $2^{\varepsilon v}$ sparse $3$-SAT instances of size $O_\varepsilon(v)$, each reducing polynomially to a tournament of order $O_\varepsilon(v^c)$ and solved by Theorem~\ref{thm:qp} in $2^{O(\log^4 v)}$ time; this decides $3$-SAT in $2^{\varepsilon v + o(v)}$ time for all $\varepsilon > 0$, contradicting ETH. Membership in $\mathsf{NP}$ is immediate, and exclusion from $\mathsf{P}$ under ETH follows from~\cite[Corollary~3]{CCJ2026}. Finally, for any nonempty $T$, the tournament $T'$ constructed in~\cite[Theorem~4.1]{CCJ2026} contains the directed $3$-cycles $x \to u_1 \to u_2 \to x$ (for all $u \in V(T)$) and $x \to y \to z \to x$, all sharing $x$ and spanning $V(T')$, so $T'$ is strongly connected; thus the same classification holds on strong tournaments.
+\end{proof}
+
+\begin{remark}[Formal Verification]
+Lemmas~\ref{lem:AB}--\ref{lem:D}, the executable algorithm $\textsc{Solve}$, soundness, completeness, the $2^{O(\log^4 n)}$ step-count bound, and the strong connectivity of~\cite[Theorem~4.1]{CCJ2026} are formally verified in Lean~4 (\texttt{TournamentP3StarQP.lean}, zero \texttt{sorry}, standard axioms only).
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{CCJ2026}
+I.~C.~Capozzoli, Y.~S.~Couto, and E.~Junchaya, \emph{Interval number for tournaments in $P_3$-convexity}, arXiv:2609.22640v1 [cs.CC], 2026.
+
+\bibitem{IPZ2001}
+R.~Impagliazzo, R.~Paturi, and F.~Zane, \emph{Which problems have strongly exponential complexity?}, J. Comput. Syst. Sci. \textbf{63} (2001), 512--530.
+\end{thebibliography}
+
+\end{document}
