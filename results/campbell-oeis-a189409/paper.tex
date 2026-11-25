@@ -1,0 +1,107 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+
+\title{Disproof of Campbell's Squarefree Conjecture for Primorials Squared Plus One (OEIS A189409)}
+\author{Salem Levinstein}
+\date{November 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $p_n\# = \prod_{k=0}^{n-1} p_k$ denote the $n$-th primorial (OEIS A002110) and define $a(n) = (p_n\#)^2 + 1$ (OEIS A189409). In 2011, John M.\ Campbell asked whether every term $a(n)$ is squarefree; the question is listed as open on OEIS A189409 and in DeepMind's \texttt{formal-conjectures} repository (\texttt{OeisA189409.conjecture\_1}). We answer this question in the negative by proving that $a(9) = 223{,}092{,}870^2 + 1 = 49{,}770{,}428{,}644{,}836{,}901$ is divisible by $29^2$, and we prove exact minimality by certifying that $a(0), \dots, a(8)$ are all squarefree via deterministic Lucas primality certificates. Both the disproof and minimality are machine-verified in Lean~4 using only the standard axioms.
+\end{abstract}
+
+\section{Introduction}
+For every nonnegative integer $n$, the $n$-th primorial is
+\[
+p_n\# = \prod_{k=0}^{n-1} p_k,
+\]
+where $p_0 = 2, p_1 = 3, p_2 = 5, \dots$ are the primes in increasing order ($p_0\# = 1$). The sequence
+\[
+a(n) = (p_n\#)^2 + 1
+\]
+is cataloged as OEIS~A189409~\cite{oeisA189409}. In April 2011, John M.\ Campbell noted that it was unknown whether every term of A189409 is squarefree, and this statement was included as an open research conjecture (\texttt{OeisA189409.conjecture\_1}) in Google DeepMind's \texttt{formal-conjectures} benchmark~\cite{formalconjectures}.
+
+\begin{theorem}\label{thm:main}
+The sequence $a(n) = (p_n\#)^2 + 1$ is not always squarefree. Specifically:
+\begin{enumerate}
+\item $a(9) = 49{,}770{,}428{,}644{,}836{,}901 = 29^2 \cdot 53 \cdot 1{,}116{,}604{,}864{,}937$ is divisible by $29^2$, hence not squarefree.
+\item Every earlier term $a(0), a(1), \dots, a(8)$ is squarefree; thus $n = 9$ is the minimal counterexample.
+\end{enumerate}
+\end{theorem}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+\begin{proof}
+\textbf{(1) Failure at $n = 9$.} The first nine primes are $2, 3, 5, 7, 11, 13, 17, 19, 23$, whose product is
+\[
+p_9\# = 2 \cdot 3 \cdot 5 \cdot 7 \cdot 11 \cdot 13 \cdot 17 \cdot 19 \cdot 23 = 223{,}092{,}870.
+\]
+Reducing modulo $29^2 = 841$ gives $223{,}092{,}870 = 265{,}270 \cdot 841 + 800 \equiv -41 \pmod{841}$, so
+\[
+a(9) = (p_9\#)^2 + 1 \equiv (-41)^2 + 1 = 1682 = 2 \cdot 841 \equiv 0 \pmod{29^2}.
+\]
+Explicitly,
+\[
+a(9) = 49{,}770{,}428{,}644{,}836{,}901 = 29^2 \cdot 59{,}180{,}057{,}841{,}661 = 29^2 \cdot 53 \cdot 1{,}116{,}604{,}864{,}937.
+\]
+Since $29^2 \mid a(9)$ and $29 > 1$, $a(9)$ is not squarefree.
+
+\medskip
+\noindent\textbf{(2) Exact minimality ($0 \le n \le 8$).} Table~\ref{tab:min} lists the exact values and complete prime factorizations of $a(0), \dots, a(8)$. Every prime factor up to $1409$ is checked directly by trial division. For each of the five larger prime factors $q$, all prime divisors of $q - 1$ are at most $839$, so primality follows directly from Lucas's primality theorem: for the stated witness $a$, one verifies $a^{q-1} \equiv 1 \pmod q$ and $a^{(q-1)/r} \not\equiv 1 \pmod q$ for every prime $r \mid (q - 1)$. In particular, for $a(8) = (p_8\#)^2 + 1$, the factorization $a(8) - 1 = (p_8\#)^2 = 2^2 \cdot 3^2 \cdots 19^2$ is immediate from the definition of $a(8)$. Every term $a(n)$ with $0 \le n \le 8$ is either prime or a product of two distinct primes, hence squarefree.
+\end{proof}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}rrrl@{}}
+\toprule
+$n$ & $p_n\#$ & $a(n) = (p_n\#)^2 + 1$ & Factorization / Lucas witness for large prime $q$ \\
+\midrule
+$0$ & $1$ & $2$ & prime \\
+$1$ & $2$ & $5$ & prime \\
+$2$ & $6$ & $37$ & prime \\
+$3$ & $30$ & $901$ & $17 \cdot 53$ \\
+$4$ & $210$ & $44{,}101$ & prime ($a=6$; $q{-}1 = 2^2{\cdot}3^2{\cdot}5^2{\cdot}7^2$) \\
+$5$ & $2{,}310$ & $5{,}336{,}101$ & prime ($a=6$; $q{-}1 = 2^2{\cdot}3^2{\cdot}5^2{\cdot}7^2{\cdot}11^2$) \\
+$6$ & $30{,}030$ & $901{,}800{,}901$ & $73 \cdot 12{,}353{,}437$ ($a=6$; $q{-}1 = 2^2{\cdot}3^2{\cdot}409{\cdot}839$) \\
+$7$ & $510{,}510$ & $260{,}620{,}460{,}101$ & $1409 \cdot 184{,}968{,}389$ ($a=2$; $q{-}1 = 2^2{\cdot}11{\cdot}79{\cdot}127{\cdot}419$) \\
+$8$ & $9{,}699{,}690$ & $94{,}083{,}986{,}096{,}101$ & prime ($a=2$; $q{-}1 = (p_8\#)^2$) \\
+$9$ & $223{,}092{,}870$ & $49{,}770{,}428{,}644{,}836{,}901$ & $29^2 \cdot 53 \cdot 1{,}116{,}604{,}864{,}937$ \textbf{(not squarefree)} \\
+\bottomrule
+\end{tabular}
+\caption{Exact factorizations of $a(n) = (p_n\#)^2 + 1$ for $0 \le n \le 9$.}
+\label{tab:min}
+\end{table}
+
+\begin{remark}
+Whenever $p \le p_{n-1}$, one has $p \mid p_n\#$ and therefore $a(n) \equiv 1 \pmod p$. Thus a prime square $p^2$ can divide $a(n)$ only when $p \equiv 1 \pmod 4$ and $p > p_{n-1}$. An exhaustive modular search over all $n \le 500$ and all primes $p \le 50{,}000$ confirms that $(n, p) = (9, 29)$ is the unique such pair in that range.
+\end{remark}
+
+\section{Formal Verification in Lean~4}
+The full proof of Theorem~\ref{thm:main} is formalized in Lean~4 (Mathlib~v4.33.1) in \texttt{CampbellA189409.lean}. It defines \texttt{kthPrimorial} ($p_n\# = \prod_{k < n} p_k$) and \texttt{a} directly over Mathlib, matching the mathematical definition in \texttt{FormalConjectures/OEIS/189409.lean}, and exports:
+\begin{itemize}
+\item \texttt{a\_9\_not\_squarefree}: $\neg\,\mathrm{Squarefree}(a(9))$;
+\item \texttt{disproof\_conjecture\_1}: $\neg\,\forall n,\ \mathrm{Squarefree}(a(n))$;
+\item \texttt{a\_9\_factorization}: $a(9) = 29^2 \cdot 53 \cdot 1{,}116{,}604{,}864{,}937$;
+\item \texttt{squarefree\_lt\_9} and \texttt{minimal\_counterexample}: $\forall n < 9,\ \mathrm{Squarefree}(a(n))$ and exact minimality of $n = 9$.
+\end{itemize}
+All modular exponentiations in the Lucas primality certificates are verified directly in the Lean kernel without \texttt{native\_decide}, depending solely on the standard axioms \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}.
+
+\begin{thebibliography}{9}
+\bibitem{oeisA189409}
+J.~M. Campbell, \emph{OEIS Sequence A189409: $a(n) = \mathrm{prime}(n)\#^2 + 1$}, The On-Line Encyclopedia of Integer Sequences, Apr 21, 2011, \url{https://oeis.org/A189409}.
+
+\bibitem{formalconjectures}
+Google DeepMind, \emph{Formal Conjectures: \texttt{FormalConjectures/OEIS/189409.lean}}, \url{https://github.com/google-deepmind/formal-conjectures}.
+\end{thebibliography}
+
+\end{document}
