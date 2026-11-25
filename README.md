@@ -10,9 +10,9 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 
 | Problem | Outcome | Preprint | Verification |
 | :--- | :--- | :---: | :---: |
-| **1.** [Fanelli–Moscardelli stability threshold conjecture](results/fanelli-moscardelli/) | Disproved for all odd $N \ge 7$ | [DOI](https://doi.org/10.5281/zenodo.24519539) | Audit · Python · DRAT SAT |
-| **2.** [Csernák–Soukup tree stacking conjecture & literal ASH](results/csernak-soukup-tree-stacking/) | Conj. 5.6 proved; literal Hyp. 3.2 disproved | [DOI](https://doi.org/10.5281/zenodo.24519570) | Audit · Python BFS |
-| **3.** [Allie–Du Preez–Hefty–Mafunda tree remoteness conjecture](results/allie-dupreez-hefty-mafunda-remoteness/) | Disproved (infinite family + $k=8$ minimizer) | [DOI](https://doi.org/10.5281/zenodo.24519582) | Audit · Python BFS |
+| **1.** [Fanelli–Moscardelli stability threshold conjecture](results/fanelli-moscardelli/) | Disproved for all odd $N \ge 7$ | [DOI](https://doi.org/10.5281/zenodo.24519727) | Audit · Python · DRAT SAT |
+| **2.** [Csernák–Soukup tree stacking conjecture & literal ASH](results/csernak-soukup-tree-stacking/) | Conj. 5.6 proved; literal Hyp. 3.2 disproved | [DOI](https://doi.org/10.5281/zenodo.24519728) | Audit · Python BFS |
+| **3.** [Allie–Du Preez–Hefty–Mafunda tree remoteness conjecture](results/allie-dupreez-hefty-mafunda-remoteness/) | Disproved (infinite family + $k=8$ minimizer) | [DOI](https://doi.org/10.5281/zenodo.24519729) | Audit · Python BFS |
 | **4.** [Firoozbakht’s OEIS A108569 parity conjecture](results/firoozbakht-oeis-a108569/) | Disproved (infinite odd family) | — | Audit · Python |
 
 ## Reproduction

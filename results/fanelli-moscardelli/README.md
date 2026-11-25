@@ -3,7 +3,7 @@
 Complete proposed disproof of the asymptotic tightness conjecture from [Fanelli–Moscardelli (ECAI 2025, Section 5)](https://doi.org/10.3233/FAIA251234) and [google-deepmind/formal-conjectures issue #7848](https://github.com/google-deepmind/formal-conjectures/issues/7848) (`FormalConjectures/Paper/ApproximatelyStableMatching.lean`). For every integer m ≥ 3 and odd market size N = 2m + 1, every complete strict roommates preference profile admits an m-stable matching, giving K(2m + 1) ≤ m < ⌈(2m + 1)/2⌉ and refuting `stability_threshold_tight` unconditionally. The bound m ≥ 3 is sharp (K(5) = 3).
 
 - [Complete proof](PROOF.md)
-- [Preprint PDF](paper.pdf) · [LaTeX source](paper.tex) · [Zenodo preprint (DOI: 10.5281/zenodo.24519539)](https://doi.org/10.5281/zenodo.24519539)
+- [Preprint PDF](paper.pdf) · [LaTeX source](paper.tex) · [Zenodo preprint (DOI: 10.5281/zenodo.24519727)](https://doi.org/10.5281/zenodo.24519727)
 - [Exact verifier](verify.py)
 - [Internal mathematical and source audit](AUDIT.md)
 
