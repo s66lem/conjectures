@@ -1,0 +1,130 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\KG}{KG}
+\DeclareMathOperator{\SG}{SG}
+
+\title{Chromatic Tightness of $G$-Stable Kneser Graphs for $k = 3$}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For $k \ge 2$ and a graph $G$ on $n \ge 2k$ vertices, the $G$-stable Kneser graph $\KG(G, k)$ has as vertices the $k$-element independent sets of $G$, joined when disjoint. Call $G$ \emph{$k$-tight} if $\chi(\KG(G, k)) = n - 2k + 2$. Arana, Haxell, Kaiser, and Stehl\'ik (\texttt{arXiv:2610.17884}) proved that every $k$-tight graph on $n \ge 2k + 1$ vertices is either a single cycle or a disjoint union of paths and cycles of length at least $4k - 3$, and conjectured the converse (Conjecture~1.3), noting that for $k \ge 3$ even the case $C_{n-1} \sqcup K_1$ remained open beyond an asymptotic threshold. We prove Conjecture~1.3 completely for $k = 3$ via a Hilton--Milner reduction to $n \le 19$, an anchor--Mantel proof for $C_m \sqcup K_1$ ($m \ge 15$), and a complete classification of nonstar intersecting triple families. We also prove an exact all-$k$ obstruction at $m = 4k - 3$ against star-restricted cycle colorings, and establish $4$-tightness of $C_m \sqcup K_1$ for all $m \ge 39$.
+\end{abstract}
+
+\section{Introduction}
+
+Let $G$ be a simple graph on $n \ge 2k$ vertices. The \emph{$G$-stable Kneser graph} $\KG(G, k)$ is the subgraph of the Kneser graph $\KG(n, k)$ induced by the $k$-element independent sets of $G$; when $G = C_n$, this is Schrijver's graph $\SG(n, k)$, which satisfies $\chi(\SG(n, k)) = n - 2k + 2$~\cite{Schrijver1978}. Since $\KG(G, k) \subseteq \KG(n, k)$, we have $\chi(\KG(G, k)) \le n - 2k + 2$, and $G$ is called \emph{$k$-tight} if equality holds.
+
+Arana, Haxell, Kaiser, and Stehl\'ik~\cite{AHKS2026} proved (Theorem~1.2) that if $G$ on $n \ge 2k + 1$ vertices contains a vertex of degree at least $3$ or properly contains a cycle of length at most $4k - 4$, then $G$ is not $k$-tight. They conjectured the converse (Conjecture~1.3), known for $k = 2$, and proved $C_{n-1} \sqcup K_1$ is $k$-tight only for $n \ge n(k)$ (Theorem~1.4).
+
+\begin{theorem}\label{thm:k3}
+Let $G$ be a simple graph on $n \ge 7$ vertices. Then $\chi(\KG(G, 3)) = n - 4$ if and only if $G$ is a cycle or $G$ is a disjoint union of paths and cycles in which every cycle has length at least $9$.
+\end{theorem}
+
+\section{Minimum Counterexample and Finite Reduction}
+
+Necessity in Theorem~\ref{thm:k3} is~\cite[Theorem~1.2]{AHKS2026}. For sufficiency, suppose a counterexample exists and choose $G$ of minimum order $n$. Single cycles and path forests (spanning subgraphs of cycles) are $3$-tight by Schrijver's theorem, so $G$ contains a cycle of length at least $9$ and at least one vertex outside it; thus $n \ge 10$. Adding ground edges restricts $\KG(G, 3)$ and cannot increase $\chi$, so joining all path components into a single path and closing it to a cycle if it has at least $9$ vertices preserves counterexample status. We may therefore assume $G$ has at most one path component, of order at most $8$, and at least one cycle of length at least $9$.
+
+Put $q = n - 5$ and consider a proper $q$-coloring of $\KG(G, 3)$, i.e., a cover of the $G$-stable triples by $q$ intersecting families. No color class can have a common ground vertex $v$: deleting $v$ would yield a $(q - 1)$-coloring of a qualifying graph $G - v$ on $n - 1 \ge 9 \ge 7$ vertices, contradicting minimality or Schrijver's theorem. Call a family with empty total intersection \emph{nonstar}.
+
+Let $p$ be the number of path components (including isolates) and $s$ the number of isolates of $G$. Then $|E(G)| = n - p$ and $\sum_v \binom{\deg(v)}{2} = n - 2p + s$. Because $G$ is triangle-free with maximum degree at most $2$, inclusion-exclusion gives
+\[
+|V(\KG(G, 3))| = \binom{n}{3} - |E(G)|(n - 2) + \sum_{v \in V(G)} \binom{\deg(v)}{2} = \frac{n(n - 4)(n - 5)}{6} + p(n - 4) + s.
+\]
+By the Hilton--Milner theorem (also proved directly in Section~\ref{sec:class}), every nonstar intersecting family of $3$-subsets of an $n$-set ($n \ge 7$) has size at most $3n - 8$. For $n \ge 20$,
+\[
+\frac{n(n - 4)(n - 5)}{6} - (n - 5)(3n - 8) = \frac{(n - 5)(n^2 - 22n + 48)}{6} > 0,
+\]
+so every minimum counterexample satisfies $n \le 19$. (For general fixed $k \ge 3$, comparing $\binom{n}{k} - n\binom{n-2}{k-2}$ against $\binom{n-1}{k-1} - \binom{n-k-1}{k-1} + 1$ yields the general cutoff $n \le k(k - 1)(k + 2) + 1$, and sharply $n \le 52$ for $k = 4$, failing from $n \ge 53$.)
+
+\section{The Cycle Plus Isolated Vertex Case $C_m \sqcup K_1$}
+
+\begin{theorem}\label{thm:iso}
+For every $m \ge 9$, $\chi(\KG(C_m \sqcup K_1, 3)) = m - 3$.
+\end{theorem}
+
+\begin{proof}
+Let $z$ be the isolated vertex and suppose $\KG(C_m \sqcup K_1, 3)$ has a coloring with $q = m - 4$ colors. By Schrijver's theorem every color occurs on $C_m$, and no full color class has a common ground vertex (deleting it leaves $C_m$ or $P_{m-1} \sqcup K_1$, both requiring $q$ colors). As in~\cite[Section~3]{AHKS2026}, each color class on $C_m$ has an \emph{anchor} $A_i$ meeting a disjoint cycle triple of every other color; every cycle triple of color $i$ meets $A_i$ in at least $2$ points, otherwise $\{z\} \cup (A_i \setminus W)$ would have no available color.
+
+Form the graph $H$ on $V(C_m)$ from the $m$ edges of $C_m$ and the $3$ pairs inside each anchor $A_1, \dots, A_q$. Every $3$-subset of $V(C_m)$ contains an edge of $H$, so $\overline{H}$ is triangle-free. Mantel's theorem gives
+\[
+\binom{m}{2} - \left\lfloor \frac{m^2}{4} \right\rfloor \le |E(H)| \le m + 3q = 4m - 12.
+\]
+At $m = 15$ this reads $49 \le 48$, and incrementing $m$ increases the left-hand side by $\lfloor m/2 \rfloor \ge 7$ versus $4$ on the right, ruling out all $m \ge 15$.
+
+For $9 \le m \le 14$, fix a cycle anchor $A$ and partition the remaining cycle-stable triples meeting $A$ in $2$ points into three groups by their pair $p \subset A$. If a color class uses at least two triples in a group $p$, every $z$-triple of that color must meet $p$ (so the whole group may be adjoined). Hence every color class lies in a maximal nonstar candidate choosing $\emptyset$, a singleton, or the full group for each of the three pairs of $A$ and adjoining all compatible $z$-triples. With dihedral-invariant integer weights (verified in \texttt{verify.py}):
+\begin{center}
+\begin{tabular}{rrrrl}
+\toprule
+$m$ & $q$ & Total weight $W$ & Max class weight $B$ & Result \\
+\midrule
+$9$ & $5$ & $4641$ & $1001$ & Branch-and-bound exhausted \\
+$10$ & $6$ & $5610$ & $1001$ & Branch-and-bound exhausted \\
+$11$ & $7$ & $6754$ & $996$ & Branch-and-bound exhausted \\
+$12$ & $8$ & $8102$ & $1004$ & $W > qB = 8032$ \\
+$13$ & $9$ & $9425$ & $1003$ & $W > qB = 9027$ \\
+$14$ & $10$ & $10857$ & $999$ & $W > qB = 9990$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Thus no $q$-coloring exists for any $m \ge 9$.
+\end{proof}
+
+\section{Classification of Nonstar Families and Orders $10 \le n \le 19$}\label{sec:class}
+
+Let $\mathcal{F}$ be a nonstar intersecting family of $3$-subsets of an $n$-set.
+\begin{itemize}
+\item If $\mathcal{F}$ has no $2$-point transversal, then $|\mathcal{F}| \le 10$ (checked by finite branching from the two canonical seeds $\{012, 034, 123\}$ and $\{012, 034, 135\}$).
+\item If $\{x, y\}$ is a transversal, let $L_x, L_y$ be the nonempty cross-intersecting link graphs on $V \setminus \{x, y\}$. Then one of four templates covers $\mathcal{F}$: (1) a Hilton--Milner family ($|L_x| = 1$); (2) all triples meeting $\{x, y, a\}$ in $\ge 2$ points ($L_x$ a star of $\ge 3$ edges at $a$); (3) all triples containing $xy$ or $ya$, plus $yuv, xau, xav$ ($L_x = \{au, av\}$); or (4) all triples containing $xy$ plus at most $6$ triples supported on a $4$-set $D$ (when neither link is a star or singleton, forcing both links onto a common $3$- or $4$-set $D$, with $\{x\} \cup e$ and $\{y\} \cup (D \setminus e)$ disjoint).
+\end{itemize}
+In particular, $|\mathcal{F}| \le 3n - 8$ for all $n \ge 7$.
+
+\begin{proof}[Completion of the proof of Theorem~\ref{thm:k3}]
+By Theorem~\ref{thm:iso}, a minimum counterexample on $10 \le n \le 19$ vertices has the form $C_m \sqcup P_r$ ($m \ge 9$, $2 \le r \le 8$), $C_9 \sqcup C_9$, $C_9 \sqcup C_{10}$, or $C_9 \sqcup C_9 \sqcup K_1$.
+\begin{enumerate}
+\item \emph{Orders $n \le 12$:} Every non-isolate case is a subgraph (possibly after vertex deletion) of $C_9 \sqcup P_3$ or $C_{10} \sqcup P_2$. By~\cite[Corollary~2.2]{AHKS2026} ($k$-tightness passes to subgraphs), it suffices that neither of these $120$-vertex graphs is $7$-colorable, verified via exact SAT unsatisfiability with color-ordering symmetry breaking.
+\item \emph{Order $n = 13$:} Orbit-invariant integer weights rule out all three graphs directly via $W > 8B$: $(80673 > 80024)$ for $C_9 \sqcup P_4$, $(80715 > 80064)$ for $C_{10} \sqcup P_3$, and $(80729 > 80024)$ for $C_{11} \sqcup P_2$.
+\item \emph{Orders $14 \le n \le 19$:} Setting $s = \max(10, \max_{x \ne y} |\mathrm{pair}(x, y)| + 6)$ bounds all Case~4 and no-pair-transversal families. At every node of the cardinality branch-and-bound with $u$ uncovered triples and $t$ remaining colors, $\lceil u/t \rceil > s$ holds, so branching over Templates~1--3 of size $> s$ is complete and exhausts all $38$ remaining graphs with zero covers. \qedhere
+\end{enumerate}
+\end{proof}
+
+\section{Higher-$k$ Obstruction and $k = 4$ Cutoff}
+
+\begin{proposition}
+For all $k \ge 2$ and $m \ge 4k - 3$, no proper coloring of $\KG(C_m \sqcup K_1, k)$ with $q = m - 2k + 2$ colors restricts on $\SG(m, k)$ to color classes all contained in stars.
+\end{proposition}
+
+\begin{proof}
+By Schrijver's theorem all $q$ colors appear on $C_m$ with distinct centers forming $C \subset V(C_m)$ of size $q \ge 2k - 1$. Reassign every $z$-containing $k$-set meeting $C$ to the color of a center it contains. Every color must still contain a member disjoint from $C$, otherwise deleting its center leaves a $(q - 1)$-coloring of $P_{m-1} \sqcup K_1$, violating Schrijver's theorem. Since $C$ induces a proper path forest of $C_m$ on at least $2k - 1$ vertices, $C$ contains an independent $k$-set $T$, which has no available color.
+\end{proof}
+
+\begin{proposition}
+For every $m \ge 39$, $\chi(\KG(C_m \sqcup K_1, 4)) = m - 5$.
+\end{proposition}
+
+\begin{proof}
+For general $k$, Tur\'an's theorem on the complement of $C_m$ plus anchor pairs requires $\frac{m^2}{2(k-1)} - \frac{m}{2} \le m + (m - 2k + 2)\binom{k}{2}$. At $k = 4$ this yields $(m^2 - 45m + 216)/6 \le 0$, impossible for $m \ge 40$. At $m = 39$ ($q = 33$), letting $t$ be the number of color classes whose cycle members require all $6$ pairs of their $4$-point anchor $A$, Tur\'an's theorem gives $234 \le 39 + 5 \cdot 33 + t$, so $t \ge 30$. In each such class, every pair $p \subset A$ has a member meeting $A$ in $p$ alone, restricting opposite-pair members to meet a fixed outside pair ($2 \cdot 35 - 3 = 67$ choices per pair), giving at most $1 + 4 \cdot 35 + 6 \cdot 67 = 543$ cycle members. By Erd\H{o}s--Ko--Rado, the remaining $\le 3$ classes each have at most $\binom{38}{3} = 8436$ members. In total at most $30 \cdot 543 + 3 \cdot 8436 = 41598 < 39\binom{34}{3}/4 = 58344$ stable $4$-sets are covered.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{AHKS2026}
+C.~Arana, P.~Haxell, T.~Kaiser, and M.~Stehl\'ik, \emph{The chromatic number of $G$-stable Kneser graphs}, arXiv:2610.17884 [math.CO], 2026.
+
+\bibitem{Schrijver1978}
+A.~Schrijver, \emph{Vertex-critical subgraphs of Kneser graphs}, Nieuw Arch.\ Wisk.\ (3) \textbf{26} (1978), 454--461.
+\end{thebibliography}
+
+\end{document}

@@ -23,6 +23,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **11.** [Rofa regular spider 0-rotatability conjecture](results/rofa-spider-rotatability/) | Proved for all $k \ge 1, \ell \ge 1$ | [PDF](results/rofa-spider-rotatability/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 | **12.** [Benedetti–Menara Conjecture 7.1 ($r = 2$, flag $1$-layered families)](results/benedetti-menara-flag-layered/) | Proved $r = 2$ sharp bound $m - 1$ + halved Larman–Barnette + unconditional Thm. E(a) at $p = d - 2$ | [PDF](results/benedetti-menara-flag-layered/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 | **13.** [Sinclair Conjecture C (radial-derivative Hilbert series front-loading)](results/sinclair-radial-mobius/) | Disproved ($M(K_{1,1,4}+e)$: $h_2^\beta = 31 < 32 = h_3^\beta$, family $m=4..7$ + binary example) | [PDF](results/sinclair-radial-mobius/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
+| **14.** [Arana–Haxell–Kaiser–Stehlík Conjecture 1.3 ($k = 3$, $G$-stable Kneser graphs)](results/arana-haxell-kaiser-stehlik-kneser/) | Proved completely for $k = 3$ (+ Schrijver $k = 3$, all-$k$ star obstruction at $4k-3$, $k = 4$ $C_m \sqcup K_1$ for $m \ge 39$) | [PDF](results/arana-haxell-kaiser-stehlik-kneser/paper.pdf) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -42,6 +43,7 @@ python3 results/notik-singer-golomb/verify.py
 python3 results/rofa-spider-rotatability/verify.py
 python3 results/benedetti-menara-flag-layered/verify.py
 python3 results/sinclair-radial-mobius/verify.py
+python3 results/arana-haxell-kaiser-stehlik-kneser/verify.py base
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
