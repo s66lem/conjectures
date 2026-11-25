@@ -26,6 +26,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **14.** [Arana–Haxell–Kaiser–Stehlík Conjecture 1.3 ($k = 3$, $G$-stable Kneser graphs)](results/arana-haxell-kaiser-stehlik-kneser/) | Proved completely for $k = 3$ (+ Schrijver $k = 3$, all-$k$ star obstruction at $4k-3$, $k = 4$ $C_m \sqcup K_1$ for $m \ge 39$) | [DOI](https://doi.org/10.5281/zenodo.24536120) | **Lean 4** · Cross-Model Audit · Python |
 | **15.** [Manabe Conjecture 57 (purely periodic three-move subtraction games)](results/manabe-subtraction-games/) | Proved in full (strengthened to all $1 \le a < b < c$ at $\mathrm{P}$-position level + Conj. 52 $\iff$ Conj. 56 for all $c > b$ + $100.9\text{M}$ census) | [DOI](https://doi.org/10.5281/zenodo.24536124) | **Lean 4** · Cross-Model Audit · Python |
 | **16.** [Chen–Zwicker Conjecture 1 ($\mathrm{EF1}_{\mathrm{outer}}$ spectrum of connected graphs)](results/chen-zwicker-ef1-outer/) | Disproved (minimal $8$-vertex graph $H$: `NO` at $k=2$, `YES` at $k=3$, `NO` at $k=4$ from common binary up to heterogeneous monotone) | [DOI](https://doi.org/10.5281/zenodo.24536131) | **Lean 4** · Cross-Model Audit · Python |
+| **17.** [Bansal Conjecture C / 6.11 (quasisymmetric Bruhat zigzag shellability)](results/bansal-quasisymmetric-bruhat/) | Disproved for all $m \ge 7$ (minimal $Z = F(1,2,4)$, $(x,Z) \cong C_6 \sqcup C_6$, non-shellable & non-Cohen–Macaulay) | [DOI](https://doi.org/10.5281/zenodo.24536751) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -48,6 +49,7 @@ python3 results/sinclair-radial-mobius/verify.py
 python3 results/arana-haxell-kaiser-stehlik-kneser/verify.py base
 python3 results/manabe-subtraction-games/verify.py
 python3 results/chen-zwicker-ef1-outer/verify.py
+python3 results/bansal-quasisymmetric-bruhat/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

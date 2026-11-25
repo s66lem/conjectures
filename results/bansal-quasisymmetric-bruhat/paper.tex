@@ -1,0 +1,80 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\IN}{IN}
+
+\title{Non-Shellable Zigzag Lower Intervals in the Quasisymmetric Bruhat Order}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Bansal (\texttt{arXiv:2611.02210}) introduced a quasisymmetric analogue of the Bruhat order on indexed binary forests via the multiplicity-free forest Monk rule, verified shellability of all lower intervals below binary trees with at most $6$ internal vertices, and conjectured (Conjecture~C / Conjecture~6.11) that every zigzag lower interval $[\varnothing, Z]$---and hence every principal lower interval $[\varnothing, F]$---is shellable. We disprove this conjecture at the minimal possible rank $m = 7$: for the zigzag forest $Z = F(1, 2, 4)$ and $x = F(0, 1, 0, 1, 1, 0, 1)$, the open interval $(x, Z)$ has order complex isomorphic to $C_6 \sqcup C_6$, two vertex-disjoint hexagons. Consequently, $[\varnothing, Z]$ is neither shellable nor Cohen--Macaulay over any field. By first-coordinate raising $x_1 P_F = P_{F + e_1}$ (and likewise third-coordinate raising), the zigzag lower intervals $[\varnothing, F(m - 6, 2, 4)]$ and $[\varnothing, F(1, 2, m - 3)]$ fail shellability and Cohen--Macaulayness for every $m \ge 7$. The counterexample and infinite family are formally verified in Lean~4 without additional axioms.
+\end{abstract}
+
+\section{Introduction}
+
+Following Bansal~\cite[Section~2]{Bansal2026} and Nadeau--Spink--Tewari, an \emph{indexed tree} with support $[a, b]$ is a full binary tree whose leaves occupy $a, a + 1, \dots, b + 1$, and an \emph{indexed forest} $F$ is a disjoint union of indexed trees with disjoint leaf sets. For each internal vertex $v \in \IN(F)$, let $\rho(v)$ be the leftmost leaf label in the subtree rooted at $v$. The \emph{code} of $F$ is $\mathbf{c}(F) = (c_1, c_2, \dots)$, where $c_i(F) = \#\{v \in \IN(F) : \rho(v) = i\}$ (ignoring trailing zeros), giving a bijection $F \leftrightarrow \mathbf{c}(F)$. A \emph{valid labeling} $\lambda : \IN(F) \to \mathbb{Z}_{>0}$ satisfies $1 \le \lambda(v) \le \rho(v)$, $\lambda(v) \le \lambda(u)$ for left children $u$, and $\lambda(v) < \lambda(u)$ for right children $u$. The \emph{forest polynomial} is $P_F = \sum_{\lambda\text{ valid}} \prod_{v \in \IN(F)} x_{\lambda(v)}$, whose lexicographically smallest monomial is $x^{\mathbf{c}(F)}$ with coefficient~$1$ (\cite[Fact~2.5]{Bansal2026}).
+
+The \emph{quasisymmetric Bruhat order} (\cite[Definition~2.7]{Bansal2026}) has cover relation
+\[
+F \lessdot G \iff \exists\, i \ge 1 \text{ such that } P_G \text{ appears in } (x_1 + \cdots + x_i) P_F,
+\]
+and is graded by rank $\mathrm{rk}(F) = |\IN(F)| = |\supp(F)|$. A forest $Z = F(a_1, \dots, a_k)$ is a \emph{zigzag forest} (\cite[Definition~6.8]{Bansal2026}) if $a_j > 0$ for all $1 \le j \le k$. Every bounded graded interval $[x, y]$ has pure order complex $\Delta((x, y))$; shellability of a poset passes to every closed subinterval (\cite[Fact~6.1]{Bansal2026}).
+
+Bansal proved that hook intervals $[\varnothing, F(n, 1)]$ are shellable, verified via recursive coatom orderings that all $196$ trees of rank $m \le 6$ have shellable lower intervals, and conjectured (\cite[Conjecture~C and Conjecture~6.11]{Bansal2026}) that $[\varnothing, Z]$ is shellable for every zigzag forest $Z$. We show this fails already at $m = 7$.
+
+\section{Counterexample and Infinite Family}
+
+Let $Z = F(1, 2, 4)$ (a zigzag tree of rank $7$ with support $[1, 7]$) and $x = F(0, 1, 0, 1, 1, 0, 1)$ (a rank-$4$ forest with support $\{2, 4, 5, 7\}$).
+
+\begin{theorem}\label{thm:cex}
+In the quasisymmetric Bruhat order, the length-$3$ interval $[x, Z]$ has open part $(x, Z)$ consisting of exactly $6$ elements of rank $5$ and $6$ elements of rank $6$, with exactly $12$ cover edges forming two vertex-disjoint $6$-cycles ($\Delta((x, Z)) \cong C_6 \sqcup C_6$):
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+Component & Rank $5$ & Rank-$6$ upper covers in $(x, Z)$ \\
+\midrule
+Hexagon~1 & $(0,1,0,2,2)$ & $(0,1,2,3),\ (0,1,3,0,2)$ \\
+Hexagon~1 & $(0,1,1,2,0,0,1)$ & $(0,1,2,3),\ (1,1,3,0,0,0,1)$ \\
+Hexagon~1 & $(0,1,2,0,1,0,1)$ & $(0,1,3,0,2),\ (1,1,3,0,0,0,1)$ \\
+\midrule
+Hexagon~2 & $(0,1,0,1,3)$ & $(0,2,0,4),\ (0,2,1,0,3)$ \\
+Hexagon~2 & $(0,2,0,2,0,0,1)$ & $(0,2,0,4),\ (0,2,3,0,0,0,1)$ \\
+Hexagon~2 & $(0,2,1,0,1,0,1)$ & $(0,2,1,0,3),\ (0,2,3,0,0,0,1)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{theorem}
+
+\begin{corollary}\label{cor:disproof}
+Conjecture~C (Conjecture~6.11) of~\cite{Bansal2026} is false for every rank $m \ge 7$: the zigzag lower intervals $[\varnothing, F(m - 6, 2, 4)]$ and $[\varnothing, F(1, 2, m - 3)]$ are neither shellable nor Cohen--Macaulay over any field.
+\end{corollary}
+
+\begin{proof}
+A pure $1$-dimensional simplicial complex is a graph with no isolated vertices. In any shelling $e_1, \dots, e_t$, each edge $e_j$ ($j > 1$) intersects $\bigcup_{i < j} e_i$ in at least one vertex, so by induction the complex must be connected. Likewise, any $1$-dimensional Cohen--Macaulay complex over a field $\mathbb{k}$ has $\widetilde{H}_0 = 0$ and is connected. Since $\Delta((x, Z)) \cong C_6 \sqcup C_6$ is disconnected, $[x, Z]$ is neither shellable nor Cohen--Macaulay over any field. Whenever the component at leaf~$1$ is followed by a bare leaf, incrementing $c_1$ adds a root forced to carry label~$1$, giving $x_1 P_F = P_{F + e_1}$ and hence the chain of Monk covers $Z = F(1, 2, 4) \lessdot F(2, 2, 4) \lessdot \cdots \lessdot F(m - 6, 2, 4)$; similarly, code-raising (\cite[Lemma~3.1]{Bansal2026}) gives $Z = F(1, 2, 4) \lessdot F(1, 2, 5) \lessdot \cdots \lessdot F(1, 2, m - 3)$. Thus $[x, Z]$ is a closed subinterval of each rank-$m$ zigzag lower interval (and $\Delta((x, Z))$ is the link of a maximal chain through $x$ and $Z$), so by \cite[Fact~6.1]{Bansal2026} neither is shellable nor Cohen--Macaulay over any field.
+\end{proof}
+
+\begin{remark}[Minimality and Verification]
+Note that $\mu(x, Z) = -1$ (so the M\"obius sign test $(-1)^r \mu \ge 0$ passes even on the counterexample; connectivity is the true obstruction). Exhaustive scanning of $\mathcal{P}_7$ finds $12$ disconnected length-$3$ intervals among $45{,}878$, hitting $4$ of the $64$ rank-$7$ zigzags: $(1,2,4)$, $(1,2,3,1)$, $(2,2,1,2)$, and $(2,2,1,1,1)$. No disconnected length-$3$ interval occurs in $\mathcal{P}_6$, and all $196$ trees with $m \le 6$ admit recursive coatom orderings, so $m = 7$ is sharp. Theorem~\ref{thm:cex} and Corollary~\ref{cor:disproof} are formally verified in Lean~4 (\texttt{QuasisymmetricBruhat.lean}, zero \texttt{sorry}, standard axioms only) and independently confirmed in Python~3.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{Bansal2026}
+R.~Bansal, \emph{A quasisymmetric analogue of the Bruhat order}, arXiv:2611.02210v1 [math.CO], 2026.
+\end{thebibliography}
+
+\end{document}
