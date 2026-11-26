@@ -21,3 +21,4 @@ import Conjectures.TournamentP3StarQP
 import Conjectures.CampbellA189409
 import Conjectures.FonollosaUniqueMultisetSums
 import Conjectures.GilAntidiagonalTraffic
+import Conjectures.EaslickNontransitiveDice
