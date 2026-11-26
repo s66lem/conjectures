@@ -57,6 +57,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **45.** [O. Vasilyev Question 7.1 (`arXiv:2611.20344v2`, cycle ratio $2^\ell < 3^{a+1}$ in the up-down graph)](results/vasilyev-up-down-cycles/) | Disproved via explicit $382$-vertex primitive cycle with $a = 240$ up-steps ($3^{241} < 2^{382}$, ratio $2^{382}/3^{240} \approx 3.050403 > 3$, $a = \lfloor 382 \log_3 2 \rfloor - 1$) | [DOI](https://doi.org/10.5281/zenodo.24567319) | **Lean 4** · Cross-Model Audit · Python |
 | **46.** [F. Bihan (`arXiv:2611.34336v1`, 3D fewnomial topological degree `D(3, 3) = {0, 1, 2, 3}`)](results/bihan-fewnomial-degree/) | Resolved negatively for sharpness of Theorem 2 ($|\deg F| \le \lfloor (3V - 8)/4 \rfloor$, $\max D(3, k) = \max D(k, 3) \le \lfloor 3k/4 \rfloor + 1$, $D(3, 3) = \{0, 1, 2, 3\}$; exact extremal witnesses for $V = 7, 8, 9, 10, 12$ including great icosahedron density $7$) | [DOI](https://doi.org/10.5281/zenodo.24567883) | **Lean 4** · Cross-Model Audit · Python |
 | **47.** [Kai Liang Conjecture 4.1 (`arXiv:2611.29198v1`, misère octal game `0.3122`)](results/liang-octal-03122/) | Resolved (false literally: $o(2,2,7,2) = \mathcal{N}$ vs $o(2,2,14,2) = \mathcal{P}$; proved for all $x, y \ge 3$ with sharp threshold $3$ & explicit $98$-entry period-$7$ closed form via two-stage translation reduction to $2{,}191$ positions) | [DOI](https://doi.org/10.5281/zenodo.24568033) | **Lean 4** · Cross-Model Audit · Python |
+| **48.** [Giovanni Rossi Conjecture 6.16 (`arXiv:2611.25741v1`, real-rootedness of permutohedron $\chi_n(t)$ and full $f$-polynomial $R_n(w)$)](results/rossi-permutohedron-real-roots/) | Proved for all $n \ge 3$ ($\chi_n(t)$ has $n$ distinct real roots: $1$, $n - 2$ in $(0, 1)$, one in $(1, \infty)$; $R_n(w)$ has $n$ distinct negative real roots; analytic Regime A/B paired sign alternation for $n \ge 64$, kernel-verified witnesses for $3 \le n \le 63$) | [DOI](https://doi.org/10.5281/zenodo.24569715) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -110,6 +111,7 @@ python3 results/phuc-danchev-tripotent-square-zero/verify.py
 python3 results/vasilyev-up-down-cycles/verify.py
 python3 results/bihan-fewnomial-degree/verify.py
 python3 results/liang-octal-03122/verify.py
+python3 results/rossi-permutohedron-real-roots/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

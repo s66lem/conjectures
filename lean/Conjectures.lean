@@ -45,3 +45,4 @@ import Conjectures.PhucDanchevTripotent
 import Conjectures.VasilyevUpDownCycles
 import Conjectures.BihanFewnomialDegree
 import Conjectures.LiangOctal03122
+import Conjectures.RossiPermutohedronRealRoots

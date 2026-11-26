@@ -1,0 +1,129 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Real-Rootedness of the Permutohedron Characteristic and Full $f$-Polynomials: Proof of Rossi's Conjecture~6.16}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove Conjecture~6.16 of G.~Rossi (\texttt{arXiv:2611.25741v1}): for every integer $n \ge 3$, the characteristic polynomial $\chi_n(t)$ of the face lattice $\mathcal{L}_n$ of the $(n - 1)$-dimensional permutohedron has $n$ distinct positive real roots---namely $t = 1$, exactly $n - 2$ roots in $(0, 1)$, and one root in $(1, \infty)$. Equivalently, the full $f$-polynomial $R_n(w)$ of the permutohedron (including the empty face) has only simple negative real roots. Via the Möbius transform $t = z / (z - 1)$, the problem reduces to showing that $M_n(z) = (1 - z) A_n(z) + z^n$ has $n - 2$ negative roots, where $A_n$ is the $n$-th Eulerian polynomial. For all $n \ge 64$, we construct $K = \lfloor (n - 1)/2 \rfloor$ ordered test points $\sigma_m \in (0, 1]$ using Euler's alternating series in the small-index regime and the polylogarithm pole expansion in the bulk regime, proving $(-1)^m (1 + \sigma_m) A_n(-\sigma_m) > 1$ and forcing $n - 2$ sign changes of $M_n$ on $(-\infty, 0)$. The finite range $3 \le n \le 63$ is certified by exact integer Sturm sequences.
+\end{abstract}
+
+\section{Introduction}
+
+Let $\mathcal{L}_n$ denote the face lattice of the $(n - 1)$-dimensional permutohedron (ordered set partitions of $[n]$ ordered by merging adjacent blocks, with an adjoined bottom element $\bot$ representing the empty face), and let $\chi_n(t) = \sum_{x \in \mathcal{L}_n} \mu(\bot, x)\, t^{n - 1 - \mathrm{rk}(x)}$ be its characteristic polynomial. By Theorem~6.11(1) of Rossi~\cite{Rossi2026},
+\begin{equation}\label{eq:chi}
+  \chi_n(t) = t^n - \sum_{i=0}^{n-1} A(n, i)\, (t - 1)^i\, t^{n - 1 - i} \qquad (n \ge 3),
+\end{equation}
+where $A(n, i)$ are the Eulerian numbers and $A_n(z) = \sum_{i=0}^{n-1} A(n, i) z^i$ is the $n$-th Eulerian polynomial. In~\cite[Conjecture~6.16]{Rossi2026}, Rossi conjectured that $\chi_n$ has $n$ distinct positive real roots for every $n \ge 3$ (equivalently, that the full $f$-polynomial $R_n(w) = \sum_{x \in \mathcal{L}_n} w^{\mathrm{rk}(x) + 1} = (-w)^n \chi_n(-1/w)$ has only negative real roots). We prove this conjecture in full.
+
+\begin{theorem}\label{thm:main}
+For every integer $n \ge 3$, $\chi_n(t)$ has $n$ distinct positive real roots: $t = 1$, exactly $n - 2$ roots in $(0, 1)$, and one root in $(1, \infty)$. Equivalently, $R_n(w)$ has only simple negative real roots.
+\end{theorem}
+
+\section{Möbius Reduction and Paired Sign-Alternation Criterion}
+
+Under the involutive Möbius map $t = z / (z - 1)$ (inverse $z = t / (t - 1)$), $(-\infty, 0)$ maps onto $(0, 1)$, $(1, \infty)$ maps onto $(1, \infty)$, and $(t - 1)/t = 1/z$. Since $A_n(1/z) = z^{1 - n} A_n(z)$, \eqref{eq:chi} yields
+\[
+  M_n(z) := (z - 1)^n \chi_n\!\left(\frac{z}{z - 1}\right) = (1 - z) A_n(z) + z^n = \sum_{k=0}^{n-1} \bigl(A(n, k) - A(n, k - 1)\bigr) z^k,
+\]
+where $A(n, -1) = 0$. The $z^n$ terms cancel since $A(n, n - 1) = 1$, and the leading coefficient is $1 - A(n, n - 2) = n + 2 - 2^n < 0$ for all $n \ge 3$, so $\deg M_n = n - 1$, $M_n(0) = M_n(1) = 1$, and $\chi_n(1) = 0$. Moreover,
+\[
+  M_n(1/s) = s^{-n}\bigl[1 - (1 - s) A_n(s)\bigr],
+\]
+so for $\sigma \in (0, 1]$,
+\begin{equation}\label{eq:refl}
+  M_n(-\sigma) = (1 + \sigma) A_n(-\sigma) + (-\sigma)^n, \qquad
+  M_n(-1/\sigma) = (-\sigma)^{-n}\bigl[1 - (1 + \sigma) A_n(-\sigma)\bigr].
+\end{equation}
+
+\begin{lemma}\label{lem:count}
+Let $K = \lfloor (n - 1) / 2 \rfloor$. If there exist $0 < \sigma_1 < \dots < \sigma_K \le 1$ (with $\sigma_K < 1$ when $n$ is even) such that
+\begin{equation}\label{eq:star}
+  (-1)^m (1 + \sigma_m) A_n(-\sigma_m) > 1 \qquad (1 \le m \le K),
+\end{equation}
+then $M_n$ has $n - 2$ distinct negative roots and one root in $(1, \infty)$, and Theorem~\ref{thm:main} holds for $n$.
+\end{lemma}
+
+\begin{proof}
+Since $|(-\sigma_m)^n| \le 1$, \eqref{eq:refl} and~\eqref{eq:star} give
+\[
+  \mathrm{sgn}\, M_n(-\sigma_m) = (-1)^m, \qquad \mathrm{sgn}\, M_n(-1/\sigma_m) = (-1)^{n + m + 1}.
+\]
+By the Intermediate Value Theorem, sign changes from $M_n(0) = 1$ through $-\sigma_1, \dots, -\sigma_K$ yield $K$ roots in $(-\sigma_K, 0)$, and sign changes through $-1/\sigma_K, \dots, -1/\sigma_1$ yield $K - 1$ roots in $(-1/\sigma_1, -1/\sigma_K)$. When $n$ is even, $\sigma_K < 1/\sigma_K$ and $(-1)^K = -(-1)^{n + K + 1}$, giving one further root in $(-1/\sigma_K, -\sigma_K)$ for $2K = n - 2$ negative roots (for odd $n$, $2K - 1 = n - 2$). Since $M_n(1) = 1 > 0$ and the leading coefficient is negative, $M_n$ also has a root in $(1, \infty)$, accounting for all $\deg M_n = n - 1$ roots as simple real roots.
+\end{proof}
+
+\section{Analytic Construction for $n \ge 64$}
+
+We use two classical representations of $A_n(-\sigma)$:
+\begin{enumerate}
+  \item \emph{Euler's alternating series:} for $0 < \sigma < 1$, $A_n(-\sigma) = (1 + \sigma)^{n+1} \sum_{k=0}^{\infty} (-1)^k T_k$ with $T_k = (k + 1)^n \sigma^k$.
+  \item \emph{Polylogarithm pole expansion:} let $\mathrm{Li}_{-n}(s) = s A_n(s) / (1 - s)^{n+1}$. Starting from Euler's expansion $\pi^2 / \sin^2(\pi x) = \sum_{k \in \mathbb{Z}} (x - k)^{-2}$ at $x = \mu / (2\pi i)$, which gives $\mathrm{Li}_{-1}(e^\mu) = \sum_{k \in \mathbb{Z}} (2\pi i k - \mu)^{-2}$, and differentiating $n - 1$ times via $\frac{d}{d\mu}\mathrm{Li}_{-n}(e^\mu) = \mathrm{Li}_{-(n+1)}(e^\mu)$, we obtain $\mathrm{Li}_{-n}(e^\mu) = n! \sum_{k \in \mathbb{Z}} (2\pi i k - \mu)^{-(n+1)}$ for $\mu \notin 2\pi i\mathbb{Z}$. For $\sigma \in (0, 1]$ and $L = -\ln\sigma \ge 0$, taking $\mu = -L + i\pi$ and pairing $\pm j$ yields
+  \begin{equation}\label{eq:pole}
+    A_n(-\sigma) = -\frac{(1 + \sigma)^{n+1}}{\sigma} \cdot 2\, n! \sum_{\substack{j \ge 1 \\ j\text{ odd}}} \mathrm{Re}\bigl((L + i\pi j)^{-(n+1)}\bigr).
+  \end{equation}
+\end{enumerate}
+
+\begin{lemma}[Regime A]\label{lem:A}
+Suppose $n \ge 64$ and $1 \le m$ satisfies $(m + 1)^2 \le n / 4$. Then $\varepsilon_m := (m / (m + 2))^{n/2} \in (0, 1)$ satisfies~\eqref{eq:star}.
+\end{lemma}
+
+\begin{proof}
+Set $\rho = (1 - (m + 1)^{-2})^{n/2}$. The ratio $T_{k+1}/T_k = ((k + 2)/(k + 1))^n \varepsilon_m$ decreases strictly in $k$, equals $\rho < 1$ at $k = m$, and satisfies $T_{m-1}/T_m = \rho$. Thus $T_k$ decreases strictly away from $k = m$ on both sides and tends to $0$, so the alternating-series bound gives $(-1)^m \sum_{k \ge 0} (-1)^k T_k \ge T_m(1 - 2\rho)$. Here $\rho \le \exp(-n/(2(m+1)^2)) \le e^{-2}$, and $T_m = c_m^{n/2}$ with $c_m = (m + 1)^2 (m / (m + 2))^m$. We have $c_1 = 4/3 > 1.21$, and for $m \ge 2$, $m \ln(m / (m + 2)) \ge -2$ gives $c_m \ge 9 e^{-2} > 1.21$. Since $(1 + \varepsilon_m)^{n+2} > 1$ and $n \ge 64$, $(-1)^m(1 + \varepsilon_m) A_n(-\varepsilon_m) > 1.21^{32}(1 - 2e^{-2}) > 1$.
+\end{proof}
+
+\begin{lemma}[Regime B]\label{lem:B}
+Suppose $n \ge 64$ and $(m + 1)^2 > n / 4$ with $m \le K$. Set $\theta = (m + 1)\pi / (n + 1) \in (0, \pi/2]$ and $\sigma^B_m = \exp(-\pi \cot \theta) \in (0, 1]$. Then $\sigma^B_m$ satisfies~\eqref{eq:star}, with $\sigma^B_K < 1$ when $n$ is even.
+\end{lemma}
+
+\begin{proof}
+Set $L = \pi \cot \theta$ and $r = \pi / \sin\theta$, so $L + i\pi = r e^{i\theta}$ and $\mathrm{Re}((L + i\pi)^{-(n+1)}) = (-1)^{m+1} r^{-(n+1)}$. Writing $u = \sin^2\theta$, $N = (n + 1)/2$, and $t_j = (1 + (j^2 - 1)u)^{-N}$, \eqref{eq:pole} gives
+\[
+  (-1)^m(1 + \sigma^B_m) A_n(-\sigma^B_m) \ge \frac{(1 + \sigma^B_m)^{n+2}}{\sigma^B_m} \cdot 2\, n!\, r^{-(n+1)} (1 - \tau), \qquad \tau = \sum_{\substack{j \ge 3 \\ j\text{ odd}}} t_j.
+\]
+By Jordan's inequality $\sin\theta \ge 2\theta/\pi$, $u \ge 4(m+1)^2/(n+1)^2 > n/(n+1)^2$. Setting $v = 8u$ and $a = v/(1 + v)$, we have $t_3 = (1 + v)^{-N} \le e^{-Na}$ and
+\[
+  \sum_{\substack{j \ge 5 \\ j\text{ odd}}} t_j \le \frac{1}{2} \int_3^{\infty} \left(1 + \frac{8}{9} x^2 u\right)^{-N} dx = \frac{3}{2} \int_1^{\infty} (1 + v y^2)^{-N} dy.
+\]
+Since $\frac{d}{dw}\ln(1 + v e^w) = \frac{v e^w}{1 + v e^w} \ge a$ for $w \ge 0$, we get $(1 + v y^2)^{-N} \le (1 + v)^{-N} y^{-2Na}$ on $[1, \infty)$, so $\tau \le e^{-Na}(1 + \frac{3}{2(2Na - 1)})$. Moreover $Na > \beta_n := \frac{4n(n+1)}{(n+1)^2 + 8n} \ge \beta_{64} > 3.5127$, giving $\tau \le 0.038$.
+
+By the binomial theorem and AM--GM,
+\[
+  \frac{(1 + \sigma^B_m)^{n+2}}{\sigma^B_m} \ge (n + 2) + \frac{1}{\sigma^B_m} + \frac{(n + 2)(n + 1)}{2}\sigma^B_m \ge (n + 2) + \sqrt{2(n + 2)(n + 1)} > 2(n + 1).
+\]
+Using $r < \pi(n + 1)/\sqrt{n}$ and Stirling's lower bound $n! \ge \sqrt{2\pi n}(n/e)^n$, the lower bound on $(-1)^m(1 + \sigma^B_m) A_n(-\sigma^B_m)$ exceeds
+\[
+  \Phi(n) := \frac{4(1 - 0.038)\sqrt{2\pi}}{\pi} \cdot n \cdot \left(\frac{n}{n + 1}\right)^n \left(\frac{\sqrt{n}}{e\pi}\right)^n.
+\]
+Since $n\ln(n/(n+1))$ increases with $n$ and $\frac{d}{dn}\bigl[\frac{n}{2}(\ln n - 2 - 2\ln\pi) + \ln n\bigr] > 0$ for $n \ge 64$, $\ln \Phi(n)$ is strictly increasing on $[64, \infty)$ with $\ln \Phi(64) > 0.109 > 0$. Thus~\eqref{eq:star} holds. Finally, $\theta < \pi/2$ whenever $n$ is even, so $\sigma^B_K < 1$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+For $n \ge 64$, let $m_0 = \max\{m : (m + 1)^2 \le n / 4\}$ (so $1 \le m_0 < K$). The sequences $\varepsilon_m$ and $\sigma^B_m$ are strictly increasing within their regimes, and at the junction, using $\ln(1 + y) \ge 2y/(2 + y)$ and $\cot x < 1/x$ on $(0, \pi/2]$,
+\[
+  -\ln \varepsilon_{m_0} = \frac{n}{2}\ln\!\left(1 + \frac{2}{m_0}\right) \ge \frac{n}{m_0 + 1} \ge \frac{n + 1}{m_0 + 2} > \pi \cot\!\left(\frac{(m_0 + 2)\pi}{n + 1}\right) = -\ln \sigma^B_{m_0 + 1},
+\]
+so $\varepsilon_{m_0} < \sigma^B_{m_0 + 1}$. Lemmas~\ref{lem:count}, \ref{lem:A}, and~\ref{lem:B} therefore establish Theorem~\ref{thm:main} for every $n \ge 64$.
+
+For every $3 \le n \le 63$, exact integer Sturm sequences (\texttt{verify.py}, Section~3) certify that $M_n$ is squarefree with exactly $n - 2$ negative roots and one root in $(1, \infty)$.
+\end{proof}
+
+\section*{Formal Verification}
+Theorem~\ref{thm:main} (covering both the analytic construction for all $n \ge 64$ and exact rational sign-alternation witnesses for all $3 \le n \le 63$) is formally verified in Lean~4 (module \texttt{Conjectures/\allowbreak RossiPermutohedronRealRoots.lean}, theorem \texttt{rossi\_conjecture\_6\_16}) with zero \texttt{sorry} and standard axioms only, and independently verified by \texttt{verify.py}.
+
+\begin{thebibliography}{9}
+\bibitem{Rossi2026}
+G.~Rossi,
+\emph{Beyond geometric lattices: pseudo-atoms and redundant join representations in the face lattice of the permutohedron},
+\texttt{arXiv:2611.25741v1}, November~19, 2026.
+\end{thebibliography}
+
+\end{document}
