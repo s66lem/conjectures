@@ -1,0 +1,177 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\title{Asymptotic Visibility of Gaussian Integers of Smaller Norm: Proof of the OEIS A401897 Conjecture}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove the conjecture of Karan Sharma in OEIS~A401897: if $(z_n)_{n \ge 1}$
+enumerates the nonzero Gaussian integers $z = a + bi$ with $0 \le b \le a$
+ordered by norm $N(z) = a^2 + b^2$ and then by $b$, and $a(n)$ counts the
+Gaussian integers $w$ with $N(w) < N(z_n)$ that are visible from $z_n$
+(meaning $\gcd(\mathrm{Re}(z_n - w), \mathrm{Im}(z_n - w)) = 1$), then
+$a(n) \sim 48n/\pi^2$. Our proof establishes an explicit uniform moving-viewpoint
+visibility estimate via M\"obius inversion and shifted Gauss circle bounds,
+together with an $8$-fold dihedral rank--norm relation handling norm ties,
+yielding $a(n) = \frac{48n}{\pi^2}(1 + O(\log n / \sqrt{n}))$.
+\end{abstract}
+
+\section{Introduction}
+
+In OEIS sequence \texttt{A401897} (November~9, 2026), Karan Sharma defines
+$(z_n)_{n \ge 1}$ as the enumeration of nonzero Gaussian integers $z = a + bi$
+in the fundamental wedge $0 \le b \le a$, ordered first by norm
+$N(z) = a^2 + b^2$ and then by $b$, and sets
+\[
+a(n) = \#\bigl\{w \in \mathbb{Z}[i] : N(w) < N(z_n),\;
+  \gcd(\mathrm{Re}(z_n - w), \mathrm{Im}(z_n - w)) = 1\bigr\},
+\]
+including $w = 0$. Sharma conjectured that $a(n) \sim 48n/\pi^2$. We prove this
+conjecture with an explicit error term.
+
+\begin{theorem}\label{thm:main}
+For every $n \ge 1$, letting $N = N(z_n)$ and $R = \sqrt{N}$, we have
+\[
+\left|a(n) - \frac{6N}{\pi}\right| \le \pi R\bigl(2 + \sqrt{2} + \sqrt{2}\ln(2R)\bigr)
+\qquad\text{and}\qquad
+\left|n - \frac{\pi N}{8}\right| \le 2R.
+\]
+Consequently,
+\[
+\lim_{n \to \infty} \frac{a(n)}{48n/\pi^2} = 1,
+\qquad
+a(n) = \frac{48n}{\pi^2}\left(1 + O\!\left(\frac{\log n}{\sqrt{n}}\right)\right).
+\]
+\end{theorem}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+\begin{lemma}[Shifted Gauss circle bound]\label{lem:gauss}
+For any center $c \in \mathbb{R}^2$ and radius $r > 0$, letting $D$ be either
+the open disk $\{x : \|x - c\| < r\}$ or the closed disk $\{x : \|x - c\| \le r\}$,
+\[
+\bigl|\#(\mathbb{Z}^2 \cap D) - \pi r^2\bigr| \le \pi\bigl(\sqrt{2}\,r + \tfrac{1}{2}\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Assign to each $p \in \mathbb{Z}^2$ the unit square
+$Q(p) = p + [-\tfrac{1}{2}, \tfrac{1}{2}]^2$ (area $1$, half-diagonal $1/\sqrt{2}$).
+The squares for $p \in \mathbb{Z}^2 \cap D$ have disjoint interiors and lie in
+the disk of radius $r + 1/\sqrt{2}$ about $c$, giving
+$\#(\mathbb{Z}^2 \cap D) \le \pi(r + 1/\sqrt{2})^2 = \pi r^2 + \pi(\sqrt{2}\,r + \tfrac{1}{2})$.
+For the lower bound, if $r \ge 1/\sqrt{2}$ then every point $x$ with
+$\|x - c\| < r - 1/\sqrt{2}$ belongs to $Q(p)$ for a lattice point
+$p \in \mathbb{Z}^2$ with $\|p - x\| \le 1/\sqrt{2}$, hence $\|p - c\| < r$ and
+$p \in D$; comparing areas gives
+$\#(\mathbb{Z}^2 \cap D) \ge \pi(r - 1/\sqrt{2})^2 = \pi r^2 - \pi(\sqrt{2}\,r - \tfrac{1}{2})$.
+If $0 < r < 1/\sqrt{2}$, then $\pi r^2 < \pi/2 < \pi(\sqrt{2}\,r + \tfrac{1}{2})$,
+so $\#(\mathbb{Z}^2 \cap D) \ge 0$ suffices.
+\end{proof}
+
+\begin{proposition}[Uniform moving-viewpoint visibility]\label{prop:vis}
+For every nonzero $z \in \mathbb{Z}^2$ with $N = \|z\|^2$ and $R = \sqrt{N}$,
+\[
+\left|a(z) - \frac{6N}{\pi}\right| \le \pi R\bigl(2 + \sqrt{2} + \sqrt{2}\ln(2R)\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+Setting $v = z - w$ gives $a(z) = \#\{v \in \mathbb{Z}^2 : \|v - z\| < R,\; \gcd(v_1, v_2) = 1\}$.
+Since $\|0 - z\| = R$, $v = 0$ is excluded. By M\"obius inversion,
+\[
+a(z) = \sum_{d \ge 1} \mu(d)\, L(z, d),
+\qquad
+L(z, d) := \#\{u \in \mathbb{Z}^2 : \|du - z\| < R\}.
+\]
+Any $u$ counted in $L(z, d)$ is nonzero and satisfies
+$d \le \|du\| \le \|du - z\| + \|z\| < 2R$, so $L(z, d) = 0$ for all $d \ge 2R$.
+Since $L(z, d)$ counts lattice points in the open disk of center $z/d$ and
+radius $R/d$, Lemma~\ref{lem:gauss} yields
+$L(z, d) = \pi N / d^2 + E_d$ with $|E_d| \le \pi(\sqrt{2}\,R/d + \tfrac{1}{2})$.
+Using $\sum_{d=1}^{\infty} \mu(d)/d^2 = 6/\pi^2$, the tail at $M = \lceil 2R \rceil \ge 2$
+satisfies
+\[
+\left|\sum_{d \ge M} \frac{\mu(d)}{d^2}\right|
+\le \sum_{d = M}^{\infty} \frac{1}{d(d - 1)} = \frac{1}{M - 1} \le \frac{1}{2R - 1} \le \frac{1}{R},
+\]
+contributing at most $\pi N / R = \pi R$. Finally, $\sum_{1 \le d < 2R} 1/d \le 1 + \ln(2R)$
+and $\#\{1 \le d < 2R\} \le 2R$ yield
+$\sum_{1 \le d < 2R} |E_d| \le \pi\sqrt{2}\,R(1 + \ln(2R)) + \pi R$.
+\end{proof}
+
+\begin{proposition}[Rank--norm relation]\label{prop:rank}
+For every $n \ge 1$, letting $N = N(z_n)$, we have $|n - \pi N / 8| \le 2\sqrt{N}$.
+\end{proposition}
+
+\begin{proof}
+For $X > 0$, define $W(X) = \#\{(a,b) \in \mathbb{Z}^2 : 0 \le b \le a,\; 0 < a^2 + b^2 \le X\}$
+and $P(X) = \#\{v \in \mathbb{Z}^2 \setminus \{0\} : \|v\|^2 \le X\}$, and let
+$W^\circ(X), P^\circ(X)$ be the corresponding strict-inequality counts. The
+dihedral group $D_4$ of order $8$ sends $\{0 \le b \le a\}$ to $8$ closed wedges
+covering $\mathbb{Z}^2 \setminus \{0\}$, with every nonzero point on the four
+lines $x = 0, y = 0, y = \pm x$ counted twice and all other points counted once.
+Hence $8 W(X) = P(X) + \Lambda(X)$ with
+$0 \le \Lambda(X) = 4\lfloor\sqrt{X}\rfloor + 4\lfloor\sqrt{X/2}\rfloor \le 7\sqrt{X}$,
+and identically $8 W^\circ(X) = P^\circ(X) + \Lambda^\circ(X)$ with
+$0 \le \Lambda^\circ(X) \le 7\sqrt{X}$.
+
+Because the enumeration orders by norm and then by $b$, we have
+$W^\circ(N) + 1 \le n \le W(N)$. Applying Lemma~\ref{lem:gauss} to
+$P(N) = \#(\mathbb{Z}^2 \cap \overline{B}(0, \sqrt{N})) - 1$ and
+$P^\circ(N) = \#(\mathbb{Z}^2 \cap B(0, \sqrt{N})) - 1$ gives
+\[
+n \le \frac{\pi N + \pi\sqrt{2}\sqrt{N} + \pi/2 - 1 + 7\sqrt{N}}{8} \le \frac{\pi N}{8} + 2\sqrt{N},
+\]
+\[
+n \ge 1 + \frac{\pi N - \pi\sqrt{2}\sqrt{N} - \pi/2 - 1}{8} \ge \frac{\pi N}{8} - 2\sqrt{N}. \qedhere
+\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Since only finitely many lattice points have bounded norm, $N = N(z_n) \to \infty$
+as $n \to \infty$. Writing $a(n) = 6N/\pi + E_A$ and $n = \pi N/8 + E_B$,
+Propositions~\ref{prop:vis} and~\ref{prop:rank} give
+\[
+\frac{a(n)}{48n/\pi^2} = \frac{1 + \pi E_A / (6N)}{1 + 8 E_B / (\pi N)}
+= 1 + O\!\left(\frac{\log N}{\sqrt{N}}\right)
+= 1 + O\!\left(\frac{\log n}{\sqrt{n}}\right) \longrightarrow 1. \qedhere
+\]
+\end{proof}
+
+\section{Formal and Computational Verification}
+
+The entire proof is formally verified in Lean~4 (Mathlib~v4.33.1) in
+\texttt{SharmaA401897.lean} with zero \texttt{sorry}s and standard axioms only:
+\begin{itemize}
+  \item Lemma~\ref{lem:gauss}: \texttt{shifted\_gauss\_circle\_open} and
+        \texttt{shifted\_gauss\_circle\_closed};
+  \item Proposition~\ref{prop:vis}: \texttt{uniform\_visibility\_bound};
+  \item Proposition~\ref{prop:rank}: \texttt{rank\_norm\_bound};
+  \item Theorem~\ref{thm:main}: \texttt{sharma\_a401897\_asymptotic}.
+\end{itemize}
+In addition, the standalone script \texttt{verify.py} reproduces all $58$
+published terms of OEIS~\texttt{A401897} and verifies the M\"obius identity,
+Lemma~\ref{lem:gauss}, Proposition~\ref{prop:vis} ($N \le 1300$), and
+Proposition~\ref{prop:rank} ($n \le 15{,}874$).
+
+\begin{thebibliography}{9}
+\bibitem{OEIS}
+K.~Sharma,
+\emph{OEIS Sequence A401897: Number of Gaussian integers $w$ with $N(w) < N(z)$
+that are visible from $z$},
+The On-Line Encyclopedia of Integer Sequences, November~9, 2026,
+\url{https://oeis.org/A401897}.
+\end{thebibliography}
+
+\end{document}
