@@ -1,0 +1,116 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{A Sharp Spherical Gauss--Bonnet Bound on the Topological Degree of Three-Dimensional Fewnomial Maps}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Bihan (\href{https://arxiv.org/abs/2611.34336}{arXiv:2611.34336v1}) proved that a real fewnomial map $F:\mathbb{R}_{>0}^n\to\mathbb{R}^n$ with $N=n+k+1$ monomials satisfying general-position hypotheses \textup{(UA)} and \textup{(UC)} has topological degree bounded by $|\deg F| < \frac{1}{2}\min(M(n,N),M(k,N))$, and asked whether this bound is sharp for $n,k\ge 3$, noting that the first open case is $n=k=3$ where Theorem~2 gives $|\deg F|\le 4$. We prove that for $n=3$ and any Newton polytope with $V\le N$ vertices,
+\[
+|\deg F| \le \left\lfloor \frac{3V-8}{4} \right\rfloor \le \left\lfloor \frac{3N-8}{4} \right\rfloor.
+\]
+Consequently, $\max D(3,k) \le \lfloor 3k/4\rfloor + 1$ and (by Bihan's duality Theorem~3) $\max D(k,3) \le \lfloor 3k/4\rfloor + 1$ for every $k\ge 1$, strictly improving Theorem~2 for all $k\ge 3$. In particular, for $n=k=3$ we obtain $D(3,3) = \{0,1,2,3\}$, answering Bihan's first open case negatively. Explicit integer realizations attain $|\deg F|=0,1,2,3$ for $N=7$ and reach $\lfloor (3V-8)/4\rfloor$ for $V=8,9,10,12$, including an integer perturbation of the great icosahedron $\{3,5/2\}$ of density $7$.
+\end{abstract}
+
+\section{Introduction}
+Let $F(x)=\sum_{i=1}^N C_i x^{a_i}$ be a real polynomial map on $\mathbb{R}_{>0}^n$ with $n$ components and $N=n+k+1$ monomials, where the exponent matrix $A$ (with columns $(1,a_i)\in\mathbb{R}^{n+1}$) and coefficient matrix $C$ (with columns $C_i\in\mathbb{R}^n$) satisfy Bihan's uniform general-position hypotheses \textup{(UA)} and \textup{(UC)}: every maximal minor of $A$ and every maximal minor of $C$ is nonzero. Write $D(n,k)$ for the set of values of $|\deg F|$ attained by such maps.
+
+In \cite{Bihan2026}, Bihan proved (Theorem~2) that
+\[
+|\deg F| < \tfrac{1}{2}\min\bigl(M(n,N), M(k,N)\bigr),
+\]
+where $M(n,N)$ is the maximal number of facets of a simplicial $n$-polytope with $N$ vertices, and established the Gale-duality symmetry $D(n,k)=D(k,n)$ (Theorem~3). For $n=3$, $M(3,N)=2N-4$, so Theorem~2 gives $|\deg F|\le N-3=k+1$. Bihan remarked after Theorem~2' and at the end of Section~5 that the maximal topological degree is unknown for $n,k\ge 3$, with $n=k=3$ ($|\deg F|\le 4$) as the first open case.
+
+\section{Upper Bound via Spherical Gauss--Bonnet}
+
+\begin{theorem}\label{thm:main}
+Let $n=3$ and let $F(x)=\sum_{i=1}^N C_i x^{a_i}$ satisfy \textup{(UA)} and \textup{(UC)}. If the Newton polytope $P=\mathrm{conv}(A)\subset\mathbb{R}^3$ has $V\le N$ vertices, then
+\[
+|\deg F| \le \left\lfloor \frac{3V-8}{4} \right\rfloor \le \left\lfloor \frac{3N-8}{4} \right\rfloor.
+\]
+Hence, for every $k\ge 1$,
+\[
+\max D(3,k) \le \left\lfloor \frac{3k}{4} \right\rfloor + 1
+\qquad\text{and}\qquad
+\max D(k,3) \le \left\lfloor \frac{3k}{4} \right\rfloor + 1.
+\]
+\end{theorem}
+
+\begin{proof}
+Under \textup{(UA)}, $P=\mathrm{conv}(A)\subset\mathbb{R}^3$ is a simplicial $3$-polytope with $V\le N$ vertices and $F=2V-4$ triangular facets (by Euler's formula $V-E+F=2$ and $2E=3F$), and every point of $A$ lying on $\partial P$ is a vertex of $P$. By Lemma~1.1 and Theorem~1.3 of \cite{Bihan2026}, $d:=\deg F$ equals the topological degree of the radial projection $g:\partial P\to S^2$ of the piecewise-affine map sending each vertex $a_s\in\partial P$ to $C_s$.
+
+Under \textup{(UC)}, every triple $(C_i,C_j,C_k)$ is linearly independent. Thus $g$ maps each facet $t=(i,j,k)$, ordered counterclockwise when viewed from outside $P$, homeomorphically onto the spherical geodesic triangle $\Delta_t\subset S^2$ with vertices $u_s = C_s/\|C_s\|$ ($s\in\{i,j,k\}$) lying in an open hemisphere, with orientation sign $\varepsilon_t=\mathrm{sgn}\det(C_i,C_j,C_k)\in\{+1,-1\}$. Let $F_+$ and $F_-$ be the numbers of facets with $\varepsilon_t=+1$ and $\varepsilon_t=-1$, so $F_++F_-=F=2V-4$. For any unit vector $u\in S^2$ outside the finitely many great circles spanned by pairs $C_i,C_j$,
+\[
+d = \sum_{t:\, u\in\Delta_t} \varepsilon_t.
+\]
+Integrating over $u\in S^2$ gives
+\[
+4\pi d = \sum_t \varepsilon_t\,\mathrm{Area}(\Delta_t).
+\]
+By Girard's spherical excess formula, $\mathrm{Area}(\Delta_t)=\alpha_{t,i}+\alpha_{t,j}+\alpha_{t,k}-\pi$, where $\alpha_{t,v}\in(0,\pi)$ is the interior spherical angle of $\Delta_t$ at vertex $v\in t$. Regrouping the sum by vertices of $P$,
+\begin{equation}\label{eq:gb}
+4\pi d = \sum_{v\in V(P)} \left(\sum_{t\ni v} \varepsilon_t \alpha_{t,v}\right) - \pi(F_+ - F_-).
+\end{equation}
+
+Fix a vertex $v$ of $P$ and let $a_1,\dots,a_{\delta_v}$ be its link in $\partial P$ in counterclockwise cyclic order viewed from outside $P$. In the oriented tangent plane $T_{u_v}S^2 = u_v^\perp$ (oriented by $u_v$), the unit tangent vector $w_r$ at $u_v$ pointing along the geodesic arc toward $u_{a_r}$ is well-defined by \textup{(UC)}. For the facet $t_r=(v,a_r,a_{r+1})$, the signed angle in $T_{u_v}S^2$ from $w_r$ to $w_{r+1}$ is $\varepsilon_{t_r}\alpha_{t_r,v}\in(-\pi,\pi)\setminus\{0\}$. Because $w_1,\dots,w_{\delta_v},w_1$ is a closed cycle on the unit circle of $T_{u_v}S^2$, its total signed turn is an integer multiple of $2\pi$:
+\[
+\sum_{t\ni v} \varepsilon_t \alpha_{t,v} = 2\pi w_v \qquad (w_v\in\mathbb{Z}).
+\]
+Dividing \eqref{eq:gb} by $\pi$ yields the exact identity
+\begin{equation}\label{eq:exact}
+4d = 2\sum_{v\in V(P)} w_v - F_+ + F_-.
+\end{equation}
+
+Let $p_v$ be the number of positive facets incident to $v$. Since $\alpha_{t,v}\in(0,\pi)$ for every $t\ni v$ and $\delta_v\ge 3$,
+\[
+2\pi w_v = \sum_{t\ni v,\,\varepsilon_t=+1}\alpha_{t,v} - \sum_{t\ni v,\,\varepsilon_t=-1}\alpha_{t,v} < \pi p_v,
+\]
+with strict inequality even if $p_v=0$ because at least three negative facets meet $v$. Dividing by $\pi$ gives $2w_v < p_v$, and since both sides are integers,
+\begin{equation}\label{eq:local}
+2w_v \le p_v - 1.
+\end{equation}
+Summing \eqref{eq:local} over all $V$ vertices and using $\sum_v p_v = 3F_+$ yields
+\[
+4d \le (3F_+ - V) - F_+ + F_- = F + F_+ - V \le 2F - V = 3V - 8.
+\]
+Negating the first coordinate of every column $C_i$ preserves \textup{(UC)} and replaces $d$ by $-d$, so $-4d \le 3V-8$ as well. Hence $4|d|\le 3V-8$, giving $|d|\le \lfloor(3V-8)/4\rfloor \le \lfloor(3N-8)/4\rfloor$. For $N=k+4$, $\lfloor(3(k+4)-8)/4\rfloor=\lfloor 3k/4\rfloor+1$, and Bihan's duality $D(k,3)=D(3,k)$ completes the proof.
+\end{proof}
+
+\begin{remark}
+Equality $4d=3V-8$ holds if and only if $F_+=F$ (every facet is positive, so $p_v=\delta_v$) and $2w_v=\delta_v-1$ at every vertex (so every vertex has odd degree). In this case $g$ is an orientation-preserving branched covering of degree $d$ with ramification indices $w_v$, and Riemann--Hurwitz matches: $\sum_v(w_v-1)=\frac{1}{2}\sum_v(\delta_v-3)=\frac{3V-12}{2}=2d-2$.
+\end{remark}
+
+\section{Exact Integer Realizations}
+
+\begin{corollary}
+$D(3,3) = \{0,1,2,3\}$. In particular, Theorem~2 of \cite{Bihan2026} is not sharp for $n=k=3$ (nor for any $n=3$, $k\ge 3$).
+\end{corollary}
+
+\begin{proof}
+For $n=k=3$ ($N=7$), Theorem~\ref{thm:main} gives $|\deg F|\le \lfloor 13/4\rfloor = 3$, excluding $4$. Exact integer matrices $(A,C)$ satisfying \textup{(UA)} and \textup{(UC)} realize $|\deg F|=0,1,2,3$; for instance, $|\deg F|=3$ is attained by
+\begin{align*}
+A &= \bigl[(3,1,3),\,(11,4,-1),\,(-4,2,6),\,(-5,3,-5),\,(-10,-3,9),\,(0,-7,2),\,(3,2,-7)\bigr],\\
+C &= \bigl[(-13,15,-22),\,(10,-25,14),\,(-20,0,23),\,(11,17,-22),\\
+  &\qquad (-8,-26,13),\,(9,28,5),\,(-24,-15,10)\bigr].
+\end{align*}
+All four witnesses for $N=7$ (degrees $0,1,2,3$), together with extremal integer witnesses attaining $|\deg F|=\lfloor(3V-8)/4\rfloor$ for $V=8$ ($|\deg|=4$), $V=9$ ($|\deg|=4$), $V=10$ ($|\deg|=5$), and $V=12$ ($|\deg|=7$, an integer perturbation of the regular icosahedron mapped to its Galois conjugate $\varphi\mapsto -1/\varphi$, realizing the great icosahedron $\{3,5/2\}$ of density $7$), are verified in exact integer arithmetic by \texttt{verify.py}.
+\end{proof}
+
+\section*{Formal Verification}
+Theorem~\ref{thm:main} (via an algebraic Pl\"ucker-telescoping formulation over any linearly ordered field) together with the exact integer realizations for $N=7$ (degrees $0,1,2,3$) and extremal $V\in\{8,9,10,12\}$ are formally verified in Lean~4 (\texttt{Conjectures/\allowbreak BihanFewnomialDegree.lean}, theorem \texttt{bihan\_3d\_\allowbreak degree\_bound}) with zero \texttt{sorry} and standard axioms only.
+
+\begin{thebibliography}{9}
+\bibitem{Bihan2026}
+F.~Bihan, \emph{Descartes' rule of signs for the topological degree}, arXiv:2611.34336v1 [math.CO], November 2026.
+\end{thebibliography}
+\end{document}

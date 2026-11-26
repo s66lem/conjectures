@@ -55,6 +55,8 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **43.** [Z. Mesyan Question 34 (`arXiv:2611.31109v1`, submonoid quantales of domains)](results/mesyan-submonoid-quantale/) | Resolved (splits: YES for every (possibly nonunital) ring without zero divisors via characteristic-$p$ idempotent extraction; NO for semiring domains via explicit $14$-element twisted domain $R_{14}$ with $90$ commuting submonoids) | [DOI](https://doi.org/10.5281/zenodo.24566360) | **Lean 4** · Cross-Model Audit · Python |
 | **44.** [Phuc–Danchev Problem 4.10 (`arXiv:2611.24594v2`, tripotent + square-zero matrices over $\mathbb{F}_2$)](results/phuc-danchev-tripotent-square-zero/) | Resolved negatively for all $d \ge 7$ with $3 \nmid d$ and all $d = 8n + 4$ ($n \ge 1$) via char-$2$ cubic rank bound $\dim \ker p(A) \le 3\,\mathrm{rank}\, p(A)$ & $d = 8$ equality rigidity ($\mathrm{M}_d(\mathbb{F}_2) = \mathcal{T}_d \iff d \in \{1, 2, 4, 5\}$) | [DOI](https://doi.org/10.5281/zenodo.24567080) | **Lean 4** · Cross-Model Audit · Python |
 | **45.** [O. Vasilyev Question 7.1 (`arXiv:2611.20344v2`, cycle ratio $2^\ell < 3^{a+1}$ in the up-down graph)](results/vasilyev-up-down-cycles/) | Disproved via explicit $382$-vertex primitive cycle with $a = 240$ up-steps ($3^{241} < 2^{382}$, ratio $2^{382}/3^{240} \approx 3.050403 > 3$, $a = \lfloor 382 \log_3 2 \rfloor - 1$) | [DOI](https://doi.org/10.5281/zenodo.24567319) | **Lean 4** · Cross-Model Audit · Python |
+| **46.** [F. Bihan (`arXiv:2611.34336v1`, 3D fewnomial topological degree `D(3, 3) = {0, 1, 2, 3}`)](results/bihan-fewnomial-degree/) | Resolved negatively for sharpness of Theorem 2 ($|\deg F| \le \lfloor (3V - 8)/4 \rfloor$, $\max D(3, k) = \max D(k, 3) \le \lfloor 3k/4 \rfloor + 1$, $D(3, 3) = \{0, 1, 2, 3\}$; exact extremal witnesses for $V = 7, 8, 9, 10, 12$ including great icosahedron density $7$) | [DOI](https://doi.org/10.5281/zenodo.24567883) | **Lean 4** · Cross-Model Audit · Python |
+| **47.** [Kai Liang Conjecture 4.1 (`arXiv:2611.29198v1`, misère octal game `0.3122`)](results/liang-octal-03122/) | Resolved (false literally: $o(2,2,7,2) = \mathcal{N}$ vs $o(2,2,14,2) = \mathcal{P}$; proved for all $x, y \ge 3$ with sharp threshold $3$ & explicit $98$-entry period-$7$ closed form via two-stage translation reduction to $2{,}191$ positions) | [DOI](https://doi.org/10.5281/zenodo.24568033) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -106,6 +108,8 @@ python3 results/talmage-list-reversal-monotonicity/verify.py
 python3 results/mesyan-submonoid-quantale/verify.py
 python3 results/phuc-danchev-tripotent-square-zero/verify.py
 python3 results/vasilyev-up-down-cycles/verify.py
+python3 results/bihan-fewnomial-degree/verify.py
+python3 results/liang-octal-03122/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

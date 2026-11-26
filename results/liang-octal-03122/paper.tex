@@ -1,0 +1,90 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Resolution of Liang's Conjecture~4.1 on the Mis\`{e}re Octal Game \texttt{0.3122}}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve Conjecture~4.1 of Liang (\texttt{arXiv:2611.29198v1}) on the slice $o(2,2,x,y)$ of the mis\`{e}re octal game \texttt{0.3122}. Without a lower bound on $x,y$, the literal statement is false: $o(2,2,7,2) = \mathcal{N}$ whereas $o(2,2,14,2) = \mathcal{P}$, despite sharing the key $(0, 2, [|x-y| \le 4] = \mathrm{False})$. For all $x, y \ge 3$, however, the conjecture holds and the threshold $3$ is sharp: $o(2,2,x,y)$ depends only on $(x \bmod 7,\; y \bmod 7,\; [|x-y| \le 4])$, with an explicit $98$-entry closed form. The proof uses a two-stage period-$7$ reduction on the move-closed family of positions with at most four heaps, at most two exceeding~$2$, reducing the infinite mis\`{e}re recursion to a finite window of $2{,}191$ positions.
+\end{abstract}
+
+\section{Introduction}
+In~\cite{Liang2026}, Liang investigates quaternary octal games with infinite mis\`{e}re quotients, focusing on the game \texttt{0.3122}. In \texttt{0.3122}, a move selects a single heap of size $h$ and either removes it entirely when $h \in \{1, 2\}$, or replaces $h$ by $h - k$ for $k \in \{1, 3, 4\}$ whenever $h > k$ (heaps never split). Under mis\`{e}re play, the empty position $\emptyset$ is an $\mathcal{N}$-position, and a nonempty position is a $\mathcal{P}$-position if and only if none of its options is a $\mathcal{P}$-position. Writing $o(a,b,x,y) \in \{\mathcal{P},\mathcal{N}\}$ for the mis\`{e}re outcome of the multiset $\{a,b,x,y\}$ (with $0$ denoting an absent heap), Section~4.1 of~\cite{Liang2026} poses:
+
+\medskip
+\noindent\textbf{Conjecture 4.1 (\cite{Liang2026}).} \emph{In \texttt{0.3122}, the slice $o(2,2,x,y)$ depends only on the triple $(x \bmod 7,\; y \bmod 7,\; [|x-y| \le 4])$, a table of $7 \times 7 \times 2 = 98$ values.}
+\medskip
+
+\section{Main Results}
+
+\begin{theorem}[Literal Disproof]\label{thm:disproof}
+Without a lower bound on $x$ and $y$, Conjecture~4.1 is false: $o(2, 2, 7, 2) = \mathcal{N}$ and $o(2, 2, 14, 2) = \mathcal{P}$, though $(7, 2)$ and $(14, 2)$ share the key $(0, 2, \mathrm{False})$.
+\end{theorem}
+
+\begin{theorem}[Proof for $x, y \ge 3$]\label{thm:main}
+For all integers $x, y \ge 3$, $o(2, 2, x, y)$ depends only on $(x \bmod 7,\; y \bmod 7,\; [|x - y| \le 4])$. Specifically, $o(2, 2, x, y) = \mathcal{P}$ if and only if $(x \bmod 7,\; y \bmod 7)$ lies in
+\[
+  B = \{(1,1),(2,2),(3,3),(5,5),(6,6),(1,6),(6,1),(2,4),(4,2),(3,5),(5,3)\},
+\]
+or equals $(0,0),(4,4)$ when $|x - y| \le 4$, or equals $(0,4),(4,0)$ when $|x - y| > 4$. All $98$ keys occur, and the threshold $x, y \ge 3$ is sharp.
+\end{theorem}
+
+\section{Proof via Period-7 Translation Reduction}
+
+Let $\mathcal{F}$ denote the family of positions with at most four positive heaps, at most two exceeding~$2$. Since every move in \texttt{0.3122} strictly reduces one heap without splitting, $\mathcal{F}$ is closed under options. Write each $X \in \mathcal{F}$ canonically as $(h_1, h_2, h_3, h_4)$ with $h_1 \ge h_2 \ge h_3 \ge h_4 \ge 0$ and $h_3, h_4 \le 2$.
+
+Fix thresholds $D = 13$, $G = 5$, $C = 8$. Define the reduction $\rho(h_1, h_2)$ in two stages:
+\begin{enumerate}
+  \item[$\rho_1$:] While $h_2 \ge D + 7 = 20$, replace $(h_1, h_2) \mapsto (h_1 - 7, h_2 - 7)$.
+  \item[$\rho_2$:] Then, while $h_1 - h_2 \ge G + 7 = 12$ and $h_1 \ge C + 7 = 15$, replace $(h_1, h_2) \mapsto (h_1 - 7, h_2)$.
+\end{enumerate}
+Every reduced pair satisfies $\tilde{h}_1 \le 30 < 44$. Let $\Phi(h_1, h_2, h_3, h_4)$ be the exact mis\`{e}re outcome of $(\tilde{h}_1, \tilde{h}_2, h_3, h_4)$, computed by dynamic programming over all $5{,}853$ positions in $\mathcal{F}$ with $h_1 \le 44$.
+
+\begin{lemma}[Shift Invariance]\label{lem:shift}
+For every $X = (h_1, h_2, h_3, h_4) \in \mathcal{F}$:
+\begin{enumerate}
+  \item If $h_2 \ge 20$, then $\Phi(h_1, h_2, h_3, h_4) = \Phi(h_1 - 7, h_2 - 7, h_3, h_4)$.
+  \item If $h_1 - h_2 \ge 12$ and $h_1 \ge 15$, then $\Phi(h_1, h_2, h_3, h_4) = \Phi(h_1 - 7, h_2, h_3, h_4)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Part~(1) is immediate because $\rho_1$ takes one fewer step on $(h_1 - 7, h_2 - 7)$. For part~(2), both $(h_1, h_2)$ and $(h_1 - 7, h_2)$ undergo the same number $i$ of $\rho_1$-steps, yielding $(h_1', h_2')$ and $(h_1' - 7, h_2')$ with $h_1' - h_2' = h_1 - h_2 \ge 12$. If $i = 0$ then $h_1' = h_1 \ge 15$; if $i \ge 1$ then $h_2' \ge 13$ and $h_1' \ge 25 \ge 15$. Thus $\rho_2$ on $(h_1', h_2')$ immediately subtracts $7$ from $h_1'$, landing on $(h_1' - 7, h_2')$.
+\end{proof}
+
+\begin{lemma}[Translation of the Mis\`{e}re Recursion]\label{lem:trans}
+For $X = (h_1, h_2, h_3, h_4) \in \mathcal{F}$:
+\begin{enumerate}
+  \item If $h_2 \ge 24$, then $\Phi$ satisfies the mis\`{e}re recursion at $X$ if and only if it does so at $(h_1 - 7, h_2 - 7, h_3, h_4)$.
+  \item If $h_2 < 24$, $h_1 - h_2 \ge 16$, and $h_1 \ge 19$, then $\Phi$ satisfies the mis\`{e}re recursion at $X$ if and only if it does so at $(h_1 - 7, h_2, h_3, h_4)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+In~(1), $h_1 \ge h_2 \ge 24 > 11$, so no move removes $h_1$ or $h_2$, and every option $Y$ satisfies $h_2(Y) \ge 20 > h_3, h_4$; thus the options of $X$ and $X - (7,7,0,0)$ correspond bijectively under subtracting $(7,7,0,0)$, and Lemma~\ref{lem:shift}(1) preserves $\Phi$. In~(2), $h_1 \ge 19$ and $h_1 - h_2 \ge 16$, so no move removes $h_1$ or changes the fact that $h_1$ is the unique largest heap, and every option $Y$ satisfies $h_1(Y) \ge 15$ and $h_1(Y) - h_2(Y) \ge 12$; the options of $X$ and $X - (7,0,0,0)$ correspond bijectively under subtracting $(7,0,0,0)$, and Lemma~\ref{lem:shift}(2) preserves $\Phi$.
+\end{proof}
+
+\begin{proof}[Proof of Theorems~\ref{thm:disproof} and~\ref{thm:main}]
+Let $W = \{X \in \mathcal{F} : h_2 < 24 \text{ and } (h_1 - h_2 < 16 \text{ or } h_1 < 19)\}$. Every $X \in W$ has $h_1 \le 38$, and $|W| = 2{,}191$. Direct finite computation (\texttt{verify.py}) checks that $\Phi$ satisfies the mis\`{e}re recursion on every $X \in W$, and gives $o(2,2,7,2) = \mathcal{N}$ and $o(2,2,14,2) = \mathcal{P}$ (proving Theorem~\ref{thm:disproof}). Since both translations in Lemma~\ref{lem:trans} strictly decrease $h_1 + h_2$, $\Phi$ satisfies the mis\`{e}re recursion on all of $\mathcal{F}$, and induction on total heap sum gives $\Phi = o$ on $\mathcal{F}$.
+
+For $x \ge y \ge 3$, $(x, y, 2, 2) \in \mathcal{F}$, and both $\rho_1$ and $\rho_2$ preserve $(x \bmod 7,\; y \bmod 7,\; [|x - y| \le 4])$ because $\rho_1$ fixes $x - y$ and stops with $y \ge 13 \ge 3$, while $\rho_2$ requires $x - y \ge 12$ and leaves $x - y \ge 5 > 4$. Checking all $204$ canonical reduced pairs $(\tilde{x}, \tilde{y})$ with $\tilde{x} \ge \tilde{y} \ge 3$ verifies that all $98$ keys appear and agree with the closed form of Theorem~\ref{thm:main}.
+\end{proof}
+
+\section*{Formal Verification}
+Theorems~\ref{thm:disproof} and~\ref{thm:main} (together with Lemmas~\ref{lem:shift} and~\ref{lem:trans} and the finite window check) are formally verified in Lean~4 (module \texttt{Conjectures/\allowbreak LiangOctal03122.lean}, theorems \texttt{liang\_conjecture\_\allowbreak 4\_1\_\allowbreak literal\_\allowbreak disproof} and \texttt{liang\_conjecture\_\allowbreak 4\_1\_ge\_3}) with zero \texttt{sorry} and standard axioms only, and independently verified by \texttt{verify.py}.
+
+\begin{thebibliography}{1}
+\bibitem{Liang2026}
+K.~Liang, \emph{Quaternary games with infinite mis\`{e}re quotients}, arXiv:2611.29198v1 [math.CO], November 22, 2026.
+\end{thebibliography}
+
+\end{document}

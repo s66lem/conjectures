@@ -43,3 +43,5 @@ import Conjectures.TalmageListReversal
 import Conjectures.MesyanSubmonoidQuantale
 import Conjectures.PhucDanchevTripotent
 import Conjectures.VasilyevUpDownCycles
+import Conjectures.BihanFewnomialDegree
+import Conjectures.LiangOctal03122
