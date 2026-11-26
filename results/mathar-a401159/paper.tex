@@ -1,0 +1,122 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{Closed-Form Enumeration of Binary Matrices with Bounded Row and Column Sums and Proof of Both OEIS~A401159 Conjectures}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $A(n, m, k)$ denote the number of $n \times m$ binary matrices with at most $k$ ones in every row and every column, and let $s(n, k) = \sum_{i=0}^{k} \binom{n}{i}$. By identifying each matrix with its tuple of column supports and applying inclusion--exclusion on the Boolean lattice, we prove that $A(n, m, k) = s(n, k)^m$ for all $0 \le m \le k$ and
+\[
+  A(n, k + 1, k) = \sum_{j=0}^{k} (-1)^j \binom{n}{j} s(n - j, k - j)^{k + 1}
+\]
+for all $n, k \ge 0$. Specializing to $k = 2$ settles both conjectures stated by R.~J.~Mathar in \texttt{OEIS~A401159}: $T(n, 2) = \mathrm{A086601}(n) = \mathrm{A000124}(n)^2$ and $T(n, 3) = 1 + n + \frac{11}{4}n^2 + \frac{13}{8}n^3 + \frac{1}{8}n^4 + \frac{3}{8}n^5 + \frac{1}{8}n^6$ for every integer $n \ge 0$. The general theorem and both corollaries are formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+In \texttt{OEIS~A401159}~\cite{Mathar2026} (approved November~18, 2026), R.~J.~Mathar defines $T(n, m)$ as the number of binary $n \times m$ matrices having at most two $1$'s in every row and at most two $1$'s in every column (tabulated earlier via a recurrence in~\cite{Mathar2014}), and records two open conjectures:
+\begin{enumerate}
+  \item $T(n, 2) = \mathrm{A086601}(n) = \bigl(\frac{n(n + 1)}{2} + 1\bigr)^2$;
+  \item $T(n, 3) = 1 + n + \dfrac{11}{4}n^2 + \dfrac{13}{8}n^3 + \dfrac{1}{8}n^4 + \dfrac{3}{8}n^5 + \dfrac{1}{8}n^6$.
+\end{enumerate}
+We establish a general exact formula for the number $A(n, m, k)$ of $n \times m$ binary matrices with every row sum and every column sum at most $k$, covering all column counts $m \le k + 1$. Both conjectures follow immediately upon setting $k = 2$.
+
+\section{Main Theorem}
+
+For integers $n, m, k \ge 0$, write $[n] = \{1, \dots, n\}$ and let
+\[
+  s(n, k) = \sum_{i=0}^{k} \binom{n}{i},
+\]
+with the standard convention $\binom{n}{i} = 0$ for $i > n$. Thus $s(n, k)$ counts the subsets of $[n]$ of cardinality at most $k$.
+
+\begin{theorem}\label{thm:main}
+For all integers $n \ge 0$ and $k \ge 0$:
+\begin{enumerate}
+  \item If $0 \le m \le k$, then $A(n, m, k) = s(n, k)^m$.
+  \item For $m = k + 1$,
+  \[
+    A(n, k + 1, k) = \sum_{j=0}^{k} (-1)^j \binom{n}{j} s(n - j, k - j)^{k + 1},
+  \]
+  where terms with $j > n$ vanish since $\binom{n}{j} = 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Each binary matrix $M \in \{0, 1\}^{n \times m}$ corresponds bijectively to its $m$-tuple of column supports $S = (S_1, \dots, S_m) \in \mathcal{P}([n])^m$, where $S_c = \{r \in [n] : M_{r, c} = 1\}$. Under this bijection, the $c$-th column sum equals $|S_c|$, and the $r$-th row sum equals $|\{c \in [m] : r \in S_c\}| \le m$. Let $\mathcal{F}_{n, k} = \{U \subseteq [n] : |U| \le k\}$; partitioning $\mathcal{F}_{n, k}$ by cardinality gives $|\mathcal{F}_{n, k}| = s(n, k)$.
+
+\emph{Part~(1).} When $m \le k$, every row sum is at most $m \le k$, so the row-sum condition holds automatically for every $S \in \mathcal{F}_{n, k}^m$. Consequently $A(n, m, k) = |\mathcal{F}_{n, k}|^m = s(n, k)^m$.
+
+\emph{Part~(2).} Now take $m = k + 1$. For any $S = (S_1, \dots, S_{k+1}) \in \mathcal{F}_{n, k}^{k+1}$, the sum of row $r$ exceeds $k$ if and only if it equals $k + 1$, meaning $r \in S_c$ for every $c \in [k + 1]$. Setting
+\[
+  B(S) = \bigcap_{c=1}^{k+1} S_c,
+\]
+the tuple $S$ represents a valid matrix if and only if $B(S) = \emptyset$.
+
+For any finite set $A \subseteq [n]$, the alternating sum over subsets of $A$ satisfies
+\[
+  \sum_{J \subseteq A} (-1)^{|J|} = \begin{cases} 1, & A = \emptyset, \\ 0, & A \ne \emptyset, \end{cases}
+\]
+as follows immediately by induction on $|A|$ (inserting a new element $a \notin A'$ pairs each $J \subseteq A'$ with $J \cup \{a\}$ of opposite sign). Summing this indicator over $S \in \mathcal{F}_{n, k}^{k+1}$ and exchanging summation order yields
+\[
+  A(n, k + 1, k) = \sum_{S \in \mathcal{F}_{n, k}^{k+1}} \sum_{J \subseteq B(S)} (-1)^{|J|} = \sum_{J \subseteq [n]} (-1)^{|J|} \bigl|\{S \in \mathcal{F}_{n, k}^{k+1} : J \subseteq B(S)\}\bigr|.
+\]
+Since $J \subseteq B(S)$ holds if and only if $J \subseteq S_c$ for every $c \in [k + 1]$, the inner count equals $N(J)^{k+1}$, where
+\[
+  N(J) = \bigl|\{U \subseteq [n] : J \subseteq U \text{ and } |U| \le k\}\bigr|.
+\]
+If $|J| > k$, then $N(J) = 0$ and hence $N(J)^{k+1} = 0$ (as $k + 1 \ge 1$). If $|J| = j \le k$, then $U \mapsto U \setminus J$ is a bijection between $\{U \subseteq [n] : J \subseteq U,\; |U| \le k\}$ and $\{V \subseteq [n] \setminus J : |V| \le k - j\}$; since $|[n] \setminus J| = n - j$, we obtain $N(J) = s(n - j, k - j)$. Grouping $J \subseteq [n]$ by cardinality $j = |J|$ (there are $\binom{n}{j}$ subsets of size $j$, vanishing for $j > n$) gives
+\[
+  A(n, k + 1, k) = \sum_{j=0}^{k} (-1)^j \binom{n}{j} s(n - j, k - j)^{k + 1}. \qedhere
+\]
+\end{proof}
+
+\section{Resolution of the OEIS~A401159 Conjectures}
+
+Set $k = 2$ and $f(n) = s(n, 2) = 1 + n + \binom{n}{2} = \frac{n^2 + n + 2}{2} = \frac{n(n + 1)}{2} + 1 = \mathrm{A000124}(n)$.
+
+\begin{corollary}\label{cor:a401159}
+For every integer $n \ge 0$:
+\begin{enumerate}
+  \item $T(n, 2) = \mathrm{A000124}(n)^2 = \mathrm{A086601}(n)$.
+  \item $T(n, 3) = 1 + n + \dfrac{11}{4}n^2 + \dfrac{13}{8}n^3 + \dfrac{1}{8}n^4 + \dfrac{3}{8}n^5 + \dfrac{1}{8}n^6$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Part~(1) is Theorem~\ref{thm:main}(1) with $m = k = 2$. For Part~(2), Theorem~\ref{thm:main}(2) with $k = 2$ gives
+\[
+  T(n, 3) = \binom{n}{0} s(n, 2)^3 - \binom{n}{1} s(n - 1, 1)^3 + \binom{n}{2} s(n - 2, 0)^3.
+\]
+Here $s(n, 2) = f(n)$, $s(m, 0) = 1$ for all $m \ge 0$, and for $n \ge 1$ we have $s(n - 1, 1) = 1 + (n - 1) = n$ (while at $n = 0$ both $\binom{0}{1} s(0, 1)^3$ and $0^4$ vanish). Thus
+\[
+  T(n, 3) = \frac{(n^2 + n + 2)^3}{8} - n^4 + \frac{n(n - 1)}{2}.
+\]
+Expanding $(n^2 + n + 2)^3 = n^6 + 3n^5 + 9n^4 + 13n^3 + 18n^2 + 12n + 8$ gives
+\begin{align*}
+  8\,T(n, 3) &= (n^6 + 3n^5 + 9n^4 + 13n^3 + 18n^2 + 12n + 8) - 8n^4 + (4n^2 - 4n) \\
+  &= 8 + 8n + 22n^2 + 13n^3 + n^4 + 3n^5 + n^6,
+\end{align*}
+and dividing by $8$ yields the claimed sextic polynomial.
+\end{proof}
+
+\section{Formal Verification}
+
+The Lean~4 module \texttt{Conjectures.MatharA401159} formally verifies Theorem~\ref{thm:main} and Corollary~\ref{cor:a401159} directly over binary matrices $\mathrm{Fin}\,n \to \mathrm{Fin}\,m \to \mathrm{Bool}$. The formalization relies exclusively on the standard Lean axioms (\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}), with no \texttt{sorry}, custom axioms, or \texttt{native\_decide}. The proof notes, Lean source, and standalone Python verifier are available at \url{https://github.com/s66lem/conjectures}.
+
+\begin{thebibliography}{9}
+\bibitem{Mathar2014}
+R.~J.~Mathar, \emph{The number of binary $n \times m$ matrices with at most $k$ $1$'s in each row or column}, 2014, \url{https://oeis.org/A247158/a247158.pdf}.
+
+\bibitem{Mathar2026}
+R.~J.~Mathar, \emph{OEIS Sequence A401159: Triangle $T(n,m)$ read by rows: the number of binary $n \times m$ matrices with at most two $1$'s in each row or column}, The On-Line Encyclopedia of Integer Sequences, approved November~18, 2026, \url{https://oeis.org/A401159}.
+\end{thebibliography}
+\end{document}
