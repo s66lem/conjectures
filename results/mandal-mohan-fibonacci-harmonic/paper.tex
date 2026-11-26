@@ -1,0 +1,190 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{Proof of the Mandal--Mohan Conjecture on Integral Harmonic-Type Means of Powers of Fibonacci Numbers}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $(F_i)_{i \ge 1}$ denote the Fibonacci sequence ($F_1 = F_2 = 1$, $F_{i+2} = F_{i+1} + F_i$).
+In a recent preprint (\texttt{arXiv:2611.32519v1}), Mandal and Mohan proved by a $2$-adic method that
+\[
+H(n,k) := \frac{n^k}{\displaystyle\sum_{i=1}^n \frac{1}{F_i^k}}
+\]
+is an integer for $k = 1$ if and only if $n \in \{1,2\}$, and for $k = 2$ if and only if $n \in \{1,2,3\}$, and conjectured (Conjecture~1.19) that for every $k \ge 3$, $H(n,k) \in \mathbb{N}$ if and only if $n \in \{1,2\}$.
+We give a short, completely elementary proof of the full classification for all $n,k \ge 1$ using only Bertrand's postulate and the strong divisibility property $\gcd(F_a,F_b) = F_{\gcd(a,b)}$, thereby settling Conjecture~1.19 and giving a unified reproof for $k \in \{1,2\}$.
+The complete proof has been formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+Let $(F_i)_{i \ge 1}$ be the Fibonacci sequence defined by $F_1 = F_2 = 1$ and $F_{i+2} = F_{i+1} + F_i$.
+In \cite{MandalMohan2026}, Sagar Mandal and Mohan investigated when arithmetic, geometric, and harmonic-type means of powers of the first $n$ Fibonacci numbers are integers. For the harmonic-type quotient
+\[
+H(n,k) := \frac{n^k}{\displaystyle\sum_{i=1}^n \frac{1}{F_i^k}}, \qquad n,k \ge 1,
+\]
+they proved by a $2$-adic valuation argument (\cite[Theorem~1.18]{MandalMohan2026}) that $H(n,1) \in \mathbb{N}$ if and only if $n \in \{1,2\}$, and $H(n,2) \in \mathbb{N}$ if and only if $n \in \{1,2,3\}$. Noting that their $2$-adic argument does not extend to $k \ge 3$ and reporting numerical verification for $k \in \{3,4,5\}$ and $n \le 10^4$, they stated the following conjecture.
+
+\begin{conjecture}[{\cite[Conjecture~1.19]{MandalMohan2026}}]\label{conj:mm}
+Let $k \ge 3$. Then
+\[
+\frac{n^k}{\displaystyle\frac{1}{F_1^k} + \frac{1}{F_2^k} + \cdots + \frac{1}{F_n^k}} \in \mathbb{N}
+\]
+if and only if $n = 1, 2$.
+\end{conjecture}
+
+In this note we establish the complete classification for all $n,k \ge 1$.
+
+\begin{theorem}\label{thm:main}
+For all integers $n \ge 1$ and $k \ge 1$,
+\[
+H(n,k) = \frac{n^k}{\displaystyle\sum_{i=1}^n \frac{1}{F_i^k}} \in \mathbb{N}
+\iff
+n \in \{1,2\} \;\text{ or }\; (n,k) = (3,2).
+\]
+\end{theorem}
+
+\begin{corollary}\label{cor:conj}
+Conjecture~\ref{conj:mm} holds for every integer $k \ge 3$.
+\end{corollary}
+
+The proof avoids $p$-adic valuations and Carmichael's primitive divisor theorem altogether: for $n \ge 12$, Bertrand's postulate supplies a prime index $q \in (n/2, n]$, whose Fibonacci number $F_q$ is coprime to every other $F_i$ ($1 \le i \le n$, $i \ne q$) by strong divisibility and already satisfies $F_q \ge 2q - 1 \ge n$. Clearing denominators then forces a direct size contradiction. The complete proof is machine-checked in Lean~4 without \texttt{sorry} or custom axioms.
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+Set $S_{n,k} := \sum_{i=1}^n F_i^{-k} > 0$. Clearly $H(n,k) \in \mathbb{N}$ if and only if there exists $m \in \mathbb{N}$ with $m S_{n,k} = n^k$.
+
+\begin{lemma}[Isolated-index criterion]\label{lem:isolated}
+Let $n \ge 3$ and $k \ge 1$. Suppose there exists an index $q \in \{3,\dots,n\}$ such that:
+\begin{enumerate}
+\item $\gcd(F_q, F_i) = 1$ for every $1 \le i \le n$ with $i \ne q$, and
+\item $F_q \ge n$.
+\end{enumerate}
+Then $H(n,k) \notin \mathbb{N}$.
+\end{lemma}
+
+\begin{proof}
+Suppose for contradiction that $m S_{n,k} = n^k$ for some $m \in \mathbb{N}$. Define
+\[
+P := \prod_{\substack{1 \le i \le n \\ i \ne q}} F_i^k \in \mathbb{N}_{>0},
+\qquad
+Q := \sum_{\substack{1 \le i \le n \\ i \ne q}} \frac{P}{F_i^k} \in \mathbb{N}.
+\]
+Multiplying $m S_{n,k} = n^k$ by $F_q^k P$ clears all denominators and yields the natural-number identity
+\[
+m (P + F_q^k Q) = n^k F_q^k P.
+\]
+By assumption~(1), $F_q^k$ is coprime to $F_i^k$ for every $i \ne q$, hence $\gcd(F_q^k, P) = 1$, and therefore
+\[
+\gcd(P + F_q^k Q,\, F_q^k) = \gcd(P, F_q^k) = 1.
+\]
+Since $(P + F_q^k Q) \mid F_q^k \cdot (n^k P)$ and $\gcd(P + F_q^k Q, F_q^k) = 1$, Euclid's lemma gives $(P + F_q^k Q) \mid n^k P$. As $n^k P > 0$, it follows that
+\[
+P + F_q^k Q \le n^k P.
+\]
+On the other hand, since $q \ge 3$, both $i = 1$ and $i = 2$ belong to $\{1,\dots,n\} \setminus \{q\}$, and $F_1 = F_2 = 1$, so
+\[
+Q \ge \frac{P}{F_1^k} + \frac{P}{F_2^k} = 2P.
+\]
+Combining this with assumption~(2), which gives $F_q^k \ge n^k$, we obtain
+\[
+P + F_q^k Q \ge P + 2 F_q^k P > 2 n^k P > n^k P,
+\]
+contradicting $P + F_q^k Q \le n^k P$.
+\end{proof}
+
+\begin{lemma}\label{lem:prime-coprime}
+If $q$ is a prime satisfying $n/2 < q \le n$, then $\gcd(F_q, F_i) = 1$ for every $1 \le i \le n$ with $i \ne q$.
+\end{lemma}
+
+\begin{proof}
+By the strong divisibility property of the Fibonacci sequence, $\gcd(F_q, F_i) = F_{\gcd(q,i)}$. Since $q$ is prime, $\gcd(q,i) \in \{1,q\}$. If $\gcd(q,i) = q$, then $q \mid i$; since $1 \le i \le n < 2q$, this forces $i = q$, contradicting $i \ne q$. Hence $\gcd(q,i) = 1$ and $\gcd(F_q,F_i) = F_1 = 1$.
+\end{proof}
+
+\begin{lemma}\label{lem:fib-linear}
+For every integer $m \ge 7$, $F_m \ge 2m - 1$.
+\end{lemma}
+
+\begin{proof}
+We proceed by strong induction on $m$. For $m = 7$ and $m = 8$, we have $F_7 = 13 \ge 13$ and $F_8 = 21 \ge 15$. For $m \ge 9$, the induction hypothesis gives
+\[
+F_m = F_{m-1} + F_{m-2} \ge (2m - 3) + (2m - 5) = 4m - 8 \ge 2m - 1. \qedhere
+\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+We handle all $n \ge 1$ by cases.
+
+\medskip
+\noindent\textbf{Cases $n \ge 12$.}
+Since $\lfloor n/2 \rfloor \ge 6$, Bertrand's postulate yields a prime $q$ with $\lfloor n/2 \rfloor < q \le 2\lfloor n/2 \rfloor \le n$. Then $q \ge 7$ and $2q > n$, so Lemma~\ref{lem:prime-coprime} gives $\gcd(F_q,F_i) = 1$ for all $1 \le i \le n$ with $i \ne q$, while Lemma~\ref{lem:fib-linear} gives $F_q \ge 2q - 1 \ge n$. Lemma~\ref{lem:isolated} implies $H(n,k) \notin \mathbb{N}$.
+
+\medskip
+\noindent\textbf{Cases $7 \le n \le 11$ and $n = 5$.}
+For $7 \le n \le 11$, take $q = 7$: $q$ is prime, $2q = 14 > n$, and $F_7 = 13 > n$.
+For $n = 5$, take $q = 5$: $q$ is prime, $2q = 10 > 5$, and $F_5 = 5 \ge 5$.
+In every case Lemmas~\ref{lem:prime-coprime} and~\ref{lem:isolated} yield $H(n,k) \notin \mathbb{N}$.
+
+\medskip
+\noindent\textbf{Case $n = 6$.}
+Since $(F_1,\dots,F_6) = (1,1,2,3,5,8)$, clearing denominators by $120^k$ gives
+\[
+S_{6,k} = \frac{U_6}{120^k}, \qquad U_6 := 2 \cdot 120^k + 60^k + 40^k + 24^k + 15^k > 1.
+\]
+For every $k \ge 1$: $2 \nmid U_6$ (only $15^k$ is odd), $3 \nmid U_6$ (only $40^k$ is coprime to $3$), and $5 \nmid U_6$ (only $24^k$ is coprime to $5$). Since every prime divisor of $6^k \cdot 120^k$ lies in $\{2,3,5\}$, we have $\gcd(U_6, 6^k \cdot 120^k) = 1$. Thus $m S_{6,k} = 6^k$, i.e.\ $m U_6 = 6^k \cdot 120^k$, forces $U_6 \mid 1$, a contradiction.
+
+\medskip
+\noindent\textbf{Case $n = 4$.}
+Clearing denominators by $6^k$ gives
+\[
+S_{4,k} = \frac{U_4}{6^k}, \qquad U_4 := 2 \cdot 6^k + 3^k + 2^k > 1.
+\]
+For every $k \ge 1$, $2 \nmid U_4$ (only $3^k$ is odd) and $3 \nmid U_4$ (only $2^k$ is coprime to $3$), so $\gcd(U_4, 4^k \cdot 6^k) = 1$. Hence $m U_4 = 4^k \cdot 6^k$ forces $U_4 \mid 1$, a contradiction.
+
+\medskip
+\noindent\textbf{Case $n = 3$.}
+Here $S_{3,k} = 2 + 2^{-k} = (2^{k+1} + 1)/2^k$. If $m S_{3,k} = 3^k$, then $m(2^{k+1}+1) = 3^k \cdot 2^k$. Since $\gcd(2^{k+1}+1, 2^k) = 1$, we get $(2^{k+1}+1) \mid 3^k$, so $2^{k+1} + 1 = 3^j$ for some integer $j \ge 0$.
+If $j = 2t + 1$ is odd, then $3^j \equiv 3 \pmod 4$, whereas $2^{k+1} + 1 \equiv 1 \pmod 4$ because $k \ge 1$, impossible.
+If $j = 2t$ is even, then $t \ge 1$ (since $2^{k+1}+1 \ge 5$) and
+\[
+(3^t - 1)(3^t + 1) = 3^{2t} - 1 = 2^{k+1}.
+\]
+Thus $3^t - 1 = 2^a$ and $3^t + 1 = 2^b$ for integers $0 \le a < b$ with $2^b - 2^a = 2$.
+We cannot have $a = 0$ (which gives $3^t = 2$) nor $a \ge 2$ (which gives $4 \mid (2^b - 2^a) = 2$).
+Hence $a = 1$, so $3^t - 1 = 2$, giving $t = 1$, $2^{k+1} = 8$, and $k = 2$.
+Conversely, $H(3,2) = 9/(1 + 1 + \frac{1}{4}) = 4 \in \mathbb{N}$.
+
+\medskip
+\noindent\textbf{Cases $n = 1, 2$.}
+Directly, $H(1,k) = 1 \in \mathbb{N}$ and $H(2,k) = 2^k / 2 = 2^{k-1} \in \mathbb{N}$ for every $k \ge 1$.
+\end{proof}
+
+\section{Formal Verification}
+
+All results in this paper have been formally verified in Lean~4 (using Mathlib's Bertrand's postulate \texttt{Nat.exists\_prime\_lt\_and\_le\_two\_mul} and strong divisibility \texttt{Nat.fib\_gcd}) with zero \texttt{sorry}, zero custom axioms, and zero \texttt{native\_decide}. The formalization and standalone Python verification script are available in the companion repository \cite{Repo}.
+
+\begin{thebibliography}{9}
+\raggedright
+\bibitem{MandalMohan2026}
+S.~Mandal and Mohan,
+\emph{Integral Means of Fibonacci Numbers: Divisibility, Density, and Arithmetic Structure},
+arXiv:2611.32519v1 [math.NT], 24 November 2026.
+
+\bibitem{Repo}
+S.~Levinstein,
+\emph{Formalized Conjecture Resolutions},
+\url{https://github.com/s66lem/conjectures} (Lean~4 formalization and Python verification artifacts).
+\end{thebibliography}
+
+\end{document}
