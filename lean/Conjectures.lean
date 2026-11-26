@@ -24,3 +24,4 @@ import Conjectures.GilAntidiagonalTraffic
 import Conjectures.EaslickNontransitiveDice
 import Conjectures.GhafariWanlessLatinTransversals
 import Conjectures.MandalMohanFibonacciHarmonic
+import Conjectures.ZaiLvSabirSplitHamilton

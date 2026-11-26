@@ -1,0 +1,122 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Counterexamples to the Tian--Dong / Zai--Lv--Sabir Conjecture on Hamilton-Connectedness of Split Graphs for All $r \ge 5$}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We disprove Conjecture~1.14 of Zai, Lv, and Sabir (\texttt{arXiv:2611.32794v1}; originally Conjecture~6.1 of Tian and Dong, \texttt{arXiv:2603.12770v1}), which asserts that for every integer $r \ge 3$, every $r$-connected $\{K_{1,r+1}, K_{1,r+1}+e\}$-free split graph on at least $2r+7$ vertices is Hamilton-connected.
+Using a unified split-circulant construction $G(m,S)$ on $2m$ vertices governed by a single difference-set intersection condition $|S \cap (S+d)| \ge 2$, we obtain counterexamples for every integer $r \ge 5$: the $22$-vertex Paley $(11,5,2)$ biplane split graph at $r = 5$ and an explicit $(2r+8)$-vertex circulant split graph for every $r \ge 6$.
+We also note by double counting that no balanced $r$-regular split counterexample exists at $r = 4$ above the order threshold $2r+7 = 15$.
+The complete proof for all $r \ge 5$ has been formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+A graph $G$ is a \emph{split graph} if its vertex set partitions into a clique $C$ and an independent set $I$. A graph is \emph{Hamilton-connected} if every pair of distinct vertices is joined by a spanning path, and is \emph{$\{K_{1,r+1}, K_{1,r+1}+e\}$-free} if it contains neither the star $K_{1,r+1}$ nor $K_{1,r+1}+e$ (the star with one edge added between two leaves) as an induced subgraph.
+
+In \cite{ZaiLvSabir2026}, Zai, Lv, and Sabir study spanning cyclability of split graphs and highlight the following conjecture of Tian and Dong \cite{TianDong2026} (whose $r = 3$ case is proved in \cite{TianDong2026} and cited as Theorem~1.13 of \cite{ZaiLvSabir2026}):
+
+\begin{conjecture}[{\cite[Conjecture~1.14]{ZaiLvSabir2026}}]\label{conj:zls}
+Let $r \ge 3$ be an integer. Every $r$-connected $\{K_{1,r+1},\allowbreak K_{1,r+1}+e\}$-free split graph with at least $2r+7$ vertices is Hamilton-connected.
+\end{conjecture}
+
+We show that Conjecture~\ref{conj:zls} fails for every integer $r \ge 5$.
+
+\begin{theorem}\label{thm:main}
+For every integer $r \ge 5$, there exists an $r$-connected $\{K_{1,r+1}, K_{1,r+1}+e\}$-free split graph on at least $2r+7$ vertices that is not Hamilton-connected. Specifically:
+\begin{enumerate}
+\item For $r = 5$, the $22$-vertex Paley $(11,5,2)$ split graph ($22 \ge 17 = 2\cdot 5 + 7$) is a counterexample.
+\item For every $r \ge 6$, the $(2r+8)$-vertex circulant split graph $G(r+4, \{0,1,\dots,r-1\})$ ($2r+8 \ge 2r+7$) is a counterexample.
+\end{enumerate}
+\end{theorem}
+
+\section{Unified Split-Circulant Criterion}
+
+For an integer $m \ge 2$ and a subset $S \subseteq \mathbb{Z}/m\mathbb{Z}$, let $G(m,S)$ denote the split graph on vertex set $V = C \sqcup I$ with $C = \{c_a : a \in \mathbb{Z}/m\mathbb{Z}\}$ and $I = \{i_b : b \in \mathbb{Z}/m\mathbb{Z}\}$, where $C$ induces a complete graph $K_m$, $I$ is an independent set, and $c_a$ is adjacent to $i_b$ if and only if $b - a \in S$.
+
+\begin{proposition}\label{prop:criterion}
+Let $2 \le r < m$ and $S \subseteq \mathbb{Z}/m\mathbb{Z}$. Suppose that $|S| = r$ and that every nonzero shift $d \in (\mathbb{Z}/m\mathbb{Z}) \setminus \{0\}$ satisfies
+\begin{equation}\label{eq:inter}
+|S \cap (S + d)| \ge 2.
+\end{equation}
+Then $G(m,S)$ is a split graph on $2m$ vertices that is $r$-connected, $\{K_{1,r+1}, K_{1,r+1}+e\}$-free, and not Hamilton-connected.
+\end{proposition}
+
+\begin{proof}
+By construction, $G(m,S)$ is a split graph on $2m$ vertices.
+
+\medskip
+\noindent\textbf{$r$-connectivity.}
+We have $|V| = 2m > r$. Let $D \subseteq V$ be any vertex cut with $|D| < r$. Because $|C| = m > r > |D|$, the surviving clique $C \setminus D$ is nonempty and connected. Every surviving independent vertex $i_b \in I \setminus D$ has $|S| = r > |D|$ neighbors $\{c_{b-s} : s \in S\} \subseteq C$, so at least one neighbor lies in $C \setminus D$. Hence every two vertices of $V \setminus D$ are joined by a path of length at most $3$ in $G(m,S) - D$.
+
+\medskip
+\noindent\textbf{$\{K_{1,r+1}, K_{1,r+1}+e\}$-freeness.}
+Let $c \in V$ and let $L \subseteq N(c)$ be any subset of size $r+1$. We show that the induced subgraph on $L$ has at least $2$ edges.
+Every vertex of $I$ has degree $|S| = r < r+1$, so $c = c_a \in C$. Write $L_C := L \cap C$ and $L_I := L \cap I$. Since $L_I \subseteq N_I(c_a) = \{i_{s+a} : s \in S\}$ has size at most $r$, we have $|L_C| \ge 1$.
+For any $c_{a'} \in L_C$ (so $a' \ne a$), condition~\eqref{eq:inter} with $d = a' - a \ne 0$ gives
+\[
+|N_I(c_a) \cap N_I(c_{a'})| = |S \cap (S + (a' - a))| \ge 2.
+\]
+We consider three cases according to $|L_C|$:
+\begin{itemize}
+\item If $|L_C| = 1$, say $L_C = \{c_{a'}\}$, then $|L_I| = r$ forces $L_I = N_I(c_a)$, so $c_{a'}$ has at least $2$ neighbors in $L_I$, giving at least $2$ edges in $L$.
+\item If $|L_C| = 2$, say $L_C = \{c_{a_1}, c_{a_2}\}$, then $|L_I| = r - 1$, so $L_I$ omits exactly one vertex of $N_I(c_a)$. Since $|N_I(c_a) \cap N_I(c_{a_1})| \ge 2$, the vertex $c_{a_1}$ still has a neighbor in $L_I$; together with the clique edge $c_{a_1}c_{a_2}$, this yields at least $2$ edges in $L$.
+\item If $|L_C| \ge 3$, then the clique $L_C$ alone spans at least $\binom{3}{2} = 3 \ge 2$ edges in $L$.
+\end{itemize}
+Therefore no induced $K_{1,r+1}$ or $K_{1,r+1}+e$ exists in $G(m,S)$.
+
+\medskip
+\noindent\textbf{Failure of Hamilton-connectedness.}
+Suppose for contradiction that $p(0), p(1), \dots, p(2m-1)$ is a Hamilton path from $c_0$ to $c_1$. Set $T := \{t \in \{0,\dots,2m-1\} : p(t) \in I\}$, so $|T| = |I| = m$. Since $p(2m-1) = c_1 \notin I$, every $t \in T$ satisfies $t + 1 \le 2m - 1$. Since $I$ is independent, $p(t+1) \in C$ for all $t \in T$, and $p(t+1) \ne p(0) = c_0$ because $t + 1 \ge 1$. Thus $t \mapsto p(t+1)$ is an injection from the $m$-element set $T$ into the $(m-1)$-element set $C \setminus \{c_0\}$, a contradiction.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+For $r = 5$, set $m = 11$ and let $S = \{1,3,4,5,9\} \subseteq \mathbb{Z}/11\mathbb{Z}$ be the quadratic-residue difference set. Then $|S| = 5$, $2m = 22 \ge 17 = 2\cdot 5 + 7$, and every nonzero shift $d \in (\mathbb{Z}/11\mathbb{Z}) \setminus \{0\}$ satisfies $|S \cap (S + d)| = 2$. Proposition~\ref{prop:criterion} yields the $r = 5$ counterexample.
+
+For every $r \ge 6$, set $m = r + 4$ and $S = \{0,1,\dots,r-1\} \subseteq \mathbb{Z}/(r+4)\mathbb{Z}$. Then $|S| = r$, $2m = 2r + 8 \ge 2r + 7$, and for every $d \in \mathbb{Z}/(r+4)\mathbb{Z}$,
+\[
+|S \cap (S + d)| = |S| + |S + d| - |S \cup (S + d)| \ge r + r - (r + 4) = r - 4 \ge 2.
+\]
+Proposition~\ref{prop:criterion} yields the counterexample for every $r \ge 6$.
+\end{proof}
+
+\begin{remark}
+In any $r$-connected $\{K_{1,r+1}, K_{1,r+1}+e\}$-free split graph $(C, I)$, $K_{1,r+1}$-freeness forces $d_I(c) \le r$ for all $c \in C$ while $r$-connectivity forces $d_C(i) \ge r$ for all $i \in I$, hence $|I| \le |C|$. Equality $|I| = |C| = m$ therefore forces the bipartite graph between $C$ and $I$ to be $r$-regular, and forbidding $K_{1,r+1}+e$ with one clique leaf forces $|N_I(c) \cap N_I(c')| \ge 2$ for every pair of distinct $c,c' \in C$. Double counting pairs in $C$ with a common neighbor in $I$ yields $m\binom{r}{2} \ge 2\binom{m}{2}$, i.e.\ $m \le \binom{r}{2} + 1$. At $r = 4$ this forces $2m \le 14 < 15 = 2\cdot 4 + 7$, so no balanced $r$-regular split counterexample reaches the order threshold at $r = 4$, and the case $r = 4$ of Conjecture~\ref{conj:zls} remains open.
+\end{remark}
+
+\section{Formal Verification}
+
+Theorem~\ref{thm:main} (both the $r = 5$ Paley $(11,5,2)$ counterexample and the infinite family for all $r \ge 6$) has been formally verified in Lean~4 without \texttt{sorry}, custom axioms, or \texttt{native\_decide}, alongside an independent Python~3 verifier \cite{Repo}.
+
+\begin{thebibliography}{9}
+\raggedright
+\bibitem{ZaiLvSabir2026}
+J.~Zai, W.~Lv, and E.~Sabir,
+\emph{Spanning cyclability of split graphs},
+arXiv:2611.32794v1 [math.CO], 24 November 2026.
+
+\bibitem{TianDong2026}
+T.~Tian and F.~Dong,
+\emph{Every $3$-connected $\{K_{1,4}, K_{1,4}+e\}$-free split graph of order at least $13$ is Hamilton-connected},
+arXiv:2603.12770v1 [math.CO], 2026 (Conjecture~6.1; v2 proves the $r=3$ case).
+
+\bibitem{Repo}
+S.~Levinstein,
+\emph{Formalized Conjecture Resolutions},
+\url{https://github.com/s66lem/conjectures} (Lean~4 formalization and Python verification artifacts).
+\end{thebibliography}
+
+\end{document}

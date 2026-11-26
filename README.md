@@ -36,6 +36,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **24.** [Easlick Conjecture 1 (minimal-advantage non-transitive $n$-sided dice)](results/easlick-nontransitive-dice/) | Proved for all $n \ge 7$ (3-die zipper cycles of length $3(n-7)$ for odd $n \ge 11$, $3(n-10)$ for even $n \ge 16$, and $n+1$ for $n \in \{7,8,9,10,12,14\}$; $n = 6$ unique with $L_{\max}(G_n) = n$) | [DOI](https://doi.org/10.5281/zenodo.24546684) | **Lean 4** · Cross-Model Audit · Python |
 | **25.** [Ghafari–Wanless Conjecture 3 (Wormald's Question on Latin square transversals)](results/ghafari-wanless-latin-transversals/) | Proved for every even $n \ge 22, n \ne 24$ (settling $n = 30$ and all even $n > 10\,000$ via modular $\Delta$-sum Latin squares + 8 mod-16 parametric tail families + 42 small witnesses) | [DOI](https://doi.org/10.5281/zenodo.24548884) | **Lean 4** · Cross-Model Audit · Python |
 | **26.** [Mandal–Mohan Conjecture 1.19 (harmonic-type means of Fibonacci powers)](results/mandal-mohan-fibonacci-harmonic/) | Proved completely for all $n, k \ge 1$ ($n^k / \sum_{i=1}^n F_i^{-k} \in \mathbb{N} \iff n \in \{1, 2\}$ or $(n, k) = (3, 2)$ via Bertrand's postulate + strong divisibility) | [DOI](https://doi.org/10.5281/zenodo.24549268) | **Lean 4** · Cross-Model Audit · Python |
+| **27.** [Zai–Lv–Sabir / Tian–Dong Conjecture 1.14 (Hamilton-connectedness of split graphs)](results/zai-lv-sabir-split-hamilton/) | Disproved for every $r \ge 5$ (22-vertex Paley $(11, 5, 2)$ biplane split graph at $r = 5$ + $(2r + 8)$-vertex circulant split family for all $r \ge 6$) | [DOI](https://doi.org/10.5281/zenodo.24549479) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -68,6 +69,7 @@ python3 results/gil-antidiagonal-traffic/verify.py
 python3 results/easlick-nontransitive-dice/verify.py
 python3 results/ghafari-wanless-latin-transversals/verify.py
 python3 results/mandal-mohan-fibonacci-harmonic/verify.py
+python3 results/zai-lv-sabir-split-hamilton/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
