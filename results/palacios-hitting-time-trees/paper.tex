@@ -1,0 +1,158 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\HT}{\operatorname{HT}}
+
+\title{The Path Uniquely Maximizes the Hitting-Time Index Among Trees}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove the tree-maximality conjecture of~\cite{Palacios2026} (Section~3): among all trees $T$ on $n \ge 1$ vertices, the hitting-time index $\HT(T)$ is uniquely maximized by the path $P_n$. Reducing $\HT(T)$ to a distance-and-transmission sum via the exact first-step Markov system on trees, we analyze a pendant-path grafting move that lowers the leaf count by one. We prove strict monotonicity via a core-independent exact evaluation of arm-to-arm transmission differences and a single closed-form positive polynomial bound for all arm lengths $a \ge 2$ (plus a short symmetric-arm argument for $a = b = 1$). Every non-path tree admits this move at a deepest branching vertex relative to a diameter endpoint, yielding $P_n$ as the unique maximizer by induction on the number of leaves. The entire proof, including uniqueness of the first-step hitting-time system on arbitrary finite trees, is formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+For a finite connected simple graph $G = (V, E)$, let $H_G(x, y)$ denote the expected hitting time from $x$ to $y$ for the simple random walk on $G$, with $H_G(y, y) = 0$. The \emph{hitting-time index} of $G$ is
+\[
+  \HT(G) = \sum_{\{x, y\} \subseteq V} \max\bigl(H_G(x, y),\, H_G(y, x)\bigr).
+\]
+In~\cite{Palacios2026}, Palacios, Tamura, Wiberg, and Petojevi\'c disprove the conjecture that $P_n$ maximizes $\HT(G)$ over all connected graphs, and state the conjecture (\cite[\S3]{Palacios2026}, citing earlier evidence including~\cite{PalaciosPetojevic}) that $P_n$ maximizes $\HT(T)$ over all trees of order $n$. We settle this conjecture affirmatively with its strict uniqueness characterization.
+
+\begin{theorem}\label{thm:main}
+For every finite tree $T$ on $n \ge 1$ vertices, $\HT(T) \le \HT(P_n)$, with equality if and only if $T \cong P_n$.
+\end{theorem}
+
+\section{Exact First-Step Reduction on Trees}
+
+Let $T = (V, E)$ be a finite tree on $n \ge 2$ vertices, and write $D_T(x) = \sum_{z \in V} d_T(x, z)$ for the transmission of $x \in V$.
+
+\begin{lemma}\label{lem:neighbor}
+For every $x \ne z$ in $T$, there is a unique neighbor $w_0 \in N_T(x)$ with $d_T(w_0, z) = d_T(x, z) - 1$, while every $w \in N_T(x) \setminus \{w_0\}$ satisfies $d_T(w, z) = d_T(x, z) + 1$. In particular,
+\[
+  \sum_{w \in N_T(x)} \bigl(d_T(w, z) - d_T(x, z)\bigr) = \deg_T(x) - 2.
+\]
+\end{lemma}
+
+\begin{proof}
+Let $x = u_0, u_1, \dots, u_k = z$ ($k = d_T(x, z) \ge 1$) be the unique path from $x$ to $z$. Then $w_0 = u_1$ satisfies $d_T(w_0, z) = k - 1$. For any $w \in N_T(x) \setminus \{w_0\}$, prepending $wx$ to the $x$--$z$ path yields a simple path of length $k + 1$ by acyclicity, so $d_T(w, z) = k + 1$. Summing gives $(-1) + (\deg_T(x) - 1) = \deg_T(x) - 2$.
+\end{proof}
+
+\begin{lemma}\label{lem:hit}
+For every target $y \in V$, the function $h_y(x) = (n - 1) d_T(x, y) + D_T(y) - D_T(x)$ is the unique solution $h : V \to \mathbb{R}$ of $h(y) = 0$ and the first-step equations
+\[
+  \deg_T(x)\, h(x) = \deg_T(x) + \sum_{w \in N_T(x)} h(w) \qquad (x \ne y).
+\]
+Consequently,
+\begin{equation}\label{eq:ht-tree}
+  \HT(T) = \sum_{\{x, y\} \subseteq V} \Bigl((n - 1)\, d_T(x, y) + |D_T(y) - D_T(x)|\Bigr).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Fix $x \ne y$. Summing Lemma~\ref{lem:neighbor} over the $n - 1$ vertices $z \ne x$ and adding the $z = x$ sum $\deg_T(x)$ yields
+\[
+  \sum_{w \in N_T(x)} \bigl(D_T(w) - D_T(x)\bigr) = \deg_T(x) + (n - 1)(\deg_T(x) - 2) = n \deg_T(x) - 2(n - 1).
+\]
+Hence
+\[
+  \sum_{w \in N_T(x)} \bigl(h_y(w) - h_y(x)\bigr) = (n - 1)(\deg_T(x) - 2) - \bigl(n \deg_T(x) - 2(n - 1)\bigr) = -\deg_T(x),
+\]
+so $h_y$ solves the first-step system. If $h_1, h_2$ both solve the system, their difference $f = h_1 - h_2$ satisfies $f(y) = 0$ and $\deg_T(x) f(x) = \sum_{w \in N_T(x)} f(w)$ for $x \ne y$. Let $M = \max_V f$, attained at $x_0$. Along any path from $x_0$ to $y$, if $u \ne y$ has $f(u) = M$, then $\sum_{w \in N_T(u)} (M - f(w)) = 0$ with each summand nonnegative, so every neighbor $w$ of $u$ satisfies $f(w) = M$. Thus $M = f(y) = 0$, so $f \le 0$; applying the same argument to $-f$ gives $f = 0$. Finally, $\max(h_y(x), h_x(y)) = (n - 1) d_T(x, y) + |D_T(y) - D_T(x)|$.
+\end{proof}
+
+\section{Pendant-Path Grafting and Strict Monotonicity}
+
+Suppose $T$ has two disjoint pendant paths $A = (A_1, \dots, A_a)$ and $B = (B_1, \dots, B_b)$ attached at a common vertex $v$, with $a \ge b \ge 1$ and no other edges incident to $A \cup B$. Let $C = V \setminus (A \cup B)$ have order $|C| = r + 1$ with $r \ge a$, and set $m = n - 1 = a + b + r$. Form $T'$ by replacing the edge $v A_1$ with $B_b A_1$. Then $T'$ is a tree on $V$ with one fewer leaf than $T$ (since $\deg_{T'}(v) = \deg_T(v) - 1 \ge 2$ and $\deg_{T'}(B_b) = 2$, while all other degrees stay unchanged).
+
+\begin{lemma}\label{lem:shift}
+Write $\delta(x) = D_{T'}(x) - D_T(x)$.
+\begin{enumerate}
+  \item Distances within $A$, within $B$, within $C$, and between $B$ and $C$ are fixed; $d_{T'}(A_i, z) = d_T(A_i, z) + b$ for $z \in C$; and $d_{T'}(A_i, B_j) = d_T(A_i, B_j) + (b - 2j)$.
+  \item $\delta(A_i) = br$, $\delta(B_j) = a(b - 2j)$, and $\delta(z) = ab$ for all $z \in C$.
+  \item Setting $X_i = D_T(A_i) - D_T(v)$ and $Y_j = D_T(B_j) - D_T(v)$, one has $X_i = i(r + b - a + i)$ and $Y_j = j(r + a - b + j)$, whence $u_{ij} := D_T(A_i) - D_T(B_j) = X_i - Y_j$ and
+  \[
+    u'_{ij} := D_{T'}(A_i) - D_{T'}(B_j) = u_{ij} + b(r - a) + 2aj = (b + i - j)(r + i + j - a) > 0.
+  \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Part~(1) is immediate from unique tree paths. Summing distance changes gives $\delta(A_i) = b(r + 1) + \sum_{j=1}^b (b - 2j) = br$, $\delta(B_j) = a(b - 2j)$, and $\delta(z) = ab$. For~(3), every $z \in C \cup B$ satisfies $d_T(A_i, z) - d_T(v, z) = i$, while $\sum_{k=1}^a (|i - k| - k) = i(i - a - 1)$; adding $i(r + 1 + b)$ yields $X_i = i(r + b - a + i)$, and symmetrically $Y_j = j(r + a - b + j)$. Adding $\delta(A_i) - \delta(B_j) = b(r - a) + 2aj$ gives $(b + i - j)(r + i + j - a) > 0$, since $b + i - j \ge i \ge 1$ and $r + i + j - a \ge 2$.
+\end{proof}
+
+\begin{lemma}\label{lem:strict}
+Under $r \ge a \ge b \ge 1$, we have $\HT(T') > \HT(T)$.
+\end{lemma}
+
+\begin{proof}
+Pairs within $A$ and within $C$ contribute zero to $\HT(T') - \HT(T)$.
+
+\emph{Case 1: $a = b = 1$ ($r \ge 1$, $m = r + 2$).}
+By arm symmetry, $D_T(A_1) = D_T(B_1)$. For each $z \in C$, setting $u = D_T(A_1) - D_T(z)$, the shifts are $\delta(A_1) - \delta(z) = r - 1$ and $\delta(B_1) - \delta(z) = -2$, so
+\[
+  |u + r - 1| + |u - 2| \ge |2u + r - 3| \ge 2|u| - |r - 3|.
+\]
+Adding the distance gain $m = r + 2$ on $(A_1, z)$ gives a net contribution of at least $(r + 2) - |r - 3| \ge 1$ per $z \in C$ (equal to $2r - 1 \ge 1$ for $1 \le r \le 3$ and $5$ for $r \ge 3$). The pair $(A_1, B_1)$ changes by $-m + (r + 1) = -1$. Summing over $C$ and $(A_1, B_1)$ gives $\HT(T') - \HT(T) \ge (r + 1) - 1 = r \ge 1$.
+
+\emph{Case 2: $a \ge 2$ ($1 \le b \le a \le r$).}
+Set $d = a - b \ge 0$ and $s = r - a \ge 0$.
+\begin{itemize}
+  \item Across $A \times C$, each pair gains at least $mb - b(r - a) = b(2a + b)$, totaling $\ge ab(r + 1)(2a + b)$. Across $B \times C$, each pair $(B_j, z)$ loses at most $2aj$, totaling $\le ab(r + 1)(b + 1)$. Their combined contribution is at least $ab(r + 1)(2a - 1)$.
+  \item Within $B$, each pair $1 \le j < k \le b$ loses at most $2a(k - j)$, totaling $\le 2a \cdot b(b^2 - 1)/6 = ab(b^2 - 1)/3$.
+  \item Across $A \times B$, the distance sum changes by $-ab$, contributing $-mab = -ab(a + b + r)$. For the transmission differences, $u'_{ij} = u_{ij} + w_{ij} > 0$ with $w_{ij} = bs + 2aj > 0$, so $u'_{ij} - |u_{ij}| = \min(w_{ij}, u'_{ij} + u_{ij})$, where
+  \[
+    u'_{ij} + u_{ij} = (b + 2i - 2j)s + 2i(i + b) - 2j^2 - 2jd.
+  \]
+  When $i < j$, $u_{ij} = (i - j)(r + i + j) - (i + j)d < 0$, so $u'_{ij} - |u_{ij}| = u'_{ij} + u_{ij}$. When $i \ge j$, both $(b + 2i - 2j)s \ge 0$ and $2i(i + b) - 2j^2 \ge 2jb \ge 0$, so $u'_{ij} + u_{ij} \ge -2jd$ and $w_{ij} > 0 \ge -2jd$, giving $u'_{ij} - |u_{ij}| \ge -2jd$. Summing over $1 \le i \le a$ and $1 \le j \le b$ using the elementary identities
+  \[
+    \sum_{1 \le i < j \le b} (b + 2i - 2j) = \frac{b(b - 1)(b - 2)}{6}, \qquad \sum_{1 \le i < j \le b} \bigl(2i(i + b) - 2j^2\bigr) = -\frac{b(b^2 - 1)}{3}
+  \]
+  gives
+  \[
+    \sum_{i=1}^a \sum_{j=1}^b \bigl(u'_{ij} - |u_{ij}|\bigr) \ge \frac{b(b - 1)(b - 2)}{6}\, s - \frac{b(b^2 - 1)}{3} - ab(b + 1)d.
+  \]
+\end{itemize}
+Multiplying the sum of these bounds by $6$ and substituting $a = b + d$, $r = b + d + s$ yields
+\begin{align*}
+  6\bigl(\HT(T') - \HT(T)\bigr) &\ge \bigl(12ab(a - 1) + b(b - 1)(b - 2)\bigr) s \\
+  &\quad + 2b\Bigl(6d^3 + (15b - 6)d^2 + 2(b - 1)(7b + 1)d + 5b^3 - 7b^2 - 2b + 1\Bigr).
+\end{align*}
+The coefficient of $s$ is strictly positive for $a \ge 2, b \ge 1$. For the second term: if $b = 1$, then $a \ge 2$ forces $d \ge 1$, giving $6d^3 + 9d^2 - 3 \ge 12 > 0$; if $b \ge 2$, then $5b^3 - 7b^2 - 2b + 1 = (b - 2)(5b^2 + 3b + 4) + 9 \ge 9 > 0$ and all other terms are nonnegative. Thus $\HT(T') > \HT(T)$.
+\end{proof}
+
+\section{Existence of the Move and Proof of Theorem~\ref{thm:main}}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+The cases $n = 1, 2$ are trivial. Fix a vertex set $V$ of size $n \ge 2$ and induct strongly on the leaf count $\ell(T) \ge 2$. If $\ell(T) = 2$, then $\sum_u (\deg_T(u) - 2) = -2$ forces every vertex to have degree at most $2$, so $T \cong P_n$ and $\HT(T) = \HT(P_n)$.
+
+If $\ell(T) \ge 3$, then $T$ has a vertex of degree at least $3$. Let $p, q \in V$ achieve the diameter $L = d_T(p, q)$. The unique $p$--$q$ path must contain a vertex $w$ of degree at least $3$ (otherwise no edge leaves the path and $T \cong P_n$). Swapping $p, q$ if necessary, assume $d_T(p, w) \ge L / 2$. Choose a vertex $v$ of degree at least $3$ maximizing $d_T(p, v)$. Then $d_T(p, v) \ge L / 2 > 0$, so by Lemma~\ref{lem:neighbor} the vertex $v$ has a unique neighbor closer to $p$ and at least two neighbors $u_1, u_2$ farther from $p$. By maximality of $d_T(p, v)$, every vertex in the subtrees of $u_1$ and $u_2$ away from $v$ has degree at most $2$, so those subtrees are pendant paths $A = (A_1, \dots, A_a)$ and $B = (B_1, \dots, B_b)$ at $v$ with $a \ge b \ge 1$. By definition of the diameter, $d_T(p, v) + a = d_T(p, A_a) \le L$, so $a \le L - d_T(p, v) \le d_T(p, v)$. The unique $p$--$v$ path lies wholly in $C = V \setminus (A \cup B)$ and has $d_T(p, v) + 1$ vertices, whence $r = |C| - 1 \ge d_T(p, v) \ge a$.
+
+Applying the grafting move of Lemma~\ref{lem:strict} produces a tree $T'$ on $V$ with $\ell(T') = \ell(T) - 1$ and $\HT(T) < \HT(T')$. By the induction hypothesis, $\HT(T') \le \HT(P_n)$, hence $\HT(T) < \HT(P_n)$.
+\end{proof}
+
+\section{Formal Verification}
+
+Theorem~\ref{thm:main} and Lemmas~\ref{lem:neighbor}--\ref{lem:strict} have been formally verified in Lean~4 with Mathlib for arbitrary finite trees (module \texttt{PalaciosHittingTimeTrees}), using only the standard axioms (no \texttt{sorry}, custom axioms, or \texttt{native\_decide}). An independent Python verifier (\texttt{verify.py}) additionally checks the first-step equations, all algebraic and graph graft bounds, and all $1{,}441$ labeled trees of orders $2 \le n \le 6$.
+
+\begin{thebibliography}{9}
+\bibitem{Palacios2026}
+J.~L.~Palacios, S.~Tamura, J.~Wiberg, and A.~Petojevi\'c,
+\emph{The hitting time index: bounds, a sharp threshold, the proof of a conjecture and the disproof of another conjecture},
+\texttt{arXiv:2611.34295v1}, November~25, 2026.
+
+\bibitem{PalaciosPetojevic}
+J.~L.~Palacios and A.~Petojevi\'c,
+\emph{An edge operation that increases the hitting time index},
+cited as Ref.~[14] in~\cite{Palacios2026}.
+\end{thebibliography}
+
+\end{document}

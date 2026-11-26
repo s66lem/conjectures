@@ -34,4 +34,5 @@ import Conjectures.BasakWaldschmidtMonomial
 import Conjectures.NakaiA400474
 import Conjectures.MatharA401159
 import Conjectures.ZamanA395348
+import Conjectures.PalaciosHittingTimeTrees
 

@@ -46,6 +46,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **34.** [Takuto Nakai’s OEIS A400474 conjecture (triangle interior integer-angle maximum)](results/nakai-a400474/) | Proved for every $n \ge 3$ ($a(n) = (n^2 - 4n + c(n \bmod 6))/3$ with $c = (6, -3, 4, 3, 0, -5)$ via real-angle floor reduction, disjoint exclusions & discrete convexity balancing) | [DOI](https://doi.org/10.5281/zenodo.24559747) | **Lean 4** · Cross-Model Audit · Python |
 | **35.** [R. J. Mathar’s OEIS A401159 conjectures (binary matrices with at most two $1$'s per row and column)](results/mathar-a401159/) | Both open conjectures proved + general $m \le k + 1$ formula ($T(n,2) = \mathrm{A086601}(n)$, $T(n,3) = 1 + n + \frac{11}{4}n^2 + \frac{13}{8}n^3 + \frac{1}{8}n^4 + \frac{3}{8}n^5 + \frac{1}{8}n^6$) | [DOI](https://doi.org/10.5281/zenodo.24559959) | **Lean 4** · Cross-Model Audit · Python |
 | **36.** [Rahid Zaman’s OEIS A395348 conjecture (two-color spiral queen recurrence)](results/zaman-a395348/) | Proved for every $n \ge 2$ ($a(n + 4) = a(n) + 8n + 34$ via exact diagonal-parity separation, contiguous line-set invariants & exact closed-form coordinates for A395348 and A395349) | [DOI](https://doi.org/10.5281/zenodo.24560206) | **Lean 4** · Cross-Model Audit · Python |
+| **37.** [Palacios–Tamura–Wiberg–Petojević Tree Hitting-Time Index Conjecture (`arXiv:2611.34295v1`, §3)](results/palacios-hitting-time-trees/) | Proved for all $n \ge 1$ ($HT(T) \le HT(P_n)$ with equality iff $T \cong P_n$, via first-step Markov uniqueness & strict pendant-path grafting monotonicity) | [DOI](https://doi.org/10.5281/zenodo.24560498) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -88,6 +89,7 @@ python3 results/basak-waldschmidt-monomial/verify.py
 python3 results/nakai-a400474/verify.py
 python3 results/mathar-a401159/verify.py
 python3 results/zaman-a395348/verify.py
+python3 results/palacios-hitting-time-trees/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
