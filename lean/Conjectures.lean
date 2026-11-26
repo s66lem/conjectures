@@ -51,3 +51,4 @@ import Conjectures.RussoHeapOddExtremal
 import Conjectures.SharmaA401897
 import Conjectures.AgyingiGabaQHyperconvexModular
 import Conjectures.MukherjeeRayUnicyclicZF
+import Conjectures.LassakSzarekPentagonCentroid

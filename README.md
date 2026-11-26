@@ -63,6 +63,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **51.** [Karan Sharma's OEIS A401897 conjecture (asymptotic Gaussian integer visibility $a(n) \sim 48n/\pi^2$)](results/sharma-a401897/) | Proved with explicit error bounds ($|a(z) - 6N/\pi| \le \pi\sqrt{N}(2 + \sqrt{2} + \sqrt{2}\ln(2\sqrt{N}))$, $|n - \pi N/8| \le 2\sqrt{N}$, and $a(n)/(48n/\pi^2) = 1 + O(\log n / \sqrt{n}) \to 1$) | [DOI](https://doi.org/10.5281/zenodo.24571199) | **Lean 4** · Cross-Model Audit · Python |
 | **52.** [Agyingi–Gaba Question `q:modular` (`arXiv:2611.32417v1`, modularity & $N_5$ in bounded $q$-hyperconvex spaces)](results/agyingi-gaba-qhyperconvex-modular/) | Resolved completely (Part 1: Isbell-hull $(Y, \le_q)$ is modular & non-distributive via strictly decreasing valuation $v(g) = \max g + \min g$, hence $N_5$-free; Part 2: explicit bounded $q$-hyperconvex space $S = \{g \in [0,1]^3 : g_3 \le \max(g_1, g_2)\}$ contains $N_5$) | [DOI](https://doi.org/10.5281/zenodo.24571430) | **Lean 4** · Cross-Model Audit · Python |
 | **53.** [Mukherjee–Ray Problem 6.2 (`arXiv:2611.10985v2`, log-concavity of connected zero forcing polynomials of unicyclic graphs)](results/mukherjee-ray-unicyclic-zf/) | Disproved (exact closed form for all tadpoles $T_{m,\ell}$: log-concave $\iff m \le 4$ or $\ell \le 1$; counterexamples $T_{5, n-5}$ for every order $n \ge 7$, sharp & unique at $n = 7$ via $T_{5,2}$ with $7^2 = 49 < 50 = 5 \cdot 10$) | [DOI](https://doi.org/10.5281/zenodo.24572283) | **Lean 4** · Cross-Model Audit · Python |
+| **54.** [Lassak–Szarek Problem (`arXiv:2611.21947v1`, centroid Banach–Mazur distance $d_{\mathrm{BM}}^{\mathrm{cen}}(F, T)$ between pentagon and triangle)](results/lassak-szarek-pentagon-centroid/) | Disproved (rotated equilateral triangle gives $d_{\mathrm{BM}}^{\mathrm{cen}}(F, T) \le (1 + \cos 24^\circ)/\cos 36^\circ \approx 2.365272 < 19/8 = 2.375 < \eta = (7 - \sqrt{5})/2 \approx 2.381966$, with exact $\mathbb{Q}(\sqrt{5})$ rational certificate) | [DOI](https://doi.org/10.5281/zenodo.24572740) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -122,6 +123,7 @@ python3 results/russo-heap-odd-extremal/verify.py
 python3 results/sharma-a401897/verify.py
 python3 results/agyingi-gaba-qhyperconvex-modular/verify.py
 python3 results/mukherjee-ray-unicyclic-zf/verify.py
+python3 results/lassak-szarek-pentagon-centroid/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
