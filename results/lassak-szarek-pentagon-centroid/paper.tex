@@ -1,0 +1,192 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{Disproof of Lassak and Szarek's Conjecture on the Centroid Banach--Mazur Distance Between a Pentagon and a Triangle}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We answer in the negative the open problem of Lassak and Szarek
+(arXiv:2611.21947v1) asking whether the centroid Banach--Mazur distance
+$d_{\mathrm{BM}}^{\mathrm{cen}}(F, T)$ between an affine-regular pentagon $F$
+and a triangle $T$ equals Lassak's upper bound
+$\eta = (7 - \sqrt{5})/2 \approx 2.381966$. Using a rotated equilateral
+triangle centred at the origin, we prove
+$d_{\mathrm{BM}}^{\mathrm{cen}}(F, T) \le (1 + \cos 24^\circ)/\cos 36^\circ
+\approx 2.365272 < \eta$. We also exhibit a completely elementary rational
+certificate in $\mathbb{Q}(\sqrt{5})$ yielding
+$d_{\mathrm{BM}}^{\mathrm{cen}}(F, T) \le 19/8 = 2.375 < \eta$, which is
+formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+For planar convex bodies $C, D \subset \mathbb{R}^2$, let $\mathrm{cen}(K) :=
+\mathrm{area}(K)^{-1} \int_K x\,dx$ denote the centroid of $K$. In their
+survey~\cite{LS2026}, Lassak and Szarek consider the \emph{centroid
+Banach--Mazur distance}
+\[
+d_{\mathrm{BM}}^{\mathrm{cen}}(C, D)
+:= \inf_{a,\, h_\lambda}
+\bigl\{\lambda > 0 : C \subset a(D) \subset h_\lambda(C) \text{ and }
+\mathrm{cen}(C) = \mathrm{cen}(a(D)) = \mathrm{cen}(h_\lambda(C))\bigr\},
+\]
+where $a$ ranges over invertible affine maps of $\mathbb{R}^2$ and $h_\lambda$
+ranges over homotheties of ratio $\lambda > 0$.
+
+For an affine-regular pentagon $F$ and a triangle $T$, Lassak~\cite{L2024}
+proved $d_{\mathrm{BM}}^{\mathrm{cen}}(F, T) \le \eta := (7 - \sqrt{5})/2
+\approx 2.381966$. In~\cite{LS2026}, Lassak and Szarek conjectured that this
+bound is optimal and posed the problem: \emph{Is
+$d_{\mathrm{BM}}^{\mathrm{cen}}(F, T) = \eta$?} We show that the answer is no.
+
+\section{Rotated Equilateral Triangle Bound}
+
+Because invertible affine maps commute with centroids and conjugate homotheties
+to homotheties of the same ratio, $d_{\mathrm{BM}}^{\mathrm{cen}}(C, D)$ is
+invariant under independent invertible affine transformations of $C$ and $D$.
+
+\begin{theorem}\label{thm:equilateral}
+For every affine-regular pentagon $F$ and every triangle $T$,
+\[
+d_{\mathrm{BM}}^{\mathrm{cen}}(F, T)
+\le \frac{1 + \cos 24^\circ}{\cos 36^\circ}
+= \frac{2\cos^2 12^\circ}{\cos 36^\circ}
+\approx 2.365272 < \frac{7 - \sqrt{5}}{2}.
+\]
+\end{theorem}
+
+\begin{proof}
+By affine invariance, take $F = \mathrm{conv}\{u_{72^\circ k} : 0 \le k \le 4\}$,
+where $u_\theta = (\cos\theta, \sin\theta)$. Rotational symmetry gives
+$\mathrm{cen}(F) = 0$. The five outward edge normals of $F$ are $u_{\nu_k}$
+with $\nu_k = 36^\circ + 72^\circ k$ and support value $\cos 36^\circ$, so the
+Minkowski gauge of $F$ is
+$g_F(\rho u_\phi) = \max_k \rho \cos(\phi - \nu_k) / \cos 36^\circ$.
+
+Let $E = \mathrm{conv}\{r u_{48^\circ}, r u_{168^\circ}, r u_{288^\circ}\}$ be
+the equilateral triangle centred at $0$ with circumradius
+$r := \cos 36^\circ / \cos 12^\circ$. Then $\mathrm{cen}(E) = 0$, and:
+\begin{itemize}
+  \item At $\phi = 48^\circ$ (nearest normal $\nu_0 = 36^\circ$) and
+        $\phi = 168^\circ$ (nearest normal $\nu_2 = 180^\circ$), the angular
+        offset is $12^\circ$, so $g_F(r u_\phi) = r\cos 12^\circ / \cos 36^\circ = 1$.
+  \item At $\phi = 288^\circ$ (nearest normals $252^\circ, 324^\circ$), the
+        angular offset is $36^\circ$, so $g_F(r u_{288^\circ}) = r < 1$.
+\end{itemize}
+By convexity, $E \subset F$.
+
+The inradius of $E$ is $r/2$ and its outward edge normals lie at
+$\mu \in \{108^\circ, 228^\circ, 348^\circ\}$, so
+$g_E(u_\psi) = \max_\mu 2\cos(\psi - \mu) / r$. Evaluating at the five
+vertices of $F$:
+\begin{itemize}
+  \item $\psi \in \{0^\circ, 216^\circ\}$: minimum distance to $\mu$ is
+        $12^\circ$, giving $g_E(u_\psi) = 2\cos 12^\circ / r$.
+  \item $\psi \in \{72^\circ, 144^\circ\}$: minimum distance to $\mu$ is
+        $36^\circ$, giving $g_E(u_\psi) = 2\cos 36^\circ / r$.
+  \item $\psi = 288^\circ$: minimum distance to $\mu$ is $60^\circ$, giving
+        $g_E(u_\psi) = 1 / r$.
+\end{itemize}
+Thus $F \subset \lambda^* E$ with
+$\lambda^* = 2\cos 12^\circ / r = 2\cos^2 12^\circ / \cos 36^\circ
+= (1 + \cos 24^\circ)/\cos 36^\circ$. Taking $a(T) = \lambda^* E$ and
+$h_{\lambda^*}(x) = \lambda^* x$ gives $F \subset a(T) \subset h_{\lambda^*}(F)$
+with all three centroids at $0$, so
+$d_{\mathrm{BM}}^{\mathrm{cen}}(F, T) \le \lambda^* < \eta$.
+\end{proof}
+
+\section{Exact $\mathbb{Q}(\sqrt{5})$ Certificate and Lean~4 Verification}
+
+For a purely algebraic, kernel-verified disproof avoiding trigonometric
+estimates, apply $L(x, y) = (x, y/\sin 72^\circ)$ to $F$ to obtain the
+affine-regular pentagon $F' = \mathrm{conv}\{P_0, \dots, P_4\}$ with vertices in
+$\mathbb{Q}(\sqrt{5})$:
+\[
+P_0 = (1, 0),\quad P_1 = (c, 1),\quad P_2 = (-\tfrac{\varphi}{2}, \tfrac{1}{\varphi}),\quad
+P_3 = (-\tfrac{\varphi}{2}, -\tfrac{1}{\varphi}),\quad P_4 = (c, -1),
+\]
+where $c = (\sqrt{5} - 1)/4$ and $\varphi = (1 + \sqrt{5})/2$.
+
+\begin{theorem}\label{thm:cert}
+Let $T_0 = \mathrm{conv}\{v_0, v_1, v_2\}$ with
+\[
+v_0 = \left(\tfrac{112}{200}, \tfrac{127}{200}\right),\qquad
+v_1 = \left(-\tfrac{161}{200}, \tfrac{35}{200}\right),\qquad
+v_2 = \left(\tfrac{49}{200}, -\tfrac{162}{200}\right).
+\]
+Then $\mathrm{cen}(F') = \mathrm{cen}(T_0) = 0$, $T_0 \subset F'$,
+$F' \subset \frac{19}{8} T_0$, and consequently
+\[
+d_{\mathrm{BM}}^{\mathrm{cen}}(F, T) \le \frac{19}{8} = 2.375
+< \frac{7 - \sqrt{5}}{2} = \eta.
+\]
+\end{theorem}
+
+\begin{proof}
+The matrix $A = \bigl(\begin{smallmatrix}c & c^2 - 1 \\ 1 & c\end{smallmatrix}\bigr)$
+satisfies $\det A = 1$ and cyclically permutes $P_k \mapsto P_{(k+1)\bmod 5}$,
+so $A(F') = F'$ and $A(\mathrm{cen}(F')) = \mathrm{cen}(F')$. Since
+$\det(A - I) = 2(1 - c) = (5 - \sqrt{5})/2 \neq 0$, we have
+$\mathrm{cen}(F') = 0$. For $T_0$, $v_0 + v_1 + v_2 = 0$ and
+$\det(v_1 - v_0, v_2 - v_0) = 73101/40000 > 0$, so $T_0$ is a nondegenerate
+triangle with $\mathrm{cen}(T_0) = 0$.
+
+Each $v_j$ lies in $F'$ via explicit nonnegative barycentric weights in
+$\mathbb{Q}(\sqrt{5})$ on a fan triangle of $F'$:
+\begin{align*}
+v_0 &= \bigl(\tfrac{497}{800} - \tfrac{459}{4000}\sqrt{5}\bigr) P_0
+     + \bigl(\tfrac{381}{800} + \tfrac{283}{4000}\sqrt{5}\bigr) P_1
+     + \bigl(-\tfrac{39}{400} + \tfrac{11}{250}\sqrt{5}\bigr) P_2,\\
+v_1 &= \bigl(-\tfrac{161}{200} + \tfrac{361}{1000}\sqrt{5}\bigr) P_0
+     + \bigl(\tfrac{757}{800} - \tfrac{547}{4000}\sqrt{5}\bigr) P_2
+     + \bigl(\tfrac{687}{800} - \tfrac{897}{4000}\sqrt{5}\bigr) P_3,\\
+v_2 &= \bigl(\tfrac{21}{50} - \tfrac{127}{1000}\sqrt{5}\bigr) P_0
+     + \bigl(-\tfrac{11}{400} + \tfrac{151}{2000}\sqrt{5}\bigr) P_3
+     + \bigl(\tfrac{243}{400} + \tfrac{103}{2000}\sqrt{5}\bigr) P_4.
+\end{align*}
+Conversely, with $D = 1{,}388{,}919$, each $P_k$ is a convex combination of
+$\frac{19}{8} v_0, \frac{19}{8} v_1, \frac{19}{8} v_2$ with nonnegative weights:
+\begin{align*}
+P_0 &: \tfrac{1}{462973}\bigl(259391,\; 191,\; 203391\bigr),\\
+P_1 &: \tfrac{1}{D}\bigl(720173 + 78800\sqrt{5},\; 679373 - 115600\sqrt{5},\; -10627 + 36800\sqrt{5}\bigr),\\
+P_2 &: \tfrac{1}{D}\bigl(216173 + 89200\sqrt{5},\; 528173 + 166000\sqrt{5},\; 644573 - 255200\sqrt{5}\bigr),\\
+P_3 &: \tfrac{1}{D}\bigl(552173 - 246800\sqrt{5},\; 628973 + 65200\sqrt{5},\; 207773 + 181600\sqrt{5}\bigr),\\
+P_4 &: \tfrac{1}{D}\bigl(48173 + 78800\sqrt{5},\; 477773 - 115600\sqrt{5},\; 862973 + 36800\sqrt{5}\bigr).
+\end{align*}
+Finally, $\frac{19}{8} < \frac{7 - \sqrt{5}}{2} \iff \sqrt{5} < \frac{9}{4}
+\iff 80 < 81$. Setting $a(T) = \frac{19}{8} T_0$ yields
+$F' \subset a(T) \subset \frac{19}{8} F'$ with common centroid $0$.
+\end{proof}
+
+Theorem~\ref{thm:cert} (including the Lebesgue integral definition of centroids,
+affine invariance, affine equivalence with the regular pentagon, and
+$d_{\mathrm{BM}}^{\mathrm{cen}}(F, T) \le 19/8 < \eta$) is formally verified in
+Lean~4 (v4.33.1) in the module \texttt{LassakSzarekPentagonCentroid} with zero
+\texttt{sorry}s and standard axioms only. A standalone exact
+$\mathbb{Q}(\sqrt{5})$ Python script \texttt{verify.py} independently checks
+both Theorems~\ref{thm:equilateral} and~\ref{thm:cert} as well as Lassak's
+original configuration achieving $\eta$.
+
+\begin{thebibliography}{9}
+\bibitem{L2024}
+M.~Lassak,
+\emph{Position of the centroid of a planar convex body},
+Aequationes Math.\ \textbf{98} (2024), 687--695.
+
+\bibitem{LS2026}
+M.~Lassak and S.~J.~Szarek,
+\emph{Banach--Mazur distance and related methods of comparing convex bodies},
+preprint, arXiv:2611.21947v1, November 2026.
+\end{thebibliography}
+
+\end{document}
