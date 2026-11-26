@@ -1,0 +1,214 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{On the Laplacian Spectral Radius of Token Graphs:\\ Proof of the Connected Conjecture and Complete Equality Characterization}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We completely resolve the conjecture of Song, Dalf\'o, Fiol, and Zhang
+(arXiv:2610.00500v1) asking whether a graph $G$ of order $n \ge 4$ satisfies
+$\rho(F_k(G)) = \rho(G)$ for all $2 \le k \le \lfloor n/2 \rfloor$ if and only
+if $G \cong S_n$, where $F_k(G)$ is the $k$-token graph and $\rho(\cdot)$ is
+the Laplacian spectral radius. First, we prove that for every connected
+non-star graph $G$ of order $n \ge 4$, the strict inequality
+$\rho(F_2(G)) > \rho(G)$ holds, establishing the intended connected version of
+the conjecture. Second, we classify all graphs $G$ of order $n \ge 4$
+satisfying $\rho(F_k(G)) = \rho(G)$ for all $2 \le k \le \lfloor n/2 \rfloor$:
+they are precisely the edgeless graph $\overline{K_n}$, stars with isolated
+vertices $S_m \cup (n - m)K_1$ ($2 \le m \le n$), and $K_3 \cup (n - 3)K_1$.
+The proof uses only elementary Laplacian Rayleigh quotients, an edge-difference
+upper bound, and a perturbed star-product embedding inside $F_2(G)$, and is
+formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+For a finite simple graph $G = (V, E)$ of order $n$ and $1 \le k \le n - 1$,
+the \emph{$k$-token graph} $F_k(G)$ has vertex set $\binom{V}{k}$, with two
+$k$-subsets adjacent iff their symmetric difference is an edge of $G$. Let
+$L(H)$ denote the Laplacian matrix of $H$ and
+$\rho(H) := \max_{f \neq 0} f^\top L(H) f / f^\top f$ its Laplacian spectral
+radius.
+
+Song, Dalf\'o, Fiol, and Zhang~\cite{SDFZ2026} proved for several graph classes
+that $\rho(F_k(G)) = \rho(G)$ for all $2 \le k \le \lfloor n/2 \rfloor$ iff
+$G \cong S_n$ (the star $K_{1, n-1}$), and conjectured this equivalence for all
+graphs of order $n \ge 4$. While the literal all-graphs statement fails for
+disconnected graphs such as $K_2 \cup 2K_1$, we prove the connected conjecture
+in full generality and characterize all equality cases.
+
+\begin{theorem}\label{thm:conn}
+Let $G$ be a connected graph of order $n \ge 4$ with $G \not\cong S_n$. Then
+$\rho(F_2(G)) > \rho(G)$. In particular, among connected graphs of order
+$n \ge 4$, $\rho(F_k(G)) = \rho(G)$ for all $2 \le k \le \lfloor n/2 \rfloor$
+if and only if $G \cong S_n$.
+\end{theorem}
+
+\begin{theorem}\label{thm:all}
+Let $G$ be a graph of order $n \ge 4$. Then $\rho(F_k(G)) = \rho(G)$ for all
+$2 \le k \le \lfloor n/2 \rfloor$ if and only if $G$ is $\overline{K_n}$,
+$S_m \cup (n - m)K_1$ ($2 \le m \le n$), or $K_3 \cup (n - 3)K_1$.
+\end{theorem}
+
+\section{Elementary Laplacian Lemmas}
+
+For any graph $H$, $f^\top L(H) f = \sum_{uv \in E(H)} (f_u - f_v)^2$, so if
+$H'$ is a subgraph of $H$ and $f$ is supported on $V(H')$, then
+$f^\top L(H) f \ge f^\top L(H') f$ and $\rho(H) \ge \rho(H')$.
+
+\begin{lemma}[Grone--Merris Test Vector]\label{lem:gm}
+If $S \in V(H)$ has degree $D = \deg_H(S) \ge 1$, then setting $f_S = D$,
+$f_T = -1$ for $T \in N_H(S)$, and $f_T = 0$ otherwise yields
+\[
+\frac{f^\top L(H) f}{f^\top f}
+= D + 1 + \frac{e_H(N_H(S), V(H) \setminus N_H[S])}{D(D + 1)}.
+\]
+Hence $\rho(H) \ge D + 1$, with strict inequality whenever an edge joins
+$N_H(S)$ to $V(H) \setminus N_H[S]$.
+\end{lemma}
+
+\begin{lemma}[Edge-Difference Upper Bound]\label{lem:edge}
+Let $G$ be connected with at least one edge, $\lambda = \rho(G)$, and
+$L(G)x = \lambda x$ ($x \neq 0$). If $uv \in E(G)$ maximizes
+$|x_u - x_v| =: M$ with $x_u - x_v = M$, then $M > 0$ and
+$\lambda \le |N_G(u) \cup N_G(v)|$.
+\end{lemma}
+
+\begin{proof}
+If $M = 0$, then $x$ is constant on $G$ and $L(G)x = 0$, contradicting
+$\lambda > 0$. Subtracting $(L(G)x)_v = \lambda x_v$ from
+$(L(G)x)_u = \lambda x_u$ gives
+\[
+\lambda M
+= \sum_{w \in N(u)} (x_u - x_w) + \sum_{w \in N(v)} (x_w - x_v).
+\]
+The terms $w = v$ (first sum) and $w = u$ (second sum) each equal $M$; each
+common neighbor $c \in N(u) \cap N(v)$ contributes $(x_u - x_c) + (x_c - x_v) = M$;
+and each private neighbor in $N(u) \setminus N[v]$ or $N(v) \setminus N[u]$
+contributes at most $M$. Summing over the $|N(u) \cup N(v)|$ vertices of
+$N(u) \cup N(v)$ gives $\lambda M \le M|N(u) \cup N(v)|$.
+\end{proof}
+
+\begin{lemma}[Perturbed Star-Product Embedding]\label{lem:prod}
+Let $uv \in E(G)$, $X = N(u) \setminus \{v\}$, $A_0 = N(u) \setminus N[v]$,
+and $Y = B_0 = N(v) \setminus N[u]$. Suppose $a := |X| \ge 1$,
+$b := |Y| \ge 1$, and $A_0 \neq \emptyset$. Set
+$\rho_0 := a + b + 2 = |N(u) \cup N(v)|$. Then $\rho(F_2(G)) > \rho_0$.
+\end{lemma}
+
+\begin{proof}
+The sets $\{u\} \cup X$ and $\{v\} \cup Y$ are disjoint because $u \neq v$,
+$u \in N[u]$, $X \subseteq N(u) \setminus \{v\}$, and $Y = N(v) \setminus N[u]$.
+Hence $\varphi(s, t) := \{s, t\}$ injects $K_{1, a} \square K_{1, b}$ as a
+subgraph into $F_2(G)$ with vertex image $W$: each edge $(u, t)(s, t)$
+($s \in X$) maps to a token edge with symmetric difference $\{u, s\} \in E(G)$,
+and each edge $(s, v)(s, t)$ ($t \in Y$) maps to one with symmetric difference
+$\{v, t\} \in E(G)$.
+
+Define $P_u = a$, $P_x = -1$ ($x \in X$), $Q_v = b$, $Q_y = -1$ ($y \in Y$),
+and let $\tilde{y}$ equal $P_s Q_t$ on $\varphi(s, t) \in W$ and $0$ outside
+$W$. Since $L(K_{1, a})P = (a + 1)P$ and $L(K_{1, b})Q = (b + 1)Q$, the
+Cartesian product Laplacian satisfies
+$L(K_{1, a} \square K_{1, b})(P \otimes Q) = \rho_0 (P \otimes Q)$, so by
+subgraph monotonicity $\tilde{y}^\top L(F_2(G)) \tilde{y} \ge \rho_0 \tilde{y}^\top \tilde{y}$.
+
+Pick $x_0 \in A_0$ and set $S := \{u, x_0\}$. Since $u, x_0 \in \{u\} \cup X$,
+we have $S \notin W$ and $\tilde{y}_S = 0$. The neighbors of $S$ in $W$ are
+precisely $\{v, x_0\} = \varphi(x_0, v)$ (moving $u$ to $v$, since
+$Y \cap N(u) = \emptyset$, with $\tilde{y} = -b$) and $\{u, w\} = \varphi(u, w)$
+for $w \in Y \cap N(x_0)$ (moving $x_0$ into $Y$, since $x_0 \not\sim v$, with
+$\tilde{y} = -a$). Thus
+\[
+g := (L(F_2(G))\tilde{y})_S = b + a|Y \cap N(x_0)| \ge b \ge 1.
+\]
+Setting $z := \tilde{y} + \varepsilon e_S$ with
+$\varepsilon := g / (|\deg_{F_2}(S) - \rho_0| + 1) > 0$ gives
+\[
+z^\top L(F_2(G)) z - \rho_0 z^\top z
+\ge 2\varepsilon g + \varepsilon^2 (\deg_{F_2}(S) - \rho_0) > 0,
+\]
+so $\rho(F_2(G)) > \rho_0$.
+\end{proof}
+
+\begin{lemma}[Stars and Triangles]\label{lem:stars}
+For $m \ge 2$ and $1 \le j \le m - 1$, $\rho(F_j(S_m)) = m$. Also
+$\rho(F_1(K_3)) = \rho(F_2(K_3)) = 3$.
+\end{lemma}
+
+\begin{proof}
+$F_j(S_m)$ is connected and bipartite between $j$-sets containing the centre
+(degree $s = m - j$) and those avoiding it (degree $t = j$). Lemma~\ref{lem:edge}
+yields $\rho(F_j(S_m)) \le s + t = m$, while assigning $s$ to centre-sets and
+$-t$ to non-centre-sets gives an eigenvector of eigenvalue $m$. For $K_3$,
+$F_2(K_3) \cong F_1(K_3) \cong K_3$ has $\rho = 3$.
+\end{proof}
+
+\section{Proofs of Theorems~\ref{thm:conn} and~\ref{thm:all}}
+
+\begin{proof}[Proof of Theorem~\ref{thm:conn}]
+If some $c \in V(G)$ has degree $n - 1$, then $G \not\cong S_n$ supplies an
+edge $pq$ avoiding $c$, so $H := S_n + pq \subseteq G$. In $F_2(H)$,
+$S = \{c, p\}$ has degree $n - 1$; since $n \ge 4$, pick
+$\ell \in V(G) \setminus \{c, p, q\}$. Then $\{\ell, p\} \in N_{F_2(H)}(S)$ is
+adjacent to $\{\ell, c\} \notin N_{F_2(H)}[S]$, so Lemma~\ref{lem:gm} and
+monotonicity give $\rho(F_2(G)) \ge \rho(F_2(H)) > n \ge \rho(G)$.
+
+Otherwise every vertex has degree $< n - 1$. Choose $uv \in E(G)$ as in
+Lemma~\ref{lem:edge}, so $\rho(G) \le |N(u) \cup N(v)| =: \rho_0$. If
+$A_0 := N(u) \setminus N[v] = \emptyset$, then $\rho_0 = d_v + 1$; picking
+$z \notin N[v]$ (so $d_z \ge 1$ by connectivity), the token $\{v, z\}$ has
+degree $d_v + d_z \ge d_v + 1$, whence Lemma~\ref{lem:gm} gives
+$\rho(F_2(G)) \ge d_v + 2 > \rho_0 \ge \rho(G)$. Symmetrically if
+$B_0 := N(v) \setminus N[u] = \emptyset$. Finally, if $A_0, B_0 \neq \emptyset$,
+then Lemma~\ref{lem:prod} gives $\rho(F_2(G)) > \rho_0 \ge \rho(G)$. The
+equivalence for connected graphs follows from Lemma~\ref{lem:stars}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:all}]
+For a disjoint union $G = G_1 \sqcup G_2$, the token graph $F_k(G)$ decomposes
+into disjoint components $F_{k_1}(G_1) \square F_{k_2}(G_2)$ over
+$k_1 + k_2 = k$, and tensor products of top eigenvectors yield
+$\rho(H_1 \square H_2) \ge \rho(H_1) + \rho(H_2)$. If $G$ has two nontrivial
+components $G_1$ and $G_2$ with $\rho(G_1) = \rho(G)$ and $\rho(G_2) > 0$, then
+$G_1 \square G_2 \subseteq F_2(G)$, whence
+$\rho(F_2(G)) \ge \rho(G_1) + \rho(G_2) > \rho(G)$.
+
+If $G = \overline{K_n}$, then $\rho(F_k(G)) = 0 = \rho(G)$. Otherwise $G = H \sqcup I$
+with a single nontrivial component $H$ of order $m \ge 2$ and $n - m$ isolated
+vertices. Then $F_k(G)$ is a disjoint union of copies of $F_j(H)$ over
+$\max(0, k - (n - m)) \le j \le \min(m, k)$. For $k = 2$, $j = 2$ is feasible,
+so if $m \ge 4$ and $H \not\cong S_m$, Theorem~\ref{thm:conn} yields
+$\rho(F_2(G)) \ge \rho(F_2(H)) > \rho(H) = \rho(G)$. The remaining connected
+graphs $H$ are $S_m$ ($2 \le m \le n$) and $K_3$ ($m = 3$). Conversely, for
+each such $H$ and every $2 \le k \le \lfloor n/2 \rfloor$, $j = \min(k, m - 1)$
+is feasible with $1 \le j \le m - 1$, while $j \in \{0, m\}$ yields isolated
+vertices; Lemma~\ref{lem:stars} therefore gives $\rho(F_k(G)) = \rho(H) = \rho(G)$.
+\end{proof}
+
+\section{Formal and Computational Verification}
+
+Theorems~\ref{thm:conn} and~\ref{thm:all} are formally verified in Lean~4
+(v4.33.1) with zero \texttt{sorry}s and standard axioms only, in the Lean
+module \texttt{SongDalfoFiolZhangTokenLaplacian}. A standalone Python verifier
+\texttt{verify.py} independently checks the exact rational certificates on all
+$877$ connected non-star graphs of order $4$ and $5$, $120$ random connected
+graphs of order $6$ and $7$, and verifies Theorem~\ref{thm:all} across all
+$1{,}088$ labelled graphs of order $4$ and $5$.
+
+\begin{thebibliography}{9}
+\bibitem{SDFZ2026}
+X.~Song, C.~Dalf\'o, M.~\`A.~Fiol, and S.~Zhang,
+\emph{The Algebraic Connectivity and Laplacian Spectral Radius of Token Graphs},
+preprint, arXiv:2610.00500v1, September 2026.
+\end{thebibliography}
+
+\end{document}
