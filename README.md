@@ -34,6 +34,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **22.** [Fonollosa Problem 4 (unique multiset sums in finite abelian groups)](results/fonollosa-unique-multiset-sums/) | Proved (exact minimum order $|G| = 2^{n-1}$, complete classification as $(\mathbb{Z}/2\mathbb{Z})^{n-1}$ with affine basis, cyclic bound $N \ge 2^{n-1} + \lceil n/\gcd(2,N) \rceil - 1$) | [DOI](https://doi.org/10.5281/zenodo.24544750) | **Lean 4** · Cross-Model Audit · Python |
 | **23.** [Gil–Liang–Odetola–Weiner Conjecture 7.4 (antidiagonal grid traffic anomaly)](results/gil-antidiagonal-traffic/) | Proved for all $n \ge 496$ ($\rho(n) < 1$, sharp at $R_{495}(240) \approx 1.000024 > 1$; Stirling-free analytic bound $n \ge 800$ + unimodal peak certificate $496 \le n \le 799$) | [DOI](https://doi.org/10.5281/zenodo.24545619) | **Lean 4** · Cross-Model Audit · Python |
 | **24.** [Easlick Conjecture 1 (minimal-advantage non-transitive $n$-sided dice)](results/easlick-nontransitive-dice/) | Proved for all $n \ge 7$ (3-die zipper cycles of length $3(n-7)$ for odd $n \ge 11$, $3(n-10)$ for even $n \ge 16$, and $n+1$ for $n \in \{7,8,9,10,12,14\}$; $n = 6$ unique with $L_{\max}(G_n) = n$) | [DOI](https://doi.org/10.5281/zenodo.24546684) | **Lean 4** · Cross-Model Audit · Python |
+| **25.** [Ghafari–Wanless Conjecture 3 (Wormald's Question on Latin square transversals)](results/ghafari-wanless-latin-transversals/) | Proved for every even $n \ge 22, n \ne 24$ (settling $n = 30$ and all even $n > 10\,000$ via modular $\Delta$-sum Latin squares + 8 mod-16 parametric tail families + 42 small witnesses) | [DOI](https://doi.org/10.5281/zenodo.24548884) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -64,6 +65,7 @@ python3 results/campbell-oeis-a189409/verify.py
 python3 results/fonollosa-unique-multiset-sums/verify.py
 python3 results/gil-antidiagonal-traffic/verify.py
 python3 results/easlick-nontransitive-dice/verify.py
+python3 results/ghafari-wanless-latin-transversals/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

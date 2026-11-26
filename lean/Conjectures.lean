@@ -22,3 +22,4 @@ import Conjectures.CampbellA189409
 import Conjectures.FonollosaUniqueMultisetSums
 import Conjectures.GilAntidiagonalTraffic
 import Conjectures.EaslickNontransitiveDice
+import Conjectures.GhafariWanlessLatinTransversals

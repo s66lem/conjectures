@@ -1,0 +1,166 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}{Conjecture}
+
+\title{Latin Squares with Pairwise-Intersecting Transversals and No Pinned Entry: Proof of Conjecture~3 of Ghafari and Wanless}
+\author{Salem Levinstein}
+\date{November 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A transversal of a Latin square of order $n$ is a selection of $n$ cells containing one representative of each row, column, and symbol; an entry is \emph{pinned} if it belongs to every transversal. Addressing a question of Nick Wormald, Ghafari and Wanless (\texttt{arXiv:2607.17547v1}, July~2026) conjectured that for every even integer $n \ge 28$, there exists a Latin square of order $n$ having no two disjoint transversals and no pinned entry, and verified this computationally for $n = 28$ and $32 \le n \le 10\,000$, leaving $n = 30$ and all even $n > 10\,000$ open. We prove the conjecture completely, establishing existence for every even integer $n \ge 22$ with $n \ne 24$. Our proof combines a modular row-band Latin square $L_{n, n_0}$ (whose $\Delta$-sum invariants forbid disjoint transversals for all $n = n_0 + 4t$) with a universal gluing theorem and a granularity-$1$ parametric tail engine covering all eight even residue classes modulo~$16$, supplemented by $42$ explicit small-order witnesses. The entire proof is formally verified in Lean~4 using only the standard axioms.
+\end{abstract}
+
+\section{Introduction}
+
+Let $n$ be a positive integer. A \emph{Latin square} of order $n$ is an $n \times n$ array $L$ on the symbol set $\{0, 1, \dots, n-1\}$ in which every symbol occurs exactly once in each row and each column. A \emph{transversal} of $L$ is a bijection $T : \{0,\dots,n-1\} \to \{0,\dots,n-1\}$ such that $r \mapsto L(r, T(r))$ is also a bijection. Two transversals $T_1, T_2$ are \emph{disjoint} if $T_1(r) \ne T_2(r)$ for every row $r$. An entry $(r, c)$ is \emph{pinned} if $L$ has at least one transversal and $T(r) = c$ for every transversal $T$ of $L$.
+
+Motivated by a question of Nick Wormald on Latin squares whose transversals intersect pairwise without sharing a single universal entry, Ghafari and Wanless~\cite{ghafariwanless2026} proposed the following conjecture.
+
+\begin{conjecture}[{\cite[Conjecture~3]{ghafariwanless2026}}]
+Let $n \ge 28$ be an even integer. There is a Latin square of order $n$ that has no two disjoint transversals, but also has no pinned entry.
+\end{conjecture}
+
+In~\cite{ghafariwanless2026}, Ghafari and Wanless constructed Latin squares with no two disjoint transversals for all even $n \ge 28$ except $n = 30$, and verified computationally that their squares have no pinned entry for $n = 28$ and $32 \le n \le 10\,000$. Both the case $n = 30$ and all even orders $n > 10\,000$ remained open. We resolve Conjecture~3 in full, and in fact extend existence to the bonus orders $n = 22$ and $n = 26$ below~$28$ (only $n = 24$, which lies outside Conjecture~3, is excluded by our non-wrapping gadget bound $s_h + 14 < n_0$).
+
+\begin{theorem}\label{thm:main}
+For every even integer $n \ge 22$ with $n \ne 24$, there exists a Latin square of order $n$ that has no two disjoint transversals and no pinned entry. In particular, Conjecture~3 of~\cite{ghafariwanless2026} holds for every even integer $n \ge 28$.
+\end{theorem}
+
+\section{The $\Delta$-Sum Obstruction and the Modular Family $L_{n, n_0}$}
+
+We index rows, columns, and symbols by $\{0, 1, \dots, n-1\}$. Absence of pinned entries is established via the following immediate observation.
+
+\begin{lemma}\label{lem:three}
+If a Latin square $L$ admits three transversals $T_0, T_1, T_2$ such that for every row $r$ we do not have $T_0(r) = T_1(r) = T_2(r)$, then $L$ has no pinned entry.
+\end{lemma}
+
+To forbid disjoint transversals, we use the $\Delta$-sum invariant of modularly perturbed cyclic Latin squares (the same mechanism underlying~\cite{ghafariwanless2026}).
+
+\begin{lemma}[$\Delta$-Sum Obstruction]\label{lem:delta}
+Let $n = 2m$ be even and let $L(r, c) = (r + c + \Delta(r, c)) \bmod n$ be a Latin square with $\Delta : \{0,\dots,n-1\}^2 \to \mathbb{Z}$. Then:
+\begin{enumerate}
+  \item Every transversal $T$ of $L$ satisfies $\sum_{r=0}^{n-1} \Delta(r, T(r)) \equiv m \pmod{2m}$.
+  \item Suppose there exist row bounds $\underline{\delta}_r \le \Delta(r, c) \le \overline{\delta}_r$ satisfying $\sum_r \overline{\delta}_r = m + 1$, $\sum_r \underline{\delta}_r > -m$, and three distinct rows $r_1, r_2, r_3$ with columns $c_1, c_2, c_3$ such that $\Delta(r_i, c) \le \overline{\delta}_{r_i} - 1$ whenever $c \ne c_i$ ($i \in \{1, 2, 3\}$). Then every transversal of $L$ contains at least two of the three cells $(r_1, c_1), (r_2, c_2), (r_3, c_3)$, and hence $L$ has no two disjoint transversals.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Summing $L(r, T(r)) \equiv r + T(r) + \Delta(r, T(r)) \pmod{n}$ over $r \in \{0,\dots,n-1\}$ cancels $\sum L(r, T(r))$ against $\sum T(r)$, yielding $\sum_r \Delta(r, T(r)) \equiv -\sum_{r=0}^{n-1} r = -m(2m - 1) \equiv m \pmod{2m}$. Under the hypotheses of~(2), the integer sum $S := \sum_r \Delta(r, T(r))$ satisfies $-m < S \le m + 1$ and $S \equiv m \pmod{2m}$, forcing $S = m$. Missing two of the three unique-maximum cells forces $S \le (m + 1) - 2 = m - 1$, a contradiction. By the pigeonhole principle, any two transversals must share at least one of the three cells.
+\end{proof}
+
+Fix an even base order $n_0 \ge 22$ with $n_0 \ne 24$ and an integer $t \ge 0$, and put $n = n_0 + 4t$. Define the even horizontal shift
+\[
+  s_h := 2\left\lfloor \frac{n_0/2 - 4}{2} \right\rfloor.
+\]
+Then $4 \le s_h$ and $s_h + 14 < n_0$ for every admissible $n_0$ (noting that $n_0 \equiv 0 \pmod 4$ forces $n_0 \ge 28$). Thus all gadget windows lie strictly inside $[4, n_0 - 1]$ with no wrap-around, and the offset function $\Delta_{n_0}(r, c)$ is independent of $n$. It is built from three row-band gadgets:
+
+\begin{itemize}
+  \item \textbf{4-row gadget $A(\mathrm{row}, s, c)$} ($0 \le \mathrm{row} < 4$, even $s$): for $c \notin [s, s+10]$, $A(\mathrm{row}, s, c) = 2$ if $c$ is odd and $\mathrm{row} < 2$, $-2$ if $c$ is odd and $\mathrm{row} \ge 2$, and $0$ if $c$ is even. For $j = c - s \in \{0,\dots,10\}$, values are given in Table~\ref{tab:gadgetA}. Row maxima sum to $6$, row minima sum to $-4$, and row~$2$ attains its maximum $+1$ uniquely at $c = s + 3$.
+  \item \textbf{3-row gadget $B(\mathrm{row}, c_{\mathrm{odd}}, c)$} ($0 \le \mathrm{row} < 3$, odd $c_{\mathrm{odd}}$): equals $(1, 1, -2)$ at $c = c_{\mathrm{odd}}$, $(1, -1, 0)$ at $c = c_{\mathrm{odd}} + 1$, $(2, 0, -2)$ at other odd $c$, and $(0, 0, 0)$ at other even $c$. Row maxima sum to $3$, row minima sum to $-3$, and row~$1$ attains its maximum $+1$ uniquely at $c = c_{\mathrm{odd}}$.
+  \item \textbf{4-row swap block $P$}: rows $0$ and $2$ carry $+2$ and $-2$ on odd columns (and $0$ on even columns); rows $1$ and $3$ carry $0$. Row maxima sum to $2$ and row minima sum to $-2$.
+\end{itemize}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}rrrrrrrrrrrrrr@{}}
+\toprule
+$\mathrm{row} \setminus j$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ & $7$ & $8$ & $9$ & $10$ & $\min$ & $\max$ \\
+\midrule
+$0$ & $0$ & $3$ & $0$ & $0$ & $1$ & $3$ & $0$ & $0$ & $3$ & $0$ & $0$ & $0$ & $3$ \\
+$1$ & $0$ & $1$ & $1$ & $1$ & $2$ & $0$ & $1$ & $2$ & $0$ & $2$ & $0$ & $0$ & $2$ \\
+$2$ & $0$ & $-2$ & $-1$ & $\mathbf{1}$ & $-2$ & $-2$ & $-1$ & $0$ & $-2$ & $-1$ & $0$ & $-2$ & $1$ \\
+$3$ & $0$ & $-2$ & $0$ & $-2$ & $-1$ & $-1$ & $0$ & $-2$ & $-1$ & $-1$ & $0$ & $-2$ & $0$ \\
+\bottomrule
+\end{tabular}
+\caption{Window offsets $A(\mathrm{row}, s, s+j)$ for $j \in \{0,\dots,10\}$. Boldface marks the unique row-$2$ maximum.}
+\label{tab:gadgetA}
+\end{table}
+
+We assemble $\Delta_{n_0}(r, c)$ by stacking:
+\begin{itemize}
+  \item \textbf{If $n_0 \equiv 2 \pmod 4$ ($n_0 \ge 22$):} $A(\cdot, s_h)$ on rows $0..3$, $B(\cdot, s_h + 11)$ on rows $4..6$, $B(\cdot, s_h + 13)$ on rows $7..9$, $(n_0 - 22)/4$ internal $P$-blocks on rows $10..n_0-13$, $12$ untouched rows ($\Delta = 0$) on rows $n_0-12..n_0-1$, and $t$ tail $P$-blocks on rows $n_0..n-1$. Unique-max cells are $(2, s_h+3), (5, s_h+11), (8, s_h+13)$; row bounds sum to $\sum \overline{\delta}_r = n/2 + 1$ and $\sum \underline{\delta}_r = -n/2 + 1 > -n/2$.
+  \item \textbf{If $n_0 \equiv 0 \pmod 4$ ($n_0 \ge 28$):} $A(\cdot, s_h)$ on rows $0..3$, $A(\cdot, s_h + 4)$ on rows $4..7$, $B(\cdot, s_h + 13)$ on rows $8..10$, $(n_0 - 28)/4$ internal $P$-blocks on rows $11..n_0-18$, $17$ untouched rows on rows $n_0-17..n_0-1$, and $t$ tail $P$-blocks on rows $n_0..n-1$. Unique-max cells are $(2, s_h+3), (6, s_h+7), (9, s_h+13)$; row bounds sum to $\sum \overline{\delta}_r = n/2 + 1$ and $\sum \underline{\delta}_r = -n/2 + 3 > -n/2$.
+\end{itemize}
+
+\begin{proposition}\label{prop:latin}
+For every even $n_0 \ge 22$ ($n_0 \ne 24$) and $n = n_0 + 4t$ ($t \ge 0$), $L_{n, n_0}(r, c) := (r + c + \Delta_{n_0}(r, c)) \bmod n$ is a Latin square of order $n$ with no two disjoint transversals.
+\end{proposition}
+
+\begin{proof}
+Each row map $c \mapsto (c + \Delta_{n_0}(r, c)) \bmod n$ admits an explicit two-sided inverse supported on the gadget window and parity classes outside it, so every row is a bijection. Each band ($A$, $B$, $P$, untouched) is closed under $r \mapsto r + \Delta_{n_0}(r, c)$ and acts as a permutation on its own row indices for every column $c$, so every column is a bijection. Lemma~\ref{lem:delta} then precludes disjoint transversals.
+\end{proof}
+
+\section{Universal Gluing and Granularity-1 Parametric Tails}
+
+Write $n_0 = 2h$ ($h \ge 11$, $h \ne 12$) and $t \ge h$, so $n = 2h + 4t$. A \emph{valid base} for $h$ consists of three permutations $b_0, b_1, b_2$ of $\{0,\dots,2h-1\}$ with no common cell such that each unwrapped map $r \mapsto r + b_\alpha(r) + \Delta_{2h}(r, b_\alpha(r))$ is a bijection onto $[h, 3h)$. A \emph{valid tail} for $(h, t)$ is a permutation $V$ of $\{0,\dots,4t-1\}$ whose unwrapped sums $s(i) := i + V(i) + \delta_{\mathrm{tail}}(i, V(i))$ (where $\delta_{\mathrm{tail}}(i, c) = +2$ for $i \equiv 0 \pmod 4$, $-2$ for $i \equiv 2 \pmod 4$ when $c$ is odd, and $0$ otherwise) are pairwise distinct and lie in
+\[
+  \mathcal{B}_{h, t} := [2t - h,\; 4t - h) \;\cup\; [4t + h,\; 6t + h).
+\]
+
+\begin{theorem}[Universal Gluing]\label{thm:glue}
+If $h \ge 11$ ($h \ne 12$) admits a valid base $(b_0, b_1, b_2)$ and $t \ge h$ admits two completely disjoint valid tails $V_1, V_2$, then $L_{2h + 4t, 2h}$ has no pinned entry.
+\end{theorem}
+
+\begin{proof}
+Define $T_0, T_1, T_2$ by placing $b_0, b_1, b_2$ on base rows $[0, 2h)$ and placing $2h + V_1, 2h + V_1, 2h + V_2$ on tail rows $[2h, 2h + 4t)$. Since $t \ge h$, base symbols stay inside $[h, 3h) \subset [0, n)$ without wrapping. Tail sums equal $(4h + s(i)) \bmod n$ with $s(i) \in \mathcal{B}_{h, t}$, mapping the three sub-intervals $[2t - h, 4t - 2h)$, $[4t - 2h, 4t - h)$, and $[4t + h, 6t + h)$ injectively onto $[3h + 2t, n)$, $[0, h)$, and $[3h, 3h + 2t)$, respectively. Thus $T_0, T_1, T_2$ are valid transversals with $T_0 \cap T_1 \cap T_2 = \emptyset$, and Lemma~\ref{lem:three} finishes the proof.
+\end{proof}
+
+We exhibit valid bases for $n_0 \in \{22, 26, 30, 32\}$ ($h \in \{11, 13, 15, 16\}$) and construct pairs of disjoint valid tails uniformly for all eight even residue classes modulo~$16$ by writing $t = 4p + R$, indexing tail rows as $i = 4j + k$ ($0 \le j < t$, $k \in \{0,1,2,3\}$) and columns as $2u$ or $2u + 1$ ($0 \le u < 2t$).
+
+\subsection{Even-$h$ Families ($n \equiv 0, 4, 8, 12 \pmod{16}$)}
+
+Take $n_0 = 32$ ($h = 16$, $d = h/2 = 8$) and $p \ge 0$. Set $e_1 = t - 8$, $e_2 = 2t + 8$, $s_1 = e_1 + d_1$, and $s_2 = e_2 + d_2$. Both even ($2h_s$) and odd ($2h_s + 1$) tail symbols belong to $\mathcal{B}_{16, t}$ precisely when $h_s \in [e_1, e_1 + t) \cup [e_2, e_2 + t)$. We assign to each $j < t$ an ordered pair $(u_a(j), u_b(j))$ with $u_a(j) \ne u_b(j)$ partitioning $[0, 2t)$ such that the half-symbols $2j + u_a(j) + 1$ and $2j + u_b(j) + 1$ partition $[e_1, e_1 + t) \cup [e_2, e_2 + t)$. Setting
+\[
+  V_1(4j + 0) = 2u_a(j) + 1,\quad V_1(4j + 1) = 2u_b(j) + 1,\quad V_1(4j + 2) = 2u_a(j),\quad V_1(4j + 3) = 2u_b(j)
+\]
+and defining $V_2$ by swapping $(u_a, u_b) \mapsto (u_b, u_a)$ yields two disjoint valid tails. Four parametric blocks of length $p$ starting at $(j_0, U_0) = (0, s_1 - 1)$, $(j_1, U_1) = ((s_1 + 1 - U_1)/2, (s_1 + 1) \bmod 2)$, $(j_3, U_3) = ((s_2 - 1 - U_3)/2, 2t - 2p - ((s_2 - 1) \bmod 2))$, and $(j_2, U_2) = (t - p, s_2 + 1 - 2j_2)$ cover $[s_1, s_1 + 4p)$ and $[s_2, s_2 + 4p)$ via $(u_a, u_b)(j_b + r) = (U_b + 2r, U_b + 2r + 1)$. The remaining $R$ row quadruples, $2R$ columns, and $2R$ half-symbols lie in constant-size gaps whose coordinates shift linearly in $p$ with slopes $1,2,3$ (in $j$), $0,2,4,6,8$ (in $u$), and $4,8,12$ (in $h_s$). A finite $p$-invariant matching preserving $2\cdot\mathrm{slope}(j) + \mathrm{slope}(u) = \mathrm{slope}(h_s)$ therefore remains valid for every $p \ge 0$.
+
+\subsection{Odd-$h$ Families ($n \equiv 2, 6, 10, 14 \pmod{16}$)}
+
+Take $h \in \{11, 13, 15\}$ ($d = \lfloor h/2 \rfloor$) and $p = q + 1 \ge 1$. Because $h$ is odd, even tail symbols require $h_s \in [e_1, e_1 + t) \cup [e_2, e_2 + t)$ ($e_1 = t - d$, $e_2 = 2t + d + 1$) while odd tail symbols require $h_s \in [o_1, o_1 + t) \cup [o_2, o_2 + t)$ ($o_1 = e_1 - 1$, $o_2 = e_2 - 1$). We assign column parities $(k = 0 \to \text{odd},\; k = 1 \to \text{even},\; k = 2 \to \text{even},\; k = 3 \to \text{odd})$, giving half-symbols $2j + u + 1$ ($k = 2$) and $2j + u + 2$ ($k = 3$) for even symbols, and $2j + u + 1$ ($k = 0$) and $2j + u$ ($k = 1$) for odd symbols. With four blocks of length $p = q + 1$ anchored at $j_0 = 0$, $U_0 = s_1 - 1$, $U_1 = s_1 \bmod 2$, $j_1 = (s_1 - U_1)/2$, $U_3 = 2t - 2p - ((s_2 - 1) \bmod 2)$, $j_3 = (s_2 - 1 - U_3)/2$, $j_2 = t - p$, $U_2 = s_2 - 2j_2$, tail $V_1$ shifts $k = 0$ backward by one step within each block (absorbing the four $r = 0$ rows and four $U_b + 2q$ columns into finite $q$-invariant permutations), while tail $V_2$ swaps parity assignments on the blocks and shifts $k = 3$ forward by one step (absorbing the four $r = q$ rows and four $U_b$ columns). Because $V_1$ and $V_2$ occupy opposite parities inside every $U$-block (and disjoint indices on the $R$ gap rows), $V_1$ and $V_2$ are disjoint for all $q \ge 0$.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}rrrrrrl@{}}
+\toprule
+$n \bmod 16$ & $n_0$ & $h$ & $R$ & $(d_1, d_2)$ & $n_{\min}$ & Small orders below $n_{\min}$ \\
+\midrule
+$0$ & $32$ & $16$ & $20$ & $(2, 0)$ & $112$ & $32, 48, 64, 80, 96$ \\
+$2$ & $26$ & $13$ & $18$ & $(0, 1)$ & $114$ & $34, 50, 66, 82, 98$ \\
+$4$ & $32$ & $16$ & $21$ & $(1, 0)$ & $116$ & $36, 52, 68, 84, 100$ \\
+$6$ & $22$ & $11$ & $16$ & $(2, 3)$ & $102$ & $22, 38, 54, 70, 86$ \\
+$8$ & $32$ & $16$ & $22$ & $(2, 0)$ & $120$ & $40, 56, 72, 88, 104$ \\
+$10$ & $26$ & $13$ & $20$ & $(0, 1)$ & $122$ & $26, 42, 58, 74, 90, 106$ \\
+$12$ & $32$ & $16$ & $19$ & $(1, 0)$ & $108$ & $28, 44, 60, 76, 92$ \\
+$14$ & $30$ & $15$ & $20$ & $(1, 0)$ & $126$ & $30, 46, 62, 78, 94, 110$ \\
+\bottomrule
+\end{tabular}
+\caption{Complete partition of all even integers $n \ge 22$ ($n \ne 24$) into eight infinite parametric families ($n \ge n_{\min}$) and $42$ explicit small orders.}
+\label{tab:coverage}
+\end{table}
+
+\section{Completion of the Proof and Formal Verification}
+
+Table~\ref{tab:coverage} partitions all even integers $n \ge 22$ with $n \ne 24$ into the eight infinite progressions $n \ge n_{\min}$ and exactly $42$ remaining small orders ($22 \le n \le 110$, $n \ne 24$). For each of the $42$ small orders, we supply three explicit transversals of $L_{n, n}$ with empty triple intersection; for each of the eight infinite progressions, Proposition~\ref{prop:latin} and Theorem~\ref{thm:glue} apply for every $p \ge 0$ (even $h$) or $p = q + 1 \ge 1$ (odd $h$). This completes the proof of Theorem~\ref{thm:main}.
+
+The complete proof---including Latin square validity of $L_{n, n_0}$, the $\Delta$-sum obstruction, universal gluing, all four base witnesses, all eight infinite mod-$16$ parametric tail families, and all $42$ small-order witnesses---has been formally verified in Lean~4 (\texttt{v4.33.1} with Mathlib) with zero \texttt{sorry}, zero custom axioms, and zero \texttt{native\_decide}, depending only on the standard Lean axioms \texttt{[propext, Classical.choice, Quot.sound]}. All witness tables and an independent Python verifier are archived at \url{https://github.com/s66lem/conjectures} in the directory \path{results/ghafari-wanless-latin-transversals/} and modules \path{lean/Conjectures/GhafariWanless*}.
+
+\begin{thebibliography}{1}
+\bibitem{ghafariwanless2026}
+A.~Ghafari and I.~M.~Wanless, \emph{Latin Squares whose transversals intersect in unusual ways}, arXiv:2607.17547v1 [math.CO], July~2026.
+\end{thebibliography}
+
+\end{document}
