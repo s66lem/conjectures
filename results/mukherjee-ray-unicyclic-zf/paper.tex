@@ -1,0 +1,180 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{Connected Zero Forcing Polynomials of Unicyclic Graphs Are Not Always Log-Concave}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We answer in the negative the log-concavity question in Problem~6.2 of
+Mukherjee and Ray (arXiv:2611.10985v2) by computing the exact connected
+zero forcing polynomial of every tadpole graph $T_{m,\ell}$ ($m \ge 3$,
+$\ell \ge 0$). We prove that $Z_C(T_{m,\ell}; x)$ is log-concave if and only if
+$m \le 4$ or $\ell \le 1$. In particular, $T_{5, n-5}$ provides a unicyclic
+counterexample of every order $n \ge 7$, with smallest example
+$Z_C(T_{5,2}; x) = 5x^2 + 7x^3 + 10x^4 + 8x^5 + 5x^6 + x^7$
+($7^2 = 49 < 50 = 5 \cdot 10$). Exhaustively, every connected graph on at most
+$6$ vertices has a log-concave connected zero forcing polynomial and $T_{5,2}$
+is the unique unicyclic counterexample on $7$ vertices, showing $n = 7$ is sharp.
+The complete tadpole family theorem is formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+For a finite simple graph $G = (V, E)$, a subset $S \subseteq V$ is a
+\emph{zero forcing set} if repeatedly applying the color-change rule---a colored
+vertex with exactly one uncolored neighbor colors that neighbor---eventually
+colors all of $V$. It is a \emph{connected zero forcing set} if the induced
+subgraph $G[S]$ is connected. The \emph{connected zero forcing polynomial} is
+\[
+Z_C(G; x) := \sum_{k=0}^{|V|} Z_C(G, k)\, x^k,
+\]
+where $Z_C(G, k)$ counts the connected zero forcing sets of $G$ of size $k$.
+
+Mukherjee and Ray~\cite{MR2026} proved that $Z_C(T; x)$ is log-concave for every
+tree $T$, and asked in Problem~6.2 whether $Z_C(U; x)$ is always log-concave for
+every unicyclic graph $U$ (and in Problem~6.4 for general finite graphs; see
+also~\cite{NB2026} for $82$-vertex non-unimodal general graphs). We show that
+log-concavity fails already for unicyclic graphs starting at $n = 7$.
+
+\section{Tadpole Graphs and Complete Log-Concavity Criterion}
+
+For $m \ge 3$ and $\ell \ge 0$, let $T_{m,\ell}$ be the \emph{tadpole graph}
+formed by an $m$-cycle $C = (c_0, c_1, \dots, c_{m-1})$ together with a pendant
+path $c_0 - t_1 - \dots - t_\ell$ of length $\ell$ attached at $c_0$. Thus
+$T_{m,\ell}$ is a connected unicyclic graph with $n = m + \ell$ vertices and
+$m + \ell$ edges.
+
+A nonempty subset $F \subseteq V(G)$ is a \emph{fort} of $G$ if every vertex
+$v \notin F$ adjacent to $F$ has at least two neighbors in $F$.
+
+\begin{lemma}[Fort Lemma]\label{lem:fort}
+Every zero forcing set $S$ of $G$ intersects every fort $F$ of $G$.
+\end{lemma}
+
+\begin{proof}
+If a colored set $B$ is disjoint from $F$ and $v \in B$ forces $w$, then
+$v \notin F$; if $w \in F$, the fort property supplies another neighbor
+$w' \in F \setminus \{w\}$ of $v$ with $w' \notin B$, contradicting uniqueness
+of $w$. By induction, $F$ remains uncolored forever, contradicting $B = V(G)$
+since $F \neq \emptyset$.
+\end{proof}
+
+\begin{theorem}\label{thm:tadpole}
+For every $m \ge 3$ and $\ell \ge 0$:
+\begin{enumerate}
+  \item A subset $S \subseteq V(T_{m,\ell})$ is a connected zero forcing set if
+        and only if $T_{m,\ell}[S]$ is connected and $S$ contains two adjacent
+        vertices of the cycle $C$.
+  \item Setting $A_m(b) = b$ and $N_m(b) = m - b$ for $2 \le b \le m - 1$,
+        $A_m(m) = 1$, $N_m(m) = 0$, and $A_m(b) = N_m(b) = 0$ otherwise,
+        \[
+        Z_C(T_{m,\ell}, k) = N_m(k) + \sum_{a=0}^{\ell} A_m(k - a)
+        \qquad (0 \le k \le m + \ell).
+        \]
+  \item $Z_C(T_{m,\ell}; x)$ is log-concave if and only if $m \le 4$ or
+        $\ell \le 1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{(1)} Assume $S$ is a connected zero forcing set of $T_{m,\ell}$.
+Since $m \ge 3$, $F_1 := \{c_1, \dots, c_{m-1}\}$ is a fort: $c_0$ has two
+neighbors $c_1, c_{m-1} \in F_1$ and tail vertices have none. By
+Lemma~\ref{lem:fort}, there exists $c_i \in S$ with $1 \le i \le m - 1$.
+Next, $F_2 := V(T_{m,\ell}) \setminus \{c_i\}$ is a fort because $c_i$ is the
+only vertex outside $F_2$ and its two cycle neighbors $c_{i-1}, c_{(i+1)\bmod m}$
+lie in $F_2$. By Lemma~\ref{lem:fort}, there exists $u \in S \setminus \{c_i\}$.
+Since $T_{m,\ell}[S]$ is connected, a path in $S$ from $c_i$ to $u$ begins with
+an edge $c_i v$ ($v \in S$); because $1 \le i \le m - 1$, every neighbor of
+$c_i$ is an adjacent cycle vertex, giving an adjacent cycle pair in $S$.
+
+Conversely, suppose $T_{m,\ell}[S]$ is connected and contains adjacent cycle
+vertices $c_i, c_{(i+1) \bmod m}$. Every $c_j$ ($1 \le j \le m - 1$) has degree
+$2$ in $T_{m,\ell}$, so whenever $c_j$ and one of its cycle neighbors are
+colored, $c_j$ forces its other cycle neighbor. Propagating forward and backward
+from $\{c_i, c_{(i+1) \bmod m}\}$ colors the entire cycle $C$. Once $C$ is
+colored, $c_0$ has at most one uncolored neighbor ($t_1$), so $c_0, t_1, \dots,
+t_{\ell-1}$ force $t_1, \dots, t_\ell$ sequentially, coloring $V(T_{m,\ell})$.
+
+\textbf{(2)} Let $S$ satisfy~(1), $B = S \cap C$, $b = |B| \ge 2$, and
+$T = S \cap \{t_1, \dots, t_\ell\}$, $a = |T|$. Since deleting $c_0$ separates
+the tail from $C \setminus \{c_0\}$:
+\begin{itemize}
+  \item If $c_0 \notin S$, then $T = \emptyset$ and $S = B$ is a contiguous arc
+        of length $k$ in the path $c_1 - \dots - c_{m-1}$, giving $N_m(k)$ sets.
+  \item If $c_0 \in S$, then $T = \{t_1, \dots, t_a\}$ for a unique
+        $0 \le a \le \ell$, and $B$ is a connected subset of $C$ of size
+        $b = k - a$ containing $c_0$, giving $A_m(k - a)$ sets ($b$ arcs for
+        $2 \le b \le m - 1$, and $1$ for $b = m$).
+\end{itemize}
+Summing over both cases yields~(2).
+
+\textbf{(3)} If $m \ge 5$ and $\ell \ge 2$, then~(2) gives
+$Z_C(T_{m,\ell}, 2) = m$, $Z_C(T_{m,\ell}, 3) = m + 2$, and
+$Z_C(T_{m,\ell}, 4) = m + 5$, whence
+\[
+Z_C(T_{m,\ell}, 3)^2 - Z_C(T_{m,\ell}, 2)\, Z_C(T_{m,\ell}, 4)
+= (m + 2)^2 - m(m + 5) = 4 - m < 0,
+\]
+so $Z_C(T_{m,\ell}; x)$ is not log-concave. Conversely:
+\begin{itemize}
+  \item For $\ell = 0$, the positive coefficients are $(m, \dots, m, 1)$.
+  \item For $\ell = 1$, they are $(3, 3, 1)$ for $m = 3$, and
+        $(m, m + 2, m + 3, \dots, 2m - 2, m, 1)$ for $m \ge 4$, where every
+        consecutive triple satisfies $z_k^2 \ge z_{k-1} z_{k+1}$ (in particular
+        $(2m - 2)^2 - (2m - 3)m = 2m^2 - 5m + 4 > 0$).
+  \item For $m = 3$ ($\ell \ge 2$), they are $(3, \dots, 3, 1)$.
+  \item For $m = 4$ ($\ell \ge 2$), they are $(4, 6, \dots, 6, 4, 1)$.
+\end{itemize}
+Each of these sequences is log-concave with no internal zeros.
+\end{proof}
+
+\begin{corollary}\label{cor:min}
+For every integer $n \ge 7$, the unicyclic graph $T_{5, n-5}$ of order $n$ has
+a non-log-concave connected zero forcing polynomial. The smallest example is
+$Z_C(T_{5,2}; x) = 5x^2 + 7x^3 + 10x^4 + 8x^5 + 5x^6 + x^7$
+($7^2 = 49 < 50 = 5 \cdot 10$).
+\end{corollary}
+
+\section{Formal and Computational Verification}
+
+Theorem~\ref{thm:tadpole} and Corollary~\ref{cor:min} are formally verified in
+Lean~4 (v4.33.1), with zero \texttt{sorry}s and standard axioms only, in the
+Lean module \texttt{MukherjeeRayUnicyclicZF}:
+\begin{itemize}
+  \item Exact closed form for all tadpoles: \texttt{tadpole\_czf\_formula};
+  \item Complete log-concavity biconditional: \texttt{tadpole\_czf\_logConcave\_iff};
+  \item Smallest counterexample $T_{5,2}$: \texttt{tadpole\_5\_2\_counterexample};
+  \item Unicyclic counterexample of every order $n \ge 7$:\\
+        \texttt{unicyclic\_not\_logConcave\_every\_order\_ge\_7}.
+\end{itemize}
+In addition, the standalone script \texttt{verify.py} confirms Theorem~\ref{thm:tadpole}
+by brute force for $3 \le m \le 9$, $0 \le \ell \le 7$, checks all connected
+graphs on $\le 6$ vertices (every one is log-concave), and verifies by exhaustive
+enumeration that $T_{5,2}$ is the unique non-log-concave unicyclic graph on $7$
+vertices (all $2{,}520 = 7!/2$ failing labelled unicyclic graphs are isomorphic
+to $T_{5,2}$).
+
+\begin{thebibliography}{9}
+\bibitem{MR2026}
+S.~Mukherjee and P.~Ray,
+\emph{On the connected zero forcing polynomial of finite trees},
+preprint, arXiv:2611.10985v2, November 2026.
+
+\bibitem{NB2026}
+P.~Newton and B.~Brimkov,
+\emph{Zero forcing polynomials of graphs},
+preprint, arXiv:2611.11352, November 2026.
+\end{thebibliography}
+
+\end{document}
