@@ -42,3 +42,4 @@ import Conjectures.MannaMandalPrimeIndexGraph
 import Conjectures.TalmageListReversal
 import Conjectures.MesyanSubmonoidQuantale
 import Conjectures.PhucDanchevTripotent
+import Conjectures.VasilyevUpDownCycles

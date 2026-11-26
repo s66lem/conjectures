@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{A Counterexample to Vasilyev's Cycle Ratio Inequality $2^\ell < 3^{a+1}$ in the Up-Down Graph}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For any subset $S \subseteq \mathbb{N} = \{1,2,\dots\}$, Vasilyev (\href{https://arxiv.org/abs/2611.20344}{arXiv:2611.20344v2}) studies the Collatz-type map $T_S(x) = \lceil 3x/2 \rceil$ for $x \in S$ and $T_S(x) = \lceil x/2 \rceil$ for $x \notin S$, whose primitive cycles correspond to simple directed cycles of the up-down graph $G$. In Question~7.1, Vasilyev asks whether every cycle of length $\ell$ with $a$ up-steps satisfies $2^\ell < 3^{a+1}$ (equivalently $a = \lfloor \ell \log_3 2 \rfloor$), having verified this inequality for all cycles with $\ell \le 30$ and all $1{,}133{,}265{,}572$ cycles contained in $[1,160]$. We answer this question in the negative by exhibiting an explicit simple cycle of length $\ell = 382$ with $a = 240$ up-steps, for which $3^{241} < 2^{382}$ and $2^{382}/3^{240} \approx 3.050403 > 3$.
+\end{abstract}
+
+\section{Introduction}
+Let $\mathbb{N} = \{1,2,3,\dots\}$, and define the upward and downward step maps
+\[
+U(x) = \left\lceil \frac{3x}{2} \right\rceil = \left\lfloor \frac{3x+1}{2} \right\rfloor,
+\qquad
+D(x) = \left\lceil \frac{x}{2} \right\rceil = \left\lfloor \frac{x+1}{2} \right\rfloor.
+\]
+For any subset $S \subseteq \mathbb{N}$, define $T_S : \mathbb{N} \to \mathbb{N}$ by $T_S(x) = U(x)$ if $x \in S$ and $T_S(x) = D(x)$ if $x \notin S$. Let $G$ be the directed \emph{up-down graph} on $\mathbb{N}$ with edges $x \to U(x)$ and $x \to D(x)$. By the Dictionary proposition of \cite{Vasilyev2026}, primitive cycles of maps $T_S$ are in bijection with simple directed cycles of $G$.
+
+For any cycle $c = (x_0,\dots,x_{\ell-1})$ of length $\ell$ with $a$ up-steps and $\ell - a$ down-steps, Theorem~4.1(c) of \cite{Vasilyev2026} establishes $3^a < 2^\ell$ via the exact product identity
+\begin{equation}\label{eq:prod}
+\frac{2^\ell}{3^a} = \prod_{i=0}^{\ell-1} \left(1 + \frac{e_i}{c_i x_i}\right),
+\end{equation}
+where $e_i = x_i \bmod 2 \in \{0,1\}$, $c_i = 3$ if $x_{i+1}=U(x_i)$, and $c_i = 1$ if $x_{i+1}=D(x_i)$. In Section~7, Vasilyev poses \textbf{Question~7.1}: does every cycle satisfy $2^\ell < 3^{a+1}$ (i.e., $a = \lfloor \ell \log_3 2 \rfloor$)? Vasilyev proved this for single-run cycles (Theorem~4.1(d)) and verified it for all $\ell \le 30$ and all $1{,}133{,}265{,}572$ cycles whose elements lie in $[1,160]$, among which the maximum ratio $2^\ell/3^a$ is $2.398$ (at $\ell = 71$).
+
+\section{Explicit Counterexample}
+
+\begin{theorem}\label{thm:main}
+Question~7.1 of \cite{Vasilyev2026} has a negative answer: there exists a subset $S \subset \mathbb{N}$ and a primitive cycle $c = (x_0,\dots,x_{381})$ of $T_S$ with length $\ell = 382$ and $a = 240$ up-steps satisfying
+\[
+3^{241} < 2^{382}.
+\]
+In particular, $2^{382}/3^{240} \approx 3.050403 > 3$ and $a = 240 = \lfloor 382 \log_3 2 \rfloor - 1 \neq \lfloor \ell \log_3 2 \rfloor$.
+\end{theorem}
+
+\begin{proof}
+Consider the sequence $c = (x_0,x_1,\dots,x_{381})$ of $382$ integers $\ge 2$ listed in full in Table~\ref{tab:cycle}. Its vertices are pairwise distinct, ranging from $2$ to $258{,}477{,}331{,}094$, and partition into $13$ alternating up-runs and down-runs whose local minima (up-run starting vertices) are
+\[
+2,\; 6,\; 10,\; 16,\; 20,\; 29,\; 33,\; 38,\; 40,\; 42,\; 46,\; 51,\; 56.
+\]
+For every index $i \in \{0,\dots,381\}$ (modulo $382$), direct arithmetic verifies $x_{i+1} \in \{U(x_i), D(x_i)\}$. Since $x_i \ge 2$ implies $D(x_i) < x_i < U(x_i)$, the step type at every vertex is uniquely determined: $a = 240$ indices satisfy $x_{i+1} = U(x_i)$ and $142$ satisfy $x_{i+1} = D(x_i)$. Setting $S = \{x_i : x_{i+1} = U(x_i)\}$, pairwise distinctness implies $T_S(x_i) = x_{i+1}$ for all $i$, so $c$ is a primitive cycle of $T_S$ of exact period $382$.
+
+Finally, exact integer exponentiation gives
+\begin{align*}
+3^{241} &= 968772506150712031215849558055091779642661983952325151332908\\
+        &\qquad\quad 6812944808568617534785161369767311066873140028406651043,\\
+2^{382} &= 985050154909861980306976002503590345126993481761636166698707\\
+        &\qquad\quad 3351061430442874302652853566563721228910201656997576704,
+\end{align*}
+whence $3^{241} < 2^{382} < 3^{242}$, proving $2^\ell > 3^{a+1}$ and $a = \lfloor \ell \log_3 2 \rfloor - 1$.
+\end{proof}
+
+\begin{table}[h!]
+\centering\footnotesize
+\begin{minipage}{0.96\textwidth}
+\raggedright\ttfamily
+2, 3, 5, 8, 12, 18, 27, 41, 62, 93, 140, 210, 315, 473, 710, 1065, 1598, 2397, 3596, 5394, 2697, 1349, 675, 338, 169, 85, 43, 22, 11, 6, 9, 14, 21, 32, 48, 72, 108, 162, 243, 365, 548, 822, 1233, 1850, 2775, 4163, 6245, 9368, 4684, 2342, 1171, 586, 293, 147, 74, 37, 19, 10, 15, 23, 35, 53, 80, 120, 180, 270, 405, 608, 912, 1368, 2052, 3078, 4617, 6926, 10389, 15584, 23376, 35064, 52596, 78894, 118341, 177512, 266268, 399402, 599103, 898655, 1347983, 2021975, 3032963, 4549445, 6824168, 10236252, 15354378, 23031567, 34547351, 51821027, 77731541, 116597312, 174895968, 262343952, 393515928, 590273892, 885410838, 1328116257, 1992174386, 2988261579, 4482392369, 6723588554, 10085382831, 15128074247, 22692111371, 34038167057, 51057250586, 76585875879, 114878813819, 172318220729, 258477331094, 129238665547, 64619332774, 32309666387, 16154833194, 8077416597, 4038708299, 2019354150, 1009677075, 504838538, 252419269, 126209635, 63104818, 31552409, 15776205, 7888103, 3944052, 1972026, 986013, 493007, 246504, 123252, 61626, 30813, 15407, 7704, 3852, 1926, 963, 482, 241, 121, 61, 31, 16, 24, 36, 54, 81, 122, 183, 275, 413, 620, 310, 155, 78, 39, 20, 30, 45, 68, 102, 153, 230, 115, 58, 29, 44, 66, 99, 149, 224, 336, 504, 756, 1134, 1701, 2552, 3828, 5742, 8613, 12920, 19380, 29070, 43605, 65408, 98112, 147168, 220752, 331128, 496692, 745038, 1117557, 1676336, 2514504, 3771756, 5657634, 8486451, 4243226, 2121613, 1060807, 530404, 265202, 132601, 66301, 33151, 16576, 8288, 4144, 2072, 1036, 518, 259, 130, 65, 33, 50, 75, 38, 57, 86, 129, 194, 291, 437, 656, 984, 1476, 2214, 3321, 4982, 7473, 11210, 16815, 25223, 37835, 56753, 85130, 127695, 191543, 287315, 430973, 646460, 323230, 161615, 80808, 40404, 20202, 10101, 5051, 2526, 1263, 632, 316, 158, 79, 40, 60, 90, 135, 203, 305, 458, 687, 1031, 1547, 2321, 3482, 5223, 7835, 11753, 17630, 26445, 39668, 59502, 89253, 133880, 200820, 301230, 451845, 677768, 338884, 169442, 84721, 42361, 21181, 10591, 5296, 2648, 1324, 662, 331, 166, 83, 42, 63, 95, 143, 215, 323, 485, 728, 364, 182, 91, 46, 69, 104, 156, 234, 351, 527, 791, 1187, 1781, 2672, 4008, 6012, 9018, 13527, 20291, 30437, 45656, 68484, 102726, 51363, 25682, 12841, 6421, 3211, 1606, 803, 402, 201, 101, 51, 77, 116, 174, 261, 392, 588, 882, 441, 221, 111, 56, 84, 126, 189, 284, 426, 639, 959, 1439, 2159, 3239, 4859, 7289, 10934, 16401, 24602, 12301, 6151, 3076, 1538, 769, 385, 193, 97, 49, 25, 13, 7, 4
+\end{minipage}
+\caption{The 382-vertex simple cycle in the up-down graph $G$ with $a = 240$ up-steps and $2^{382}/3^{240} \approx 3.050403 > 3$.}\label{tab:cycle}
+\end{table}
+
+\begin{remark}
+The follow-up part of Question~7.1 asks for $\sup 2^\ell / 3^a$ over all simple cycles of $G$. Theorem~\ref{thm:main} establishes $\sup 2^\ell / 3^a \ge 2^{382}/3^{240} \approx 3.0504$, and extending the construction to more small odd targets yields larger ratios (e.g., $\approx 3.72$ at $\ell = 12{,}913$). Determining whether $\sup 2^\ell/3^a = \infty$ remains open.
+\end{remark}
+
+\section*{Formal Verification}
+Theorem~\ref{thm:main} is formally verified in Lean~4 (\texttt{Conjectures/VasilyevUpDownCycles.lean}, theorem \texttt{vasilyev\_question\_7\_1\_disproof}) with zero \texttt{sorry} and standard axioms only, and independently verified in exact integer and rational arithmetic by \texttt{verify.py}.
+
+\begin{thebibliography}{9}
+\bibitem{Vasilyev2026}
+O.~Vasilyev, \emph{Up or down at every integer: Collatz-type maps of arbitrary sets and the up-down graph}, arXiv:2611.20344v2 [math.NT], November 2026.
+\end{thebibliography}
+\end{document}
