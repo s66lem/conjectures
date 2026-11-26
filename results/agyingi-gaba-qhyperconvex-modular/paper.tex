@@ -1,0 +1,235 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\title{Modularity and $N_5$ Sublattices in Specialization Orders of Bounded $q$-Hyperconvex Spaces}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve both parts of the open question on modularity and $N_5$ sublattices
+posed by Agyingi and Gaba (\texttt{arXiv:2611.32417v1}). First, we prove via a
+strictly antimonotone valuation $v(g) = \max_k g_k + \min_k g_k$ that the
+specialization order $(Y, \le_q)$ of the Isbell-hull of the equilateral
+three-point space is modular and not distributive, confirming their conjecture
+and ruling out $N_5$ as a sublattice of $(Y, \le_q)$. Second, we show that
+$N_5$ does occur as a sublattice of the specialization order $(S, \le_q)$ of
+the bounded $q$-hyperconvex $T_0$-quasi-metric space
+$S = \{g \in [0, 1]^3 : g_3 \le \max(g_1, g_2)\}$, demonstrating that
+specialization orders of bounded $q$-hyperconvex spaces need not be modular.
+All results are formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+In~\cite{AG2026}, Agyingi and Gaba study the specialization order of bounded
+$q$-hyperconvex $T_0$-quasi-metric spaces. Let $X = [0, 1]^3$ carry the
+bounded $T_0$-quasi-metric
+\[
+q(g, h) := \max_{k \in \{1, 2, 3\}} \max(h_k - g_k, 0),
+\]
+whose specialization order is the reverse coordinatewise order:
+$g \le_q h \iff q(g, h) = 0 \iff \forall k,\; h_k \le g_k$.
+The Isbell-hull of the equilateral three-point space is isometric to the
+subspace
+\[
+Y := \bigl\{g \in [0, 1]^3 : \text{the two largest coordinates of } g \text{ coincide}\bigr\}.
+\]
+In the final section of~\cite{AG2026} (Question~\texttt{q:modular}), the
+authors ask:
+\begin{quote}\itshape
+Is the specialization order $(Y, \le_q)$ of the Isbell-hull of the equilateral
+three-point space modular? Does $N_5$ occur as a sublattice of $(Y, \le_q)$, or
+more generally of the specialization order of some bounded $q$-hyperconvex space?
+\end{quote}
+They conjecture that $(Y, \le_q)$ is modular but not distributive. We settle
+both questions completely.
+
+\begin{theorem}\label{thm:main}
+Define $S := \{g \in [0, 1]^3 : g_3 \le \max(g_1, g_2)\} \subseteq (X, q)$.
+\begin{enumerate}
+  \item The specialization order $(Y, \le_q)$ is a modular, non-distributive
+        lattice; in particular, $N_5$ does not occur as a sublattice of $(Y, \le_q)$.
+  \item $(S, q)$ is a bounded $q$-hyperconvex $T_0$-quasi-metric space whose
+        specialization order $(S, \le_q)$ is a non-modular lattice containing
+        $N_5$ as a sublattice.
+\end{enumerate}
+\end{theorem}
+
+\section{Lattice Operations via Deflationary Retractions}
+
+Define $\rho_Y, \rho_S : X \to X$ by
+\[
+\rho_Y(g)_k := \min\Bigl(g_k,\; \max_{j \neq k} g_j\Bigr) \quad (k = 1, 2, 3),
+\qquad
+\rho_S(g) := \bigl(g_1,\; g_2,\; \min(g_3, \max(g_1, g_2))\bigr).
+\]
+
+\begin{lemma}\label{lem:retract}
+For both $(\rho, F) = (\rho_Y, Y)$ and $(\rho, F) = (\rho_S, S)$, the map $\rho$
+is coordinatewise monotone and deflationary ($\rho(g) \le_{\mathrm{coord}} g$)
+with image and fixed set equal to $F$, and $F$ is closed under coordinatewise
+maximum. Consequently, $(F, \le_q)$ is a lattice with
+\[
+g \wedge_q h = \max(g, h),
+\qquad
+g \vee_q h = \rho\bigl(\min(g, h)\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Monotonicity, deflationarity, and $\mathrm{Fix}(\rho) = \mathrm{Im}(\rho) = F$
+are immediate from the formulas. For $g, h \in F$, monotonicity gives
+$g = \rho(g) \le_{\mathrm{coord}} \rho(\max(g, h))$ and
+$h = \rho(h) \le_{\mathrm{coord}} \rho(\max(g, h))$, so
+$\max(g, h) \le_{\mathrm{coord}} \rho(\max(g, h)) \le_{\mathrm{coord}} \max(g, h)$
+and thus $\max(g, h) \in F$. Since $\le_q$ is the reverse coordinatewise order,
+$\max(g, h)$ is the greatest lower bound $g \wedge_q h$ in $F$. Moreover,
+$u := \rho(\min(g, h)) \in F$ satisfies $u \le_{\mathrm{coord}} \min(g, h)$, so
+$g, h \le_q u$; for any $x \in F$ with $g, h \le_q x$, we have
+$x \le_{\mathrm{coord}} \min(g, h)$ and therefore
+$x = \rho(x) \le_{\mathrm{coord}} \rho(\min(g, h)) = u$, i.e., $u \le_q x$.
+Thus $u = g \vee_q h$.
+\end{proof}
+
+\section{Modularity and Non-Distributivity of $(Y, \le_q)$}
+
+Define $v : X \to \mathbb{R}$ by $v(g) := \max_k g_k + \min_k g_k$.
+
+\begin{lemma}\label{lem:overlap}
+For all $g, h \in Y$,
+$\max_k \min(g_k, h_k) = \min(\max_k g_k, \max_k h_k)$.
+\end{lemma}
+
+\begin{proof}
+Clearly $\min(g_k, h_k) \le \min(\max_j g_j, \max_j h_j)$ for each $k$.
+Conversely, by definition of $Y$, the maximum of $g$ is attained on a
+$2$-element subset $A \subseteq \{1, 2, 3\}$ and the maximum of $h$ on a
+$2$-element subset $B \subseteq \{1, 2, 3\}$. Since $|A| + |B| = 4 > 3$, there
+is some $k \in A \cap B$, at which
+$\min(g_k, h_k) = \min(\max_j g_j, \max_j h_j)$.
+\end{proof}
+
+\begin{proposition}\label{prop:Y}
+The lattice $(Y, \le_q)$ is modular and not distributive; in particular, $N_5$
+does not occur as a sublattice of $(Y, \le_q)$.
+\end{proposition}
+
+\begin{proof}
+For any $x \in X$ with sorted coordinates $x_{(1)} \le x_{(2)} \le x_{(3)}$,
+$\rho_Y(x)$ has sorted coordinates $(x_{(1)}, x_{(2)}, x_{(2)})$, so
+$v(\rho_Y(x)) = x_{(1)} + x_{(2)} = \sum_k x_k - \max_k x_k$. For $y \in Y$,
+$\rho_Y(y) = y$ gives $v(y) = \sum_k y_k - \max_k y_k$. For $g, h \in Y$, let
+$J = \max(g, h) = g \wedge_q h \in Y$ and $m = \min(g, h)$, so
+$g \vee_q h = \rho_Y(m)$. Using $\sum_k J_k + \sum_k m_k = \sum_k g_k + \sum_k h_k$,
+$\max_k J_k = \max(\max_k g_k, \max_k h_k)$, and Lemma~\ref{lem:overlap},
+\[
+v(g \vee_q h) + v(g \wedge_q h)
+= \sum_k m_k - \max_k m_k + \sum_k J_k - \max_k J_k
+= v(g) + v(h).
+\]
+Next, we claim $v$ is strictly antimonotone on $(Y, \le_q)$: if $g \le_q h$
+(i.e., $h \le_{\mathrm{coord}} g$) and $v(h) = v(g)$, then $\max h = \max g =: M$
+and $\min h = \min g =: m$. If $m = M$, then $g = (M, M, M) = h$. If $m < M$,
+then each of $g, h \in Y$ has exactly one coordinate equal to $m$ and two equal
+to $M$; since $h \le_{\mathrm{coord}} g$, the unique coordinate with $g_k = m$
+also has $h_k = m$, forcing $g = h$.
+
+Now let $a, b, c \in Y$ with $a \le_q c$, and set $\ell = a \vee_q (b \wedge_q c)$
+and $r = (a \vee_q b) \wedge_q c$. Then $\ell \le_q r$,
+$a \wedge_q (b \wedge_q c) = a \wedge_q b$, and $(a \vee_q b) \vee_q c = b \vee_q c$.
+Applying the valuation identity twice to each side gives
+\[
+v(\ell) = v(a) + v(b) + v(c) - v(b \vee_q c) - v(a \wedge_q b) = v(r),
+\]
+whence $\ell = r$ by strict antimonotonicity. Thus $(Y, \le_q)$ is modular and
+cannot contain $N_5$. Finally, $\{0, (0,1,1), (1,0,1), (1,1,0), 1\} \subseteq Y$
+forms an $M_3$ sublattice of $(Y, \le_q)$, so $(Y, \le_q)$ is not distributive.
+\end{proof}
+
+\section{A Bounded $q$-Hyperconvex Space Containing $N_5$}
+
+Recall that a $T_0$-quasi-metric space $(S, q)$ is \emph{$q$-hyperconvex} if
+for every index set $I$, points $(y_i)_{i \in I}$ in $S$, and nonnegative reals
+$(r_i)_{i \in I}, (s_i)_{i \in I}$ satisfying $q(y_i, y_j) \le r_i + s_j$ for
+all $i, j \in I$, there exists $z \in S$ with $q(y_i, z) \le r_i$ and
+$q(z, y_i) \le s_i$ for all $i \in I$.
+
+\begin{proposition}\label{prop:S}
+$(S, q)$ is a bounded $q$-hyperconvex $T_0$-quasi-metric space, and $(S, \le_q)$
+contains $N_5$ as a sublattice.
+\end{proposition}
+
+\begin{proof}
+As a subspace of $(X, q)$, $(S, q)$ is bounded ($q \le 1$) and $T_0$. Let
+$(y_i, r_i, s_i)_{i \in I}$ be a compatible family in $S$. If $I = \emptyset$,
+$z = (0, 0, 0) \in S$ suffices. Otherwise, for $k \in \{1, 2, 3\}$ set
+\[
+L_k := \max\Bigl(0,\; \sup_{i \in I} (y_{i,k} - s_i)\Bigr),
+\qquad
+U_k := \min\Bigl(1,\; \inf_{i \in I} (y_{i,k} + r_i)\Bigr).
+\]
+Compatibility $q(y_j, y_i) \le r_j + s_i$ gives $y_{i,k} - s_i \le y_{j,k} + r_j$
+for all $i, j \in I$, and $0 \le y_{i,k} \le 1$ with $r_i, s_i \ge 0$ ensures
+$0 \le L_k \le U_k \le 1$. Set
+\[
+z := \bigl(U_1,\; U_2,\; \min(U_3, \max(U_1, U_2))\bigr) \in S.
+\]
+Immediately $L_1 \le z_1 \le U_1$, $L_2 \le z_2 \le U_2$, and $z_3 \le U_3$.
+Since $y_i \in S$ implies $y_{i,3} \le \max(y_{i,1}, y_{i,2})$, we have
+$y_{i,3} - s_i \le \max(L_1, L_2) \le \max(U_1, U_2)$ for all $i \in I$, whence
+$L_3 \le \max(U_1, U_2)$ and therefore $L_3 \le z_3 \le U_3$. Thus for every
+$i \in I$ and $k \in \{1, 2, 3\}$, $z_k - y_{i,k} \le r_i$ and
+$y_{i,k} - z_k \le s_i$, giving $q(y_i, z) \le r_i$ and $q(z, y_i) \le s_i$.
+
+For the $N_5$ sublattice of $(S, \le_q)$, take
+\[
+t = \bigl(\tfrac{1}{4}, \tfrac{1}{4}, \tfrac{1}{4}\bigr),\quad
+c = \bigl(0, \tfrac{1}{4}, \tfrac{1}{4}\bigr),\quad
+a = \bigl(0, \tfrac{1}{4}, 0\bigr),\quad
+b = \bigl(\tfrac{1}{4}, 0, \tfrac{1}{4}\bigr),\quad
+o = (0, 0, 0).
+\]
+All five points lie in $S$, with $t <_q c <_q a <_q o$, $b$ incomparable to $c$
+and $a$, $c \wedge_q b = a \wedge_q b = \max(\cdot, b) = t$, and
+$a \vee_q b = \rho_S(0, 0, 0) = o$,
+$c \vee_q b = \rho_S(0, 0, \tfrac{1}{4}) = o$. Hence $\{t, c, a, b, o\}$ is an
+$N_5$ sublattice of $(S, \le_q)$, and
+$c \vee_q (b \wedge_q a) = c \neq a = (c \vee_q b) \wedge_q a$.
+\end{proof}
+
+\section{Formal and Computational Verification}
+
+Theorem~\ref{thm:main} is formally verified in Lean~4 (Mathlib~v4.33.1) with
+zero \texttt{sorry}s and standard axioms only in the module
+\texttt{AgyingiGabaQHyperconvexModular.lean}:
+\begin{itemize}
+  \item Modularity and non-distributivity of $(Y, \le_q)$:
+        \texttt{Y\_isModularLattice}, \texttt{Y\_not\_distributive}, and
+        \texttt{Y\_no\_N5\_sublattice};
+  \item $q$-hyperconvexity and $N_5$ sublattice of $(S, \le_q)$:\\
+        \texttt{S\_isQHyperconvex} and \texttt{S\_has\_N5\_sublattice};
+  \item Combined resolution (all parts together):\\
+        \texttt{agyingi\_gaba\_question\_modular\_resolution}.
+\end{itemize}
+The standalone script \texttt{verify.py} checks the retractions, lattice
+operations, valuation identity, grid modularity of $Y$, $M_3 \subseteq Y$,
+$N_5 \subseteq S$, and $12{,}000$ random compatible double-ball families.
+
+\begin{thebibliography}{9}
+\bibitem{AG2026}
+C.~A. Agyingi and Y.~U. Gaba,
+\emph{Smyth completeness and nonexpansive iteration in $q$-hyperconvex
+$T_0$-quasi-metric spaces},
+arXiv:2611.32417v1, November 2026.
+\end{thebibliography}
+
+\end{document}

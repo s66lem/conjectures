@@ -49,3 +49,4 @@ import Conjectures.RossiPermutohedronRealRoots
 import Conjectures.MishimaLuSawaUchida5Design
 import Conjectures.RussoHeapOddExtremal
 import Conjectures.SharmaA401897
+import Conjectures.AgyingiGabaQHyperconvexModular
