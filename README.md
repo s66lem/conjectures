@@ -45,6 +45,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **33.** [Basak–Bijender–Kumar Question 4.14 (`arXiv:2611.19424v1`, Waldschmidt constant of monomial ideals)](results/basak-waldschmidt-monomial/) | Disproved (infinite two-parameter unmixed family $r(T-3) > T(T-1)$ with $\hat{\alpha}(I) = 2r/(2r-T+1) < (T+r)/(r+2)$; headline $455$-component ideal: $\alpha = 4, e = 14, \hat{\alpha} = 26/23 < 17/15$) | [DOI](https://doi.org/10.5281/zenodo.24558264) | **Lean 4** · Cross-Model Audit · Python |
 | **34.** [Takuto Nakai’s OEIS A400474 conjecture (triangle interior integer-angle maximum)](results/nakai-a400474/) | Proved for every $n \ge 3$ ($a(n) = (n^2 - 4n + c(n \bmod 6))/3$ with $c = (6, -3, 4, 3, 0, -5)$ via real-angle floor reduction, disjoint exclusions & discrete convexity balancing) | [DOI](https://doi.org/10.5281/zenodo.24559747) | **Lean 4** · Cross-Model Audit · Python |
 | **35.** [R. J. Mathar’s OEIS A401159 conjectures (binary matrices with at most two $1$'s per row and column)](results/mathar-a401159/) | Both open conjectures proved + general $m \le k + 1$ formula ($T(n,2) = \mathrm{A086601}(n)$, $T(n,3) = 1 + n + \frac{11}{4}n^2 + \frac{13}{8}n^3 + \frac{1}{8}n^4 + \frac{3}{8}n^5 + \frac{1}{8}n^6$) | [DOI](https://doi.org/10.5281/zenodo.24559959) | **Lean 4** · Cross-Model Audit · Python |
+| **36.** [Rahid Zaman’s OEIS A395348 conjecture (two-color spiral queen recurrence)](results/zaman-a395348/) | Proved for every $n \ge 2$ ($a(n + 4) = a(n) + 8n + 34$ via exact diagonal-parity separation, contiguous line-set invariants & exact closed-form coordinates for A395348 and A395349) | [DOI](https://doi.org/10.5281/zenodo.24560206) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -86,6 +87,7 @@ python3 results/pol-a400974/verify.py
 python3 results/basak-waldschmidt-monomial/verify.py
 python3 results/nakai-a400474/verify.py
 python3 results/mathar-a401159/verify.py
+python3 results/zaman-a395348/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
