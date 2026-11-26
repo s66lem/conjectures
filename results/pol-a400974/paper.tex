@@ -1,0 +1,180 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{Symmetric Representation Subparts and Maximal $2$-Dense Divisor Blocks: Proof of Omar E.~Pol's OEIS A400974, A280940, and A384225 Conjectures}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove four interrelated conjectures of Omar E.~Pol on the Online Encyclopedia of Integer Sequences linking the symmetric representation of $\sigma(n)$ to maximal $2$-dense blocks of positive divisors of $n$. Writing $n = 2^v m$ with $m$ odd, we show that for every integer $n \ge 1$: (i) the number of parts of the symmetric representation of $\sigma(n)$ equals the number of maximal $2$-dense blocks of divisors of $n$; (ii) the number of width-one layer subparts in the $k$-th part (\texttt{A280940}) equals the number of odd divisors in the $k$-th $2$-dense block (\texttt{A384225}); (iii) each $2$-dense block has length $(v+1)$ times its odd-divisor count (\texttt{A384222} $= \texttt{A001511} \cdot \texttt{A384225}$); and (iv) extracting the middle entry yields $\texttt{A400974}(n) = \texttt{A001511}(n) \cdot \texttt{A384230}(n)$. The proof combines an interval-counting interpretation of the alternating divisor sum \texttt{A249223}, an exact reversal involution on jump points, a variation identity for layer-run counts, and dyadic-chain closure of $2$-dense blocks. All results have been formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+For a positive integer $n$, let $r = \max\{j \ge 1 : j(j+1) \le 2n\} = \lfloor(\sqrt{8n+1}-1)/2\rfloor$. In the symmetric representation of $\sigma(n)$ (OEIS~\texttt{A237048}, \texttt{A249223}, \texttt{A262045}~\cite{OEIS-A262045}), one defines indicators $b_j = 1$ if $j \mid \bigl(n - j(j+1)/2\bigr)$ and $0$ otherwise for $1 \le j \le r$, alternating partial sums $w_k = \sum_{j=1}^k (-1)^{j+1} b_j$, and the palindromic width word
+\[
+  \mathcal{W}(n) = (w_1, \dots, w_r, w_r, \dots, w_1).
+\]
+The \emph{parts} $P_1, \dots, P_s$ of $\mathcal{W}(n)$ are its maximal contiguous runs of positive entries. Within a part $p = (p_0, \dots, p_{L-1})$, each maximal contiguous run of entries $\ge h$ at a height $h \ge 1$ forms a width-one layer \emph{subpart}; denote the total number of subparts in $p$ by
+\[
+  \Lambda(p) = \sum_{h = 1}^{\max p} \#\{\text{maximal contiguous runs of entries } \ge h \text{ in } p\}.
+\]
+Row $n$ of \texttt{A280940}~\cite{OEIS-A280940} records $(\Lambda(P_1), \dots, \Lambda(P_s))$, and \texttt{A384230}$(n)$~\cite{OEIS-A384230} records the middle entry $\Lambda(P_{(s+1)/2})$ if $s$ is odd, and $0$ if $s$ is even.
+
+Independently, let $1 = e_0 < e_1 < \dots < e_{d-1} = n$ be the sorted positive divisors of $n$, and partition this list into maximal $2$-dense blocks $B_1, \dots, B_t$ by splitting wherever $e_{i+1} > 2 e_i$. Row $n$ of \texttt{A384222} records $(|B_1|, \dots, |B_t|)$, row $n$ of \texttt{A384225}~\cite{OEIS-A384225} records the odd-divisor counts $(|B_1^{\mathrm{odd}}|, \dots, |B_t^{\mathrm{odd}}|)$, and \texttt{A400974}$(n)$~\cite{OEIS-A400974} records $|B_{(t+1)/2}|$ if $t$ is odd and $0$ if $t$ is even. Write $\texttt{A001511}(n) = v_2(n) + 1$ for the ruler function.
+
+Omar E.~Pol formulated four conjectures connecting these triangles and central sequences:
+\begin{itemize}
+  \item \texttt{A280940} (Jan.~13, 2026) and \texttt{A384225} Conj.~1 (Oct.~13, 2026): the triangles \texttt{A280940} and \texttt{A384225} are identical.
+  \item \texttt{A384225} Conj.~2 (Oct.~13, 2026): $\texttt{A384225}(n,k) = \texttt{A384222}(n,k) / \texttt{A001511}(n)$.
+  \item \texttt{A400974} (Oct.~11, 2026): $\texttt{A400974}(n) = \texttt{A001511}(n) \cdot \texttt{A384230}(n)$.
+\end{itemize}
+
+\begin{theorem}\label{thm:main}
+For every positive integer $n \ge 1$, the number of parts equals the number of maximal $2$-dense divisor blocks ($s = t$), and for every $1 \le k \le t$:
+\begin{enumerate}
+  \item $\Lambda(P_k) = |B_k^{\mathrm{odd}}|$, i.e., $\texttt{A280940}(n, k) = \texttt{A384225}(n, k)$;
+  \item $|B_k| = (v_2(n) + 1)\,|B_k^{\mathrm{odd}}|$, i.e., $\texttt{A384222}(n, k) = \texttt{A001511}(n)\cdot \texttt{A384225}(n, k)$.
+\end{enumerate}
+Consequently, $\texttt{A400974}(n) = \texttt{A001511}(n) \cdot \texttt{A384230}(n)$ for every $n \ge 1$.
+\end{theorem}
+
+\section{Layer-Run Variation and Stutter Compression}
+
+For any finite list $L$ of nonnegative integers, let $\operatorname{dedup}(L)$ denote the list obtained by collapsing consecutive equal entries to a single copy.
+
+\begin{lemma}\label{lem:rise}
+For every finite list $p = (p_0, \dots, p_{L-1})$ of nonnegative integers (with $p_{-1} = 0$),
+\[
+  \Lambda(p) = \sum_{i = 0}^{L - 1} \max(0, p_i - p_{i-1}).
+\]
+In particular, $\Lambda(\operatorname{dedup}(p)) = \Lambda(p)$, and the tuple of subpart counts of the maximal positive runs of any list $L$ depends only on $\operatorname{dedup}(L)$.
+\end{lemma}
+
+\begin{proof}
+For each integer $h \ge 1$, a maximal contiguous run of entries $\ge h$ starts at index $i$ if and only if $p_{i-1} < h \le p_i$. Interchanging summation over $1 \le h \le \max p$ and $0 \le i < L$ gives
+\[
+  \Lambda(p) = \sum_{i = 0}^{L - 1} \#\{h \ge 1 : p_{i-1} < h \le p_i\} = \sum_{i = 0}^{L - 1} \max(0, p_i - p_{i-1}).
+\]
+Adjacent equal entries contribute $\max(0, x - x) = 0$, so $\Lambda(\operatorname{dedup}(p)) = \Lambda(p)$. Since collapsing consecutive zeros preserves the boundaries of maximal positive runs and collapsing consecutive equal positive entries applies $\operatorname{dedup}$ to each part, the tuple $(\Lambda(P_1), \dots, \Lambda(P_s))$ is invariant under $\operatorname{dedup}$.
+\end{proof}
+
+\section{Interval-Count Representation and Symmetry}
+
+Fix $n \ge 1$ and write $n = 2^v m$ with $m$ odd and $Q = 2^{v+1}$, so $2n = Qm$. Define for $x \in \mathbb{Z}_{\ge 0}$:
+\[
+  W_n(x) = \#\{d \mid m : d \le x < Q d\}.
+\]
+Clearly $W_n(0) = 0$. Comparing $W_n(x+1)$ and $W_n(x)$, an interval $[d, Qd)$ enters at $d$ and leaves at $Qd$, so
+\begin{equation}\label{eq:W-step}
+  W_n(x+1) - W_n(x) = \mathbf{1}_{x+1 \mid m} - \mathbf{1}_{\exists d \mid m,\; x+1 = Qd}.
+\end{equation}
+Since divisors of $m$ are odd and multiples of $Q$ are even, the two sets are disjoint. Let $E = \{d : d \mid m\} \cup \{Qd : d \mid m\}$ be the set of jump points of $W_n$.
+
+\begin{lemma}\label{lem:match}
+For every $1 \le k \le r$, one has $w_k = W_n(k)$.
+\end{lemma}
+
+\begin{proof}
+For $1 \le j \le r$, $j(j+1) \le 2n$ is even, so $j \mid \bigl(n - j(j+1)/2\bigr)$ holds if and only if $2j \mid \bigl(2n - j(j+1)\bigr)$, equivalently $j \mid 2n$ and $2n/j \equiv j + 1 \pmod 2$. If $j$ is odd, $\gcd(j, Q) = 1$, so $j \mid Qm \iff j \mid m$, in which case $2n/j = Q(m/j)$ is even. If $j$ is even, $2n/j$ must be odd, which holds if and only if $j = Qd$ for some $d \mid m$. Thus $(-1)^{j+1} b_j = W_n(j) - W_n(j-1)$ by~\eqref{eq:W-step}. Summing for $1 \le j \le k$ gives $w_k = W_n(k)$.
+\end{proof}
+
+\begin{lemma}\label{lem:rev}
+For every positive divisor $e \mid 2n$, one has $W_n(2n / e) = W_n(e - 1)$.
+\end{lemma}
+
+\begin{proof}
+Under the involution $d \mapsto m/d$ on the divisors of $m$, multiplying by $de > 0$ (and using $de(m/d) = em$, $de(2n/e) = dQm$) gives
+\[
+  m/d \le 2n/e \iff e \le Qd \iff e - 1 < Qd, \qquad 2n/e < Q(m/d) \iff d < e \iff d \le e - 1.
+\]
+Hence $d \mapsto m/d$ bijects $\{d \mid m : d \le e - 1 < Qd\}$ onto $\{d' \mid m : d' \le 2n/e < Qd'\}$.
+\end{proof}
+
+\begin{proposition}\label{prop:dedup}
+Set $\mathcal{U}(n) = (W_n(1), W_n(2), \dots, W_n(2n-1))$. Then
+\[
+  \operatorname{dedup}(\mathcal{W}(n)) = \operatorname{dedup}(\mathcal{U}(n)).
+\]
+\end{proposition}
+
+\begin{proof}
+Every $e \in E$ divides $2n$, and $e \mapsto 2n/e$ is a fixed-point-free involution on $E$ swapping odd and even endpoints. Moreover, $e \le r \iff e(e+1) \le 2n \iff e < 2n/e$. Let $1 = e_0 < e_1 < \dots < e_{s-1}$ be the elements of $E \cap [1, r]$; then the remaining elements of $E \setminus \{2n\}$ are $2n/e_{s-1} < \dots < 2n/e_1$.
+
+Because $W_n(x) \ne W_n(x-1)$ precisely when $x \in E$, we have
+\[
+  \operatorname{dedup}(W_n(1), \dots, W_n(r)) = (W_n(e_0), \dots, W_n(e_{s-1})),
+\]
+\[
+  \operatorname{dedup}(\mathcal{U}(n)) = (W_n(e_0), \dots, W_n(e_{s-1}), W_n(2n/e_{s-1}), \dots, W_n(2n/e_1)).
+\]
+For each $1 \le i \le s-1$, Lemma~\ref{lem:rev} gives $W_n(2n/e_i) = W_n(e_i - 1) = W_n(e_{i-1})$, since no jump point lies strictly between $e_{i-1}$ and $e_i$. By Lemma~\ref{lem:match},
+\[
+  \mathcal{W}(n) = (W_n(1), \dots, W_n(r), W_n(r), \dots, W_n(1)),
+\]
+whose compression is the identical palindrome $(W_n(e_0), \dots, W_n(e_{s-1}), W_n(e_{s-2}), \dots, W_n(e_0))$.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+Every divisor $e \mid n$ factors uniquely as $e = 2^i d$ with $0 \le i \le v$ and $d \mid m$. Since $[d, Qd) = \bigsqcup_{i=0}^v [2^i d, 2^{i+1} d)$, we have for every integer $x \ge 1$:
+\begin{equation}\label{eq:W-pos}
+  W_n(x) > 0 \iff \exists e \mid n,\; e \le x < 2e.
+\end{equation}
+
+Let $B_1, \dots, B_t$ be the maximal $2$-dense blocks of sorted divisors of $n$, with $a_k = \min B_k$ and $c_k = \max B_k$. Then $a_1 = 1$, $c_t = n$, and $2c_k < a_{k+1}$ for $1 \le k < t$.
+\begin{itemize}
+  \item For every $x \in [a_k, 2c_k)$, adjacent elements of $B_k$ have ratio at most $2$, so some $e \in B_k$ satisfies $e \le x < 2e$, giving $W_n(x) > 0$ by~\eqref{eq:W-pos}.
+  \item For every $x \in [2c_k, a_{k+1})$ (nonempty since $2c_k < a_{k+1}$), any divisor $e \mid n$ satisfies either $e \le c_k$ (so $2e \le 2c_k \le x$) or $e \ge a_{k+1} > x$, giving $W_n(x) = 0$ by~\eqref{eq:W-pos}.
+\end{itemize}
+Hence the maximal positive runs of $\mathcal{U}(n)$ are precisely $U_k = (W_n(a_k), \dots, W_n(2c_k - 1))$ ($1 \le k \le t$).
+
+\emph{Part (1).} By Lemma~\ref{lem:rise} and Proposition~\ref{prop:dedup}, $s = t$ and $\Lambda(P_k) = \Lambda(U_k)$ for all $k$. Since $W_n(a_k - 1) = 0$, Lemma~\ref{lem:rise} and~\eqref{eq:W-step} give
+\[
+  \Lambda(U_k) = \sum_{x = a_k}^{2c_k - 1} \max(0, W_n(x) - W_n(x-1)) = \#\{d \mid m : a_k \le d < 2c_k\}.
+\]
+Every odd divisor $d \in B_k$ divides $m$ and lies in $[a_k, 2c_k)$; conversely, any $d \mid m$ in $[a_k, 2c_k)$ divides $n$ and cannot belong to any block $B_j$ with $j < k$ (all elements $< a_k$) or $j > k$ (all elements $\ge a_{k+1} > 2c_k$), so $d \in B_k^{\mathrm{odd}}$. Thus $\Lambda(P_k) = |B_k^{\mathrm{odd}}|$.
+
+\emph{Part (2).} Whenever $e \mid n$ and $2e \mid n$, no gap of factor $> 2$ can separate $e$ from $2e$, so $e$ and $2e$ lie in the same block $B_k$. By induction on $i$, for each $d \mid m$ and $0 \le i \le v$, $2^i d \in B_k \iff d \in B_k$. Thus $e \mapsto (v_2(e), e/2^{v_2(e)})$ bijects $B_k$ onto $\{0, \dots, v\} \times B_k^{\mathrm{odd}}$, giving $|B_k| = (v + 1)|B_k^{\mathrm{odd}}|$.
+
+\emph{Central consequence.} Since $(|B_1|, \dots, |B_t|)$ and $(\Lambda(P_1), \dots, \Lambda(P_s))$ have equal length $t = s$ and satisfy $|B_k| = \texttt{A001511}(n)\,\Lambda(P_k)$ for all $k$, taking the middle entry (or $0$ if $t$ is even) gives $\texttt{A400974}(n) = \texttt{A001511}(n) \cdot \texttt{A384230}(n)$. \hfill $\square$
+
+\section{Formal Verification}
+
+All results are formally verified in Lean~4 with Mathlib (module \texttt{Conjectures.PolA400974}), using only the standard axioms (no \texttt{sorry}, custom axioms, or \texttt{native\_decide}):
+\begin{itemize}
+  \item \texttt{pol\_A280940\_eq\_A384225} proves Theorem~\ref{thm:main}(1) for all $n \ge 1$;
+  \item \texttt{pol\_A384222\_eq\_ruler\_mul\_A384225} proves Theorem~\ref{thm:main}(2) for all $n \ge 1$;
+  \item \texttt{pol\_A400974\_conjecture} proves the central identity $\texttt{A400974}(n) = \texttt{A001511}(n)\cdot \texttt{A384230}(n)$ for all $n \ge 1$.
+\end{itemize}
+An independent Python verifier (\texttt{verify.py}) additionally checks the published OEIS prefixes of \texttt{A400974} ($n \le 84$) and \texttt{A384230} ($n \le 87$), the interval-sweep word compression, and all four conjectures for every $1 \le n \le 4096$.
+
+\begin{thebibliography}{9}
+\bibitem{OEIS-A262045}
+H.~H.~H\"oft and O.~E.~Pol, \emph{OEIS Sequences A237048, A249223, and A262045}, The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A262045}.
+
+\bibitem{OEIS-A280940}
+O.~E.~Pol, \emph{Sequence A280940: Irregular triangle of subparts in the $k$-th part of the symmetric representation of $\sigma(n)$}, \url{https://oeis.org/A280940}, Conjecture added Jan.~13, 2026.
+
+\bibitem{OEIS-A384225}
+O.~E.~Pol, \emph{Sequence A384225: Odd numbers in the $k$-th $2$-dense sublist of divisors of $n$}, \url{https://oeis.org/A384225}, Conjectures added Oct.~13, 2026.
+
+\bibitem{OEIS-A384230}
+O.~E.~Pol, \emph{Sequence A384230: Number of subparts in the central part of the symmetric representation of $\sigma(n)$}, \url{https://oeis.org/A384230}.
+
+\bibitem{OEIS-A400974}
+O.~E.~Pol, \emph{Sequence A400974: Number of terms in the central $2$-dense sublist of divisors of $n$}, \url{https://oeis.org/A400974}, Oct.~11, 2026.
+\end{thebibliography}
+
+\end{document}

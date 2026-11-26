@@ -40,6 +40,8 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **28.** [Yaqubi–Mirzavaziri Conjecture 6.2 ($2$-adic valuations of $k$-tuple $\mathrm{PDO}$ partitions)](results/yaqubi-mirzavaziri-pdo/) | Proved unconditionally for every $k \ge 1$ (all $8$ classes $\bmod 8$, including exceptional $k \equiv 1, 6 \pmod 8$ via $B_k(7)$ period certificates & self-contained Jacobi/$\psi\psi(q^3)$ dissections) | [DOI](https://doi.org/10.5281/zenodo.24552279) | **Lean 4** · Cross-Model Audit · Python |
 | **29.** [Clark Kimberling’s OEIS A308355 & A025065 conjectures (lex-order partition part counts)](results/kimberling-a308355/) | Complete resolution: A025065 conjecture proved for all $n \ge 1$ ($\sum_{r=0}^{\lfloor n/2 \rfloor} p(r)$); A308355 $\mathrm{A025065}(n+1)$ formula disproved for every odd $n \ge 1$ | [DOI](https://doi.org/10.5281/zenodo.24552281) | **Lean 4** · Cross-Model Audit · Python |
 | **30.** [Sajid Khan Hussain’s OEIS A402341 conjecture (central polynomial $2$-adic valuations)](results/hussain-a402341/) | Proved for every even $n \ge 0$ and generalized to every power-of-two block length $2^r$ ($a_r(2m) \equiv \binom{2N}{N} \pmod{2^{s_2(N)+1}}$, $v_2(a_r(2m)) = s_2((2^r-1)m)$) | [DOI](https://doi.org/10.5281/zenodo.24552348) | **Lean 4** · Cross-Model Audit · Python |
+| **31.** [Jan Snellman’s Conjecture 21 (`arXiv:2611.26110v1`, rank-two Kozlov polytope volume monotonicity)](results/snellman-kozlov-volume/) | Proved for all $n \ge 1, d \ge 0$ (explicit lower bound $\bigl(\binom{n}{d}-1\bigr)t_d(n-d)\,\mathrm{NV}(\mathrm{Koz}(n))$, strict for $0 \le d \le n - 2$ except $(n,d)=(2,0)$) | [DOI](https://doi.org/10.5281/zenodo.24553538) | **Lean 4** · Cross-Model Audit · Python |
+| **32.** [Omar E. Pol’s OEIS A400974, A280940 & A384225 conjectures (symmetric representation subparts & $2$-dense divisor blocks)](results/pol-a400974/) | All four conjectures proved for every $n \ge 1$ ($\mathrm{A280940} = \mathrm{A384225}$, $\mathrm{A384222} = \mathrm{A001511}\cdot\mathrm{A384225}$, $\mathrm{A400974} = \mathrm{A001511}\cdot\mathrm{A384230}$) | [DOI](https://doi.org/10.5281/zenodo.24556521) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -76,6 +78,8 @@ python3 results/zai-lv-sabir-split-hamilton/verify.py
 python3 results/yaqubi-mirzavaziri-pdo/verify.py
 python3 results/kimberling-a308355/verify.py
 python3 results/hussain-a402341/verify.py
+python3 results/snellman-kozlov-volume/verify.py
+python3 results/pol-a400974/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

@@ -1,0 +1,130 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\NV}{NV}
+\DeclareMathOperator{\Koz}{Koz}
+
+\title{Monotonicity of the Normalized Volume of Rank-Two Kozlov Polytopes}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove Jan Snellman's conjecture (\texttt{arXiv:2611.26110v1}, Conjecture~\texttt{conj-nv-monotone}) that the normalized volume $\NV(\Koz(n; 0, d))$ of the rank-two Kozlov polytope is weakly increasing in the shift gap $d \ge 0$ for every $n \ge 1$. Starting from Snellman's staircase-tiling volume formula, we show by an elementary termwise comparison that every surviving staircase cell grows when $d$ increases by $1$, and that the gain of the final surviving cell equals $\binom{n}{d}$ times the dropped cell. This yields the explicit lower bound
+\[
+  \NV(\Koz(n; 0, d + 1)) - \NV(\Koz(n; 0, d)) \ge \left(\binom{n}{d} - 1\right)\binom{n-1+d}{n-1} \NV(\Koz(n)) \prod_{k=n-d+1}^{n} \binom{n}{k}
+\]
+for all $n \ge 2$ and $0 \le d \le n - 2$, and establishes strict monotonicity throughout $0 \le d \le n - 2$ with the unique exception $(n, d) = (2, 0)$, where $\NV = 2$ at both $d = 0$ and $d = 1$. The proof is formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+In~\cite{Snellman2026}, Jan Snellman studies lattice points, Ehrhart theory, and volumes of the higher-rank Kozlov polytopes $\Koz(n; \mathbf{d})$ associated with Hilbert functions of graded modules over an exterior algebra in $n$ variables. For rank $r = 2$ with shift vector $\mathbf{d} = (0, d)$ ($d \ge 0$), Snellman proves two exact volume descriptions:
+\begin{itemize}
+  \item For $0 \le d \le n - 1$, the staircase tiling (\texttt{thm-staircase} and \texttt{cor-\allowbreak rank2-\allowbreak volume} in~\cite{Snellman2026}) yields
+  \begin{equation}\label{eq:rank2-vol}
+    \NV(\Koz(n; 0, d)) = \NV(\Koz(n)) \cdot T(n, d), \qquad T(n, d) = \sum_{j=1}^{n-d} t_d(j),
+  \end{equation}
+  where $\NV(\Koz(n)) = \prod_{k=2}^{n} \binom{n}{k}$ and
+  \[
+    t_d(j) = \binom{n - 1 + d}{d + j - 1} \prod_{k=j+1}^{j+d} \binom{n}{k}.
+  \]
+  \item For $d \ge n - 1$ (the product regime, \cite[Proposition~\texttt{prop-product-regime}]{Snellman2026}), $\Koz(n; 0, d)$ is unimodularly equivalent to $\Koz(n)^2$, so $\NV(\Koz(n; 0, d))$ is constant for $d \ge n - 1$ and agrees with~\eqref{eq:rank2-vol} at $d = n - 1$, namely $\binom{2n-2}{n-1}\NV(\Koz(n))^2$.
+\end{itemize}
+
+The Euclidean volume of $\Koz(n; 0, d)$ need not be monotone in $d$: for $n = 6$, it drops from $270000$ at $d = 4$ to $50625$ at $d = 5$. In contrast, Snellman observed normalized-volume monotonicity for $n \le 7$ and posed Conjecture~\texttt{conj-nv-monotone} of~\cite{Snellman2026}:
+
+\begin{quote}
+\emph{Conjecture (\cite{Snellman2026}): $\NV(\Koz(n; 0, d))$ is weakly increasing in $d$.}
+\end{quote}
+
+We prove this conjecture completely for all $n \ge 1$ and $d \ge 0$, with an explicit quantitative lower bound and exact strictness classification.
+
+\begin{theorem}\label{thm:main}
+Let $\NV(\Koz(n; 0, d)) = \NV(\Koz(n)) \cdot T(n, \min(d, n - 1))$ as in~\eqref{eq:rank2-vol}.
+\begin{enumerate}
+  \item For every $n \ge 2$ and every $0 \le d \le n - 2$,
+  \[
+    T(n, d + 1) - T(n, d) \ge \left(\binom{n}{d} - 1\right) t_d(n - d) \ge 0.
+  \]
+  \item For every $n \ge 1$, $\NV(\Koz(n; 0, d))$ is weakly increasing in $d \ge 0$.
+  \item For $n \ge 2$ and $0 \le d \le n - 2$, one has $\NV(\Koz(n; 0, d + 1)) > \NV(\Koz(n; 0, d))$ strictly, except at the unique pair $(n, d) = (2, 0)$, where $\NV(\Koz(2; 0, 0)) = \NV(\Koz(2; 0, 1)) = 2$.
+\end{enumerate}
+\end{theorem}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+Fix $n \ge 2$ and $0 \le d \le n - 2$. For $n = 1$, $\min(d, 0) = 0$ for all $d \ge 0$, so $\NV(\Koz(1; 0, d)) = 1$ is trivially weakly increasing.
+
+\begin{lemma}[Termwise growth]\label{lem:ratio}
+For every $1 \le j \le n - d - 1$,
+\[
+  (d + j)\, t_{d+1}(j) = (n + d) \binom{n}{j + d + 1} t_d(j).
+\]
+Consequently $t_{d+1}(j) > t_d(j)$ strictly for every $1 \le j \le n - d - 1$.
+\end{lemma}
+
+\begin{proof}
+Applying the binomial absorption identity $(k+1)\binom{m+1}{k+1} = (m+1)\binom{m}{k}$ with $m = n - 1 + d$ and $k = d + j - 1$ gives
+\[
+  (d + j)\binom{n + d}{d + j} = (n + d)\binom{n - 1 + d}{d + j - 1}.
+\]
+Furthermore, $\prod_{k=j+1}^{j+d+1}\binom{n}{k} = \binom{n}{j + d + 1} \prod_{k=j+1}^{j+d}\binom{n}{k}$. Multiplying these identities yields $(d + j)\, t_{d+1}(j) = (n + d)\binom{n}{j + d + 1} t_d(j)$. Since $1 \le j \le n - d - 1$, we have $j + d + 1 \le n$, so $\binom{n}{j + d + 1} \ge 1$, $n + d > d + j > 0$, and $t_d(j) > 0$. Dividing by $d + j$ gives $t_{d+1}(j) > t_d(j)$.
+\end{proof}
+
+\begin{lemma}[Last-cell gain identity]\label{lem:last}
+For every $n \ge 2$ and $0 \le d \le n - 2$,
+\[
+  t_{d+1}(n - d - 1) = t_d(n - d - 1) + \binom{n}{d} t_d(n - d).
+\]
+\end{lemma}
+
+\begin{proof}
+Setting $j = n - d - 1$ in Lemma~\ref{lem:ratio}, we have $d + j = n - 1$ and $j + d + 1 = n$, so $\binom{n}{n} = 1$ gives
+\begin{equation}\label{eq:last-step}
+  (n - 1)\, t_{d+1}(n - d - 1) = (n + d)\, t_d(n - d - 1) = (n - 1)\, t_d(n - d - 1) + (d + 1)\, t_d(n - d - 1).
+\end{equation}
+On the other hand, $(m - k)\binom{m}{k} = (k + 1)\binom{m}{k + 1}$ with $m = n - 1 + d$ and $k = n - 2$ yields
+\[
+  (d + 1)\binom{n - 1 + d}{n - 2} = (n - 1)\binom{n - 1 + d}{n - 1}.
+\]
+For the product factors, if $d = 0$ both products are empty and $\binom{n}{0} = 1$; if $d \ge 1$, then since $\binom{n}{n} = 1$ and $\binom{n}{n - d} = \binom{n}{d}$,
+\[
+  \prod_{k=n-d}^{n-1}\binom{n}{k} = \binom{n}{n - d}\prod_{k=n-d+1}^{n-1}\binom{n}{k} = \binom{n}{d}\prod_{k=n-d+1}^{n}\binom{n}{k}.
+\]
+Multiplying yields $(d + 1)\, t_d(n - d - 1) = (n - 1)\binom{n}{d} t_d(n - d)$. Substituting into~\eqref{eq:last-step} and dividing by $n - 1 > 0$ completes the proof.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Separating $j = n - d - 1$ and the dropped term $j = n - d$ gives
+\[
+  T(n, d + 1) - T(n, d) = \sum_{j=1}^{n-d-2}\bigl(t_{d+1}(j) - t_d(j)\bigr) + \bigl(t_{d+1}(n - d - 1) - t_d(n - d - 1) - t_d(n - d)\bigr).
+\]
+By Lemma~\ref{lem:ratio}, every summand in the first sum is nonnegative; by Lemma~\ref{lem:last}, the second term equals $\bigl(\binom{n}{d} - 1\bigr) t_d(n - d) \ge 0$. This proves~(1), and multiplying by $\NV(\Koz(n)) > 0$ together with constancy for $d \ge n - 1$ proves~(2).
+
+For~(3), assume $(n, d) \ne (2, 0)$. If $d \ge 1$, then $1 \le d \le n - 2$ implies $\binom{n}{d} \ge 2$ and $t_d(n - d) > 0$, so $T(n, d + 1) - T(n, d) > 0$. If $d = 0$, then $n \ge 3$, so the sum over $1 \le j \le n - 2$ contains $j = 1$, where $t_1(1) > t_0(1)$ by Lemma~\ref{lem:ratio}, yielding $T(n, 1) > T(n, 0)$. At $(n, d) = (2, 0)$, direct computation gives $\NV(\Koz(2)) = 1$ and $T(2, 0) = T(2, 1) = 2$.
+\end{proof}
+
+\section{Formal Verification}
+
+All algebraic and monotonicity results of Theorem~\ref{thm:main}, together with the boundary identities $T(n, 0) = 2^{n-1}$ and $\NV(\Koz(n; 0, d)) = \binom{2n-2}{n-1}\NV(\Koz(n))^2$ ($d \ge n - 1$), have been formally verified in Lean~4 with Mathlib (module \texttt{Conjectures.SnellmanKozlovVolume}) using only the standard axioms (no \texttt{sorry}, custom axioms, or \texttt{native\_decide}). As in the proof above, the Lean formalization defines $\NV(\Koz(n; 0, d))$ directly from Snellman's proved volume formula~\eqref{eq:rank2-vol}. An independent Python verifier (\texttt{verify.py}) additionally reproduces Table~\texttt{tab:volumes} of~\cite{Snellman2026} ($n = 3, \dots, 6$) and checks all identities and inequalities through $n = 100$.
+
+\begin{thebibliography}{9}
+\bibitem{Snellman2026}
+J.~Snellman,
+\emph{Hilbert functions over the exterior algebra and $f$-vectors in higher rank III: Lattice points of the Kozlov polytope},
+\texttt{arXiv:2611.26110v1}, November~19, 2026.
+\end{thebibliography}
+
+\end{document}

@@ -28,3 +28,5 @@ import Conjectures.ZaiLvSabirSplitHamilton
 import Conjectures.YaqubiMirzavaziriPDO
 import Conjectures.KimberlingA308355
 import Conjectures.HussainA402341
+import Conjectures.PolA400974
+import Conjectures.SnellmanKozlovVolume
