@@ -40,3 +40,5 @@ import Conjectures.SchulteA397048
 import Conjectures.CliftonHarrisKhaqanBackgammon
 import Conjectures.MannaMandalPrimeIndexGraph
 import Conjectures.TalmageListReversal
+import Conjectures.MesyanSubmonoidQuantale
+import Conjectures.PhucDanchevTripotent

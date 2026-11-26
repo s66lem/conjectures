@@ -52,6 +52,8 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **40.** [Clifton–Harris–Khaqan Question 5.2 (`arXiv:2611.29890v1`, backgammon parking Motzkin enumeration)](results/clifton-harris-khaqan-backgammon/) | Proved affirmatively for all $n \ge k \ge 1$ ($\sum_{n \ge k} T(n, k)x^n = x^k \sum_{i=0}^{k-1} B(k-1, i)\,m(x)^{k+1-i}$, general car-$1$ prefix-length reduction $P_{1 \oplus \sigma} = \Phi(P_\sigma)$) | [DOI](https://doi.org/10.5281/zenodo.24564921) | **Lean 4** · Cross-Model Audit · Python |
 | **41.** [Manna–Mandal Problem 7.10, Q2 (`arXiv:2611.27642v1`, prime index elements graph `(H1) ⇏ (H2)`)](results/manna-mandal-prime-index-graph/) | Disproved via explicit irregular $3$-group $|P| = 243$ ($K = P \times \mathbb{Z}_5$: $N_3(P) = 4 \le 10$, $N_5(\mathbb{Z}_5) = 1 \le 486$, yet $c_P(\langle u \rangle) = 30 > 19$; direct $20$-vertex cut into $31$ branches in $\Gamma(P \times \mathbb{Z}_{10})$) | [DOI](https://doi.org/10.5281/zenodo.24565009) | **Lean 4** · Cross-Model Audit · Python |
 | **42.** [Alan Talmage's Monotonicity Conjecture (`arXiv:2611.25115v1`, Muñiz's list reversal game)](results/talmage-list-reversal-monotonicity/) | Disproved in both directions ($(2, 6)$ irreversible via $7$-state closed component vs $(2, 7)$ reversible in $4$ moves; $(1, 3, 7, 4)$ reversible in $18$ moves vs $(1, 3, 8, 4)$ irreversible via $5$-state closed component) | [DOI](https://doi.org/10.5281/zenodo.24565022) | **Lean 4** · Cross-Model Audit · Python |
+| **43.** [Z. Mesyan Question 34 (`arXiv:2611.31109v1`, submonoid quantales of domains)](results/mesyan-submonoid-quantale/) | Resolved (splits: YES for every (possibly nonunital) ring without zero divisors via characteristic-$p$ idempotent extraction; NO for semiring domains via explicit $14$-element twisted domain $R_{14}$ with $90$ commuting submonoids) | [DOI](https://doi.org/10.5281/zenodo.24566360) | **Lean 4** · Cross-Model Audit · Python |
+| **44.** [Phuc–Danchev Problem 4.10 (`arXiv:2611.24594v2`, tripotent + square-zero matrices over $\mathbb{F}_2$)](results/phuc-danchev-tripotent-square-zero/) | Resolved negatively for all $d \ge 7$ with $3 \nmid d$ and all $d = 8n + 4$ ($n \ge 1$) via char-$2$ cubic rank bound $\dim \ker p(A) \le 3\,\mathrm{rank}\, p(A)$ & $d = 8$ equality rigidity ($\mathrm{M}_d(\mathbb{F}_2) = \mathcal{T}_d \iff d \in \{1, 2, 4, 5\}$) | [DOI](https://doi.org/10.5281/zenodo.24567080) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -100,6 +102,8 @@ python3 results/schulte-a397048/verify.py
 python3 results/clifton-harris-khaqan-backgammon/verify.py
 python3 results/manna-mandal-prime-index-graph/verify.py
 python3 results/talmage-list-reversal-monotonicity/verify.py
+python3 results/mesyan-submonoid-quantale/verify.py
+python3 results/phuc-danchev-tripotent-square-zero/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

@@ -1,0 +1,114 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Complete Resolution of Phuc--Danchev Problem~4.10: Tripotent Plus Square-Zero Matrix Decompositions over $\mathbb{F}_2$}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve Problem~4.10 of Phuc and Danchev (\texttt{arXiv:2611.24594v2}) completely in the negative. Let $\mathcal{T}_d = \{T + N \in \mathrm{M}_d(\mathbb{F}_2) : T^3 = T,\; N^2 = 0\}$ and $p(x) = x^3 + x^2 + 1$. Over any field $F$ of characteristic~$2$, we prove two sharp obstructions: (i) every $A \in \mathcal{T}_d$ satisfies $\dim \ker p(A) \le 3 \operatorname{rank} p(A)$, and (ii) in the equality case $A = A_1 \oplus B$ with $p(A_1) = 0$, $p(B)$ invertible, and $\dim \ker p(A) = 3 \operatorname{rank} p(A)$, membership $A \in \mathcal{T}_d$ forces $B^3 = B^2$. Together these eliminate every $d \ge 7$ with $3 \nmid d$ (and in particular every $d = 8n + 4$ with $n \ge 1$), yielding the complete classification $\mathrm{M}_d(\mathbb{F}_2) = \mathcal{T}_d \iff d \in \{1, 2, 4, 5\}$.
+\end{abstract}
+
+\section{Introduction}
+
+For a field $F$, denote by $\mathcal{T}_d(F) = \{T + N \in \mathrm{M}_d(F) : T^3 = T,\; N^2 = 0\}$ the set of $d \times d$ matrices expressible as a sum of a tripotent and a square-zero matrix, and write $\mathcal{T}_d := \mathcal{T}_d(\mathbb{F}_2)$. In~\cite{PD2026}, Phuc and Danchev proved that $\mathrm{M}_d(\mathbb{F}_2) = \mathcal{T}_d$ for $d \in \{1, 2, 4, 5\}$ and $\mathrm{M}_d(\mathbb{F}_2) \neq \mathcal{T}_d$ whenever $3 \mid d$, and posed the following open problem~\cite[Problem~4.10]{PD2026}:
+\begin{quote}
+\emph{``Determine all integers $d \ge 7$ with $3 \nmid d$ for which $\mathrm{M}_d(\mathbb{F}_2) = \mathcal{T}_d$. In particular, determine which orders $d = 8n + 4$, with $n \ge 2$ and $n \not\equiv 1 \pmod 3$, satisfy this equality.''}
+\end{quote}
+
+We prove that no integer $d \ge 7$ with $3 \nmid d$ satisfies $\mathrm{M}_d(\mathbb{F}_2) = \mathcal{T}_d$.
+
+\begin{theorem}\label{thm:main}
+For every integer $d \ge 7$ with $3 \nmid d$, we have $\mathrm{M}_d(\mathbb{F}_2) \neq \mathcal{T}_d$. In particular, no order $d = 8n + 4$ with $n \ge 1$ satisfies $\mathrm{M}_d(\mathbb{F}_2) = \mathcal{T}_d$, and across all $d \ge 1$,
+\[
+  \mathrm{M}_d(\mathbb{F}_2) = \mathcal{T}_d \iff d \in \{1, 2, 4, 5\}.
+\]
+\end{theorem}
+
+\section{The Rank Inequality and Equality-Case Rigidity}
+
+Throughout, $F$ is a field of characteristic~$2$ and $p(x) = x^3 + x^2 + 1 \in F[x]$. Note the identity $(x^2 + 1)(x^3 + x) + (x^2 + x + 1)p(x) = 1$, so $a^3 + a$ is invertible with inverse $a^2 + 1$ in any characteristic-$2$ ring whenever $p(a) = 0$.
+
+If $a = t + u$ in a characteristic-$2$ ring $R$ with $t^3 = t$ and $u^2 = 0$, then $t = a + u$, $t^2 = a^2 + au + ua$, and expanding $0 = t^3 + t$ yields
+\begin{equation}\label{eq:E1}
+  a^3 + a + a^2 u + a u a + u a^2 + u a u + u = 0,
+\end{equation}
+and right-multiplying by $u$ gives
+\begin{equation}\label{eq:E1u}
+  (a^3 + a)u + a u a u + u a^2 u = 0.
+\end{equation}
+
+We begin with a self-contained proof of~\cite[Theorem~3.1]{PD2026} (at $\lambda = 1$).
+
+\begin{lemma}\label{lem:zero}
+Let $R$ be a nonzero ring of characteristic~$2$ and $a \in R$ with $p(a) = 0$. Then there are no $t, u \in R$ with $a = t + u$, $t^3 = t$, and $u^2 = 0$.
+\end{lemma}
+
+\begin{proof}
+Suppose $a = t + u$ with $t^3 = t$ and $u^2 = 0$, and put $X = uau$, $Y = ua^2u$, $Z = uauau$. Multiplying~\eqref{eq:E1} on both sides by $u$ gives $ua^3u + Z + X = 0$; since $a^3 = a^2 + 1$ and $u^2 = 0$, we have $ua^3u = Y$, so $Y = X + Z$. Next, $S := t^2 = a^2 + au + ua$ satisfies $S^2 + S = t^4 + t^2 = 0$, so $0 = u(S^2 + S)u = ua^4u + Yau + uaY + Y$. Since $a^4 = a(a^2 + 1) = a^2 + a + 1$, we have $ua^4u = Y + X$, whence $X = Yau + uaY$. Substituting $Y = X + Z$ gives $Yau = Z + uauauau = uaY$, so $X = 0$. Therefore $Z = Xau = 0$ and $Y = X + Z = 0$. By~\eqref{eq:E1u}, $(a^3 + a)u = aX + Y = 0$, so $u = (a^2 + 1)(a^3 + a)u = 0$. Then $a = t$ satisfies $a^3 + a = 0$, forcing $1 = (a^2 + 1)(a^3 + a) = 0$, a contradiction.
+\end{proof}
+
+\begin{lemma}[Rank inequality]\label{lem:A}
+Let $V$ be a finite-dimensional $F$-vector space and $a = t + u \in \mathrm{End}_F(V)$ with $t^3 = t$ and $u^2 = 0$. Set $e = p(a)$ and $K = \ker e$. Then
+\[
+  K_1 := \{x \in K : eux = euax = eua^2x = 0\} = 0,
+\]
+and hence $\dim_F \ker p(a) \le 3 \operatorname{rank} p(a)$.
+\end{lemma}
+
+\begin{proof}
+Since $e$ commutes with $a$, $K$ is $a$-invariant. For $x \in K_1$, we have $ax \in K$, $eu(ax) = 0$, $eua(ax) = eua^2x = 0$, and $eua^2(ax) = eu(a^2x + x) = 0$ (since $a^3x = a^2x + x$), so $a(K_1) \subseteq K_1$. Likewise, $ux \in K$, $eu(ux) = 0$ (since $u^2 = 0$), applying $e$ to~\eqref{eq:E1} at $x$ yields $euaux = 0$, and applying $e$ to~\eqref{eq:E1u} at $x$ yields $eua^2ux = (a^3 + a)eux + a(euaux) = 0$; hence $u(K_1) \subseteq K_1$. Thus $K_1$ is invariant under $a$, $u$, and $t = a + u$, with $p(a|_{K_1}) = 0$. Lemma~\ref{lem:zero} in $\mathrm{End}_F(K_1)$ forces $K_1 = 0$. The linear map $K \to (\mathrm{im}\, e)^3$, $x \mapsto (eux, euax, eua^2x)$, is therefore injective, yielding $\dim_F K \le 3 \operatorname{rank} e$.
+\end{proof}
+
+\begin{lemma}[Equality-case rigidity]\label{lem:B}
+Let $V = K \oplus U$ with $\dim_F K = 3 \dim_F U$, and let $a = a_1 \oplus B \in \mathrm{End}_F(V)$ where $p(a_1) = 0$ and $p(B) \in \mathrm{End}_F(U)$ is invertible. If $a = t + u$ with $t^3 = t$ and $u^2 = 0$, then $B^3 = B^2$.
+\end{lemma}
+
+\begin{proof}
+Write $u = \bigl(\begin{smallmatrix} u_{11} & u_{12} \\ u_{21} & c \end{smallmatrix}\bigr)$ on $K \oplus U$. Here $e = 0 \oplus p(B)$ has $\ker e = K$, and since $p(B)$ is invertible, $eu a^j x = 0 \iff u_{21} a_1^j x = 0$ for $x \in K$. By Lemma~\ref{lem:A}, $\Phi : K \to U^3$, $\Phi(x) = (u_{21}x, u_{21}a_1x, u_{21}a_1^2x)$, is injective, hence an isomorphism by dimension. Transporting to $U^3$, $M := \Phi a_1 \Phi^{-1}$ acts by $M(x, y, z) = (y, z, x + z)$, $u_{21}\Phi^{-1}(x, y, z) = x$, and $N := \Phi u_{11} \Phi^{-1}$ has components $(N_1, N_2, N_3)$:
+\begin{itemize}
+  \item The $U \leftarrow K$ block of $u^2 = 0$ is $u_{21} u_{11} = c u_{21}$, giving $N_1(x, y, z) = cx$.
+  \item The $U \leftarrow K$ block of~\eqref{eq:E1} is $B^2 u_{21} + B u_{21} a_1 + u_{21} a_1^2 + u_{21} a_1 u_{11} + c B u_{21} + u_{21} = 0$, giving $N_2(x, y, z) = (B^2 + cB + 1)x + By + z$.
+  \item The $K \leftarrow K$ block of~\eqref{eq:E1}, conjugated by $\Phi$, is
+  \[
+    M^3 + M + M^2 N + M N M + N M^2 + N M N + (\Phi u_{12}) B \pi_1 + N = 0,
+  \]
+  where $\pi_1(x, y, z) = x$ and $(\Phi u_{12})_1 = u_{21} u_{12} = c^2$ (from the $U \leftarrow U$ block of $u^2 = 0$). Taking the first coordinate at $(x, y, z)$ cancels all terms except $N_3(x, y, z) + cB^2 x + B^2 y + Bz = 0$, so $N_3(x, y, z) = cB^2 x + B^2 y + Bz$.
+  \item Finally, evaluating the third coordinate of the same equation at $(0, 0, w)$ (where $\pi_1(0, 0, w) = 0$) gives
+  \[
+    0 = \bigl(1 + (1 + B) + (B^2 + B) + (cB^2 + B^2 + B) + (cB^2 + B^3 + B^2) + B\bigr)w = (B^3 + B^2)w.
+  \]
+\end{itemize}
+Since $w \in U$ is arbitrary, $B^3 = B^2$.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+Let $C = \left(\begin{smallmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 1 \end{smallmatrix}\right) \in \mathrm{M}_3(\mathbb{F}_2)$, which satisfies $p(C) = 0$. Every integer $d \ge 7$ with $3 \nmid d$ is covered by one of three explicit witnesses:
+\begin{enumerate}
+  \item $d = 3m + 1$ ($m \ge 2$): $A = C^{\oplus m} \oplus [0]$ has $p(A) = 0_{3m} \oplus [1]$, so $\dim \ker p(A) = 3m > 3 = 3\operatorname{rank} p(A)$, violating Lemma~\ref{lem:A}.
+  \item $d = 3m + 2$ ($m \ge 3$): $A = C^{\oplus m} \oplus 0_2$ has $p(A) = 0_{3m} \oplus I_2$, so $\dim \ker p(A) = 3m > 6 = 3\operatorname{rank} p(A)$, violating Lemma~\ref{lem:A}.
+  \item $d = 8$: $A = C \oplus C \oplus B$ with $B = \bigl(\begin{smallmatrix} 0 & 1 \\ 1 & 1 \end{smallmatrix}\bigr)$ has $p(B) = B^2$ invertible ($B^3 = I_2$), $\dim \ker p(A) = 6 = 3 \cdot 2$, and $B^3 = I_2 \neq B^2$, violating Lemma~\ref{lem:B}.
+\end{enumerate}
+For $d = 8n + 4$ ($n \ge 1$), $d \ge 12$, so either $3 \mid d$ (ruled out by Lemma~\ref{lem:zero}) or $3 \nmid d$ (ruled out by (1)--(2)). \qed
+
+\section*{Formal Verification}
+
+Lemma~\ref{lem:zero}, Lemma~\ref{lem:A}, Lemma~\ref{lem:B}, and Theorem~\ref{thm:main} are formally verified in Lean~4 with Mathlib (in \texttt{PhucDanchevTripotent.lean}) with zero \texttt{sorry}, zero warnings, and only the standard axioms (\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}). A standalone Python script (\texttt{verify.py}) independently confirms all small cases $d \le 5$, the companion-matrix obstructions, and the non-decomposability of the $d = 8$ witness.
+
+\begin{thebibliography}{9}
+\bibitem{PD2026}
+D.~V.~Phuc and P.~V.~Danchev,
+\emph{A cubic obstruction to sums of tripotent and square-zero matrices},
+Preprint \texttt{arXiv:2611.24594v2} [math.RA], 21~November 2026.
+\end{thebibliography}
+
+\end{document}
