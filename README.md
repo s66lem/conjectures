@@ -60,6 +60,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **48.** [Giovanni Rossi Conjecture 6.16 (`arXiv:2611.25741v1`, real-rootedness of permutohedron $\chi_n(t)$ and full $f$-polynomial $R_n(w)$)](results/rossi-permutohedron-real-roots/) | Proved for all $n \ge 3$ ($\chi_n(t)$ has $n$ distinct real roots: $1$, $n - 2$ in $(0, 1)$, one in $(1, \infty)$; $R_n(w)$ has $n$ distinct negative real roots; analytic Regime A/B paired sign alternation for $n \ge 64$, kernel-verified witnesses for $3 \le n \le 63$) | [DOI](https://doi.org/10.5281/zenodo.24569715) | **Lean 4** · Cross-Model Audit · Python |
 | **49.** [Mishima–Lu–Sawa–Uchida Problem 8.3 (`arXiv:2503.21151v4`, Res. Number Theory 2026, odd-size rational 5-designs for Chebyshev measure)](results/mishima-lu-sawa-uchida-5design/) | Resolved affirmatively via explicit $37$-point antipodal rational $5$-design (denominator $240$) + complete odd-size spectrum ($2N + 1$ points exist $\iff N \ge 17$, via bases $N \in \{17, 18, 19\}$, disjoint monotone $6$-point blocks, and self-contained $2$-adic non-existence for $N \le 16$) | [DOI](https://doi.org/10.5281/zenodo.24570643) | **Lean 4** · Cross-Model Audit · Python |
 | **50.** [Luís M. S. Russo §10 item 2 (`arXiv:2611.22780v1`, odd-$n$ extremal Heap-type permutation generation)](results/russo-heap-odd-extremal/) | Resolved affirmatively for every odd $n \ge 3$ (explicit closed-form cyclic lower levels, zigzag penultimate level, and three-phase top level reaching the lexicographically largest odd permutation $a^*_n$: full reversal for $n \equiv 3 \pmod 4$, $(n, \dots, 3, 1, 2)$ for $n \equiv 1 \pmod 4$) | [DOI](https://doi.org/10.5281/zenodo.24570908) | **Lean 4** · Cross-Model Audit · Python |
+| **51.** [Karan Sharma's OEIS A401897 conjecture (asymptotic Gaussian integer visibility $a(n) \sim 48n/\pi^2$)](results/sharma-a401897/) | Proved with explicit error bounds ($|a(z) - 6N/\pi| \le \pi\sqrt{N}(2 + \sqrt{2} + \sqrt{2}\ln(2\sqrt{N}))$, $|n - \pi N/8| \le 2\sqrt{N}$, and $a(n)/(48n/\pi^2) = 1 + O(\log n / \sqrt{n}) \to 1$) | [DOI](https://doi.org/10.5281/zenodo.24571199) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -116,6 +117,7 @@ python3 results/liang-octal-03122/verify.py
 python3 results/rossi-permutohedron-real-roots/verify.py
 python3 results/mishima-lu-sawa-uchida-5design/verify.py
 python3 results/russo-heap-odd-extremal/verify.py
+python3 results/sharma-a401897/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
