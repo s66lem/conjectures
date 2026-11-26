@@ -46,3 +46,4 @@ import Conjectures.VasilyevUpDownCycles
 import Conjectures.BihanFewnomialDegree
 import Conjectures.LiangOctal03122
 import Conjectures.RossiPermutohedronRealRoots
+import Conjectures.MishimaLuSawaUchida5Design

@@ -58,6 +58,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **46.** [F. Bihan (`arXiv:2611.34336v1`, 3D fewnomial topological degree `D(3, 3) = {0, 1, 2, 3}`)](results/bihan-fewnomial-degree/) | Resolved negatively for sharpness of Theorem 2 ($|\deg F| \le \lfloor (3V - 8)/4 \rfloor$, $\max D(3, k) = \max D(k, 3) \le \lfloor 3k/4 \rfloor + 1$, $D(3, 3) = \{0, 1, 2, 3\}$; exact extremal witnesses for $V = 7, 8, 9, 10, 12$ including great icosahedron density $7$) | [DOI](https://doi.org/10.5281/zenodo.24567883) | **Lean 4** · Cross-Model Audit · Python |
 | **47.** [Kai Liang Conjecture 4.1 (`arXiv:2611.29198v1`, misère octal game `0.3122`)](results/liang-octal-03122/) | Resolved (false literally: $o(2,2,7,2) = \mathcal{N}$ vs $o(2,2,14,2) = \mathcal{P}$; proved for all $x, y \ge 3$ with sharp threshold $3$ & explicit $98$-entry period-$7$ closed form via two-stage translation reduction to $2{,}191$ positions) | [DOI](https://doi.org/10.5281/zenodo.24568033) | **Lean 4** · Cross-Model Audit · Python |
 | **48.** [Giovanni Rossi Conjecture 6.16 (`arXiv:2611.25741v1`, real-rootedness of permutohedron $\chi_n(t)$ and full $f$-polynomial $R_n(w)$)](results/rossi-permutohedron-real-roots/) | Proved for all $n \ge 3$ ($\chi_n(t)$ has $n$ distinct real roots: $1$, $n - 2$ in $(0, 1)$, one in $(1, \infty)$; $R_n(w)$ has $n$ distinct negative real roots; analytic Regime A/B paired sign alternation for $n \ge 64$, kernel-verified witnesses for $3 \le n \le 63$) | [DOI](https://doi.org/10.5281/zenodo.24569715) | **Lean 4** · Cross-Model Audit · Python |
+| **49.** [Mishima–Lu–Sawa–Uchida Problem 8.3 (`arXiv:2503.21151v4`, Res. Number Theory 2026, odd-size rational 5-designs for Chebyshev measure)](results/mishima-lu-sawa-uchida-5design/) | Resolved affirmatively via explicit $37$-point antipodal rational $5$-design (denominator $240$) + complete odd-size spectrum ($2N + 1$ points exist $\iff N \ge 17$, via bases $N \in \{17, 18, 19\}$, disjoint monotone $6$-point blocks, and self-contained $2$-adic non-existence for $N \le 16$) | [DOI](https://doi.org/10.5281/zenodo.24570643) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -112,6 +113,7 @@ python3 results/vasilyev-up-down-cycles/verify.py
 python3 results/bihan-fewnomial-degree/verify.py
 python3 results/liang-octal-03122/verify.py
 python3 results/rossi-permutohedron-real-roots/verify.py
+python3 results/mishima-lu-sawa-uchida-5design/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

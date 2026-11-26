@@ -1,0 +1,168 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Odd-Size Antipodal Rational 5-Designs for the Chebyshev Measure: Resolution of Mishima--Lu--Sawa--Uchida Problem~8.3}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve Problem~8.3 of Mishima, Lu, Sawa, and Uchida
+(\texttt{arXiv:2503.21151v4}; \emph{Res.\ Number Theory} 12 (2026), No.~39) by
+exhibiting an explicit $37$-point antipodal rational $5$-design for the
+Chebyshev measure $(1-t^2)^{-1/2}\,dt/\pi$ on $(-1,1)$ with common denominator
+$240$. Together with explicit base designs of sizes $35$ and $39$ and disjoint
+$6$-point rational blocks, we prove that an odd-size antipodal rational
+$5$-design for the Chebyshev measure exists if and only if $n \ge 35$,
+completing the existence spectrum of rational antipodal $5$-designs. The entire
+result, including a self-contained $2$-adic proof of non-existence for
+$n \le 33$, is formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+An $n$-point \emph{antipodal rational $5$-design} for the Chebyshev measure
+$d\mu(t) = (1 - t^2)^{-1/2}\,dt/\pi$ on $(-1, 1)$ is a finite subset
+$X = -X \subset (-1, 1) \cap \mathbb{Q}$ of cardinality $n$ such that
+\[
+\frac{1}{n} \sum_{x \in X} x^k = \int_{-1}^{1} t^k\,d\mu(t)
+\qquad (0 \le k \le 5).
+\]
+Odd moments vanish automatically by antipodality, while the second and fourth
+Chebyshev moments are $1/2$ and $3/8$. When $n = 2N + 1$ is odd, writing
+$X = \{0\} \cup \{\pm x_1, \dots, \pm x_N\}$ with distinct
+$x_i \in (0, 1) \cap \mathbb{Q}$, the design condition is equivalent to the
+Diophantine system
+\begin{equation}\label{eq:hk}
+\sum_{i=1}^{N} x_i^2 = \frac{2N + 1}{4},
+\qquad
+\sum_{i=1}^{N} x_i^4 = \frac{3(2N + 1)}{16}.
+\end{equation}
+
+In~\cite{MLSU2026}, Mishima, Lu, Sawa, and Uchida determined the complete
+spectrum of even sizes $2N$, proved that no odd-size design exists for
+$2N + 1 \le 33$ (Theorem~8.1), constructed odd-size designs for
+$N \equiv 5 \pmod 6$ with $N \ge 17$ (Theorem~8.2), and posed:
+\begin{quote}
+\emph{\textbf{Problem 8.3.} Find an antipodal $5$-design with $37$ rational
+points, as the smallest open case.}
+\end{quote}
+We settle Problem~8.3 and complete the odd-size classification.
+
+\begin{theorem}\label{thm:main}
+An antipodal rational $5$-design for the Chebyshev measure with an odd number of
+points $n = 2N + 1$ exists if and only if $n \ge 35$ ($N \ge 17$). In
+particular, a $37$-point design exists:
+\begin{align*}
+X_{37} = \{0\} \cup \Bigl\{\pm \frac{a}{240} : a \in \{&15,57,61,69,93,129,141,147,151,\\
+&183,199,209,211,215,234,235,238,239\}\Bigr\}.
+\end{align*}
+\end{theorem}
+
+\section{Existence for Every $N \ge 17$}
+
+We first exhibit three base positive half-sets $S_{N_0} \subset (0, 1) \cap \mathbb{Q}$
+solving~\eqref{eq:hk} for $N_0 \in \{17, 18, 19\}$:
+\begin{itemize}
+\item $N_0 = 17$ ($n = 35$, $D = 1092$): numerators\\
+$\{55, 87, 171, 305, 533, 575, 733, 753, 765, 881, 905, 966, 981, 985, 1083, 1085, 1089\}$;
+\item $N_0 = 18$ ($n = 37$, $D = 240$, Problem~8.3): numerators\\
+$\{15, 57, 61, 69, 93, 129, 141, 147, 151, 183, 199, 209, 211, 215, 234, 235, 238, 239\}$;
+\item $N_0 = 19$ ($n = 39$, $D = 420$): numerators\\
+$\{47, 93, 108, 113, 129, 153, 161, 305, 309, 343, 353, 357, 365, 366, 369, 395, 405, 408, 413\}$.
+\end{itemize}
+Direct integer arithmetic confirms $\sum a_i^2 = \frac{2N_0+1}{4} D^2$ and
+$\sum a_i^4 = \frac{3(2N_0+1)}{16} D^4$ in all three cases.
+
+\begin{lemma}[Monotone disjoint $6$-point blocks]\label{lem:blocks}
+For $t \in \mathbb{N}$ with $t \ge 20$, set
+\[
+a(t) = \frac{2t^2 - 22t - 13}{14(t^2 + t + 1)},
+\quad
+b(t) = \frac{13t^2 + 4t - 11}{14(t^2 + t + 1)},
+\quad
+c(t) = \frac{11t^2 + 26t + 2}{14(t^2 + t + 1)}.
+\]
+Then $a(t)^2 + b(t)^2 + c(t)^2 = 3/2$, $a(t)^4 + b(t)^4 + c(t)^4 = 9/8$, and
+\[
+0 < a(t) < \tfrac{2}{14} < \tfrac{11}{14} < c(t) < \tfrac{12}{14} < b(t) < \tfrac{13}{14} < 1.
+\]
+Moreover, $a(t)$ and $b(t)$ are strictly increasing and $c(t)$ is strictly
+decreasing for $t \ge 20$.
+\end{lemma}
+
+\begin{proof}
+Clearing the common denominator $14(t^2 + t + 1)$ reduces both moment equations
+and the six interval inequalities to elementary polynomial identities and
+quadratic inequalities valid for $t \ge 20$. For $20 \le t_1 < t_2$,
+\begin{align*}
+a(t_2) - a(t_1) &= \frac{(t_2 - t_1)(24 t_1 t_2 + 15(t_1 + t_2) - 9)}{14(t_1^2+t_1+1)(t_2^2+t_2+1)} > 0, \\
+b(t_2) - b(t_1) &= \frac{(t_2 - t_1)(9 t_1 t_2 + 24(t_1 + t_2) + 15)}{14(t_1^2+t_1+1)(t_2^2+t_2+1)} > 0, \\
+c(t_1) - c(t_2) &= \frac{(t_2 - t_1)(15 t_1 t_2 - 9(t_1 + t_2) - 24)}{14(t_1^2+t_1+1)(t_2^2+t_2+1)} > 0. \qedhere
+\end{align*}
+\end{proof}
+
+\begin{proof}[Proof of Existence ($N \ge 17$)]
+Given any finite solution $S \subset (0, 1) \cap \mathbb{Q}$ of~\eqref{eq:hk},
+the strict monotonicity in Lemma~\ref{lem:blocks} implies that each of
+$a, b, c$ takes values in $S$ for at most $|S|$ integers $t \ge 20$. Hence among
+the $3|S| + 1$ integers $20 \le t \le 20 + 3|S|$, at least one $t$ yields a
+triple $\{a(t), b(t), c(t)\}$ disjoint from $S$. Adjoining it increases $|S|$ by
+$3$, $\sum x^2$ by $3/2$, and $\sum x^4$ by $9/8$, preserving~\eqref{eq:hk}.
+Inducting from $S_{17}$, $S_{18}$, or $S_{19}$ according to $N \bmod 3$ covers
+every $N \ge 17$.
+\end{proof}
+
+\section{Non-Existence for $N \le 16$}
+
+For completeness we give a short $2$-adic proof of Theorem~8.1
+of~\cite{MLSU2026}. Suppose $S = \{x_1, \dots, x_N\}$ satisfies~\eqref{eq:hk}
+with $N \le 16$ and $M = 2N + 1$ odd. Choose the minimal common denominator
+$D \ge 1$ with $x_i = y_i / D$ ($y_i \in \mathbb{Z}$) so that if $2 \mid D$ then
+some $y_i$ is odd. Then
+\[
+4\sum_{i=1}^N y_i^2 = M D^2, \qquad 16\sum_{i=1}^N y_i^4 = 3 M D^4.
+\]
+Let $r = \#\{i : y_i \text{ odd}\}$; then $\sum y_i^4 \equiv r \pmod{16}$.
+\begin{itemize}
+\item If $2 \nmid D$, then $M D^2$ is odd, contradicting $4 \mid M D^2$.
+\item If $D = 2 D_1$ with $D_1$ odd, then $\sum y_i^2 = M D_1^2 \equiv M \pmod 8$
+and $\sum y_i^4 = 3 M D_1^4 \equiv 3M \pmod 8$. Letting $j = \#\{i : y_i \equiv 2 \pmod 4\}$,
+we obtain $r \equiv 3M \pmod 8$ and $r + 4j \equiv M \pmod 8$, whence
+$2M + 4j \equiv 0 \pmod 8$, contradicting $M$ odd.
+\item If $D = 4 D_2$, then $\sum y_i^4 = 48 M D_2^4 \equiv 0 \pmod{16}$, so
+$16 \mid r$. Since $1 \le r \le N \le 16$, we have $r = N = 16$ ($M = 33$), and
+every $y_i$ is odd. Writing $y_i^2 = 1 + 8 t_i$, $T_1 = \sum t_i$,
+$T_2 = \sum t_i^2$ yields $16 + 8 T_1 = 4 M D_2^2$ and
+$16 + 16 T_1 + 64 T_2 = 48 M D_2^4$. If $D_2$ is odd, the first equation fails
+modulo $8$ ($0 \not\equiv 4$). If $D_2$ is even, the first equation gives
+$16 \mid 16 + 8 T_1$ ($T_1$ even), while the second gives
+$256 \mid 16(1 + T_1 + 4 T_2)$ ($T_1$ odd), a contradiction. \qed
+\end{itemize}
+
+\section{Formal and Computational Verification}
+
+Theorem~\ref{thm:main} (both Problem~8.3 and the full odd-size biconditional
+\texttt{mishima\_odd\_\allowbreak 5design\_iff}) is formally verified in Lean~4
+(module \texttt{Conjectures/\allowbreak MishimaLuSawaUchida5Design.lean}) with
+zero \texttt{sorry} and standard axioms only. An independent Python script
+(\texttt{verify.py}) verifies all base designs, block identities, explicit
+constructions for $17 \le N \le 80$, and the $2$-adic residue checks.
+
+\begin{thebibliography}{9}
+\bibitem{MLSU2026}
+T.~Mishima, X.-N.~Lu, M.~Sawa, and Y.~Uchida,
+\emph{Geometric designs and Hilbert--Kamke equations of degree five for
+classical orthogonal polynomials},
+Res.\ Number Theory \textbf{12} (2026), Paper No.~39;
+\texttt{arXiv:2503.21151v4}.
+\end{thebibliography}
+
+\end{document}
