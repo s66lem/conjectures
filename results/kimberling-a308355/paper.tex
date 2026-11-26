@@ -1,0 +1,117 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{Exact Maximal Prefix Agreement Between OEIS A308355 and Row $n$ of A128628}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Order the integer partitions of $n$ as weakly decreasing tuples of positive integers in descending lexicographic order (OEIS A080577), and let row $n$ of OEIS A128628 record their part counts. We prove that the row limit sequence OEIS A308355 exists and that for every integer $n \ge 1$, the length of the maximal initial segment on which row $n$ of A128628 agrees with A308355 is $\mathrm{A025065}(n) = \sum_{r=0}^{\lfloor n/2 \rfloor} p(r)$, the number of palindromic partitions of $n$. This proves Clark Kimberling's 2019 conjecture on OEIS A025065 for all $n \ge 1$ and disproves the off-by-one conjecture displayed on OEIS A308355 ($\mathrm{A025065}(n+1)$) for every odd $n \ge 1$, showing it holds if and only if $n$ is even. The complete proof is formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+Let $p(r)$ denote the number of integer partitions of $r \ge 0$, with $p(0) = 1$ corresponding to the empty partition $()$. Writing each partition of $n \ge 1$ as a weakly decreasing tuple of positive integers and ordering these tuples in descending lexicographic order produces OEIS A080577~\cite{A080577}; recording the number of parts of each partition in this order produces row $n$ of the irregular triangle OEIS A128628~\cite{A128628}. Its limiting row sequence as $n \to \infty$ is OEIS A308355~\cite{A308355}. Finally, OEIS A025065$(n)$~\cite{A025065} counts the \emph{palindromic partitions} of $n$, namely partitions whose parts can be permuted into a palindrome.
+
+In May 2019, Clark Kimberling posted two closely related conjectures on these OEIS entries:
+\begin{itemize}
+\item On \textbf{OEIS A308355}: ``The length of maximal initial segment of this sequence that is identical to row $n$ of A128628 is $\mathrm{A025065}(n+1)$, for $n \ge 1$.''
+\item On \textbf{OEIS A025065}: ``$a(n)$ is the length of maximal initial segment of $\mathrm{A308355}(n-1)$ that is identical to row $n$ of A128628, for $n \ge 2$.''
+\end{itemize}
+Here ``$\mathrm{A308355}(n-1)$'' is a minor notational slip in the OEIS comment referring to the sequence $\mathrm{A308355}$ itself; notably, Kimberling's May~24, 2019 comment on $\mathrm{A025065}$ already corrects the off-by-one index $n+1$ displayed on $\mathrm{A308355}$ to $\mathrm{A025065}(n)$. We prove the exact common-prefix theorem for all $n \ge 1$, establishing the $\mathrm{A025065}$ conjecture unconditionally and showing that the $\mathrm{A308355}$ formula fails for every odd $n \ge 1$.
+
+\begin{theorem}\label{thm:main}
+The row limit sequence $\mathrm{A308355}$ of $\mathrm{A128628}$ exists. For every integer $n \ge 1$, the exact length of the maximal initial segment on which row $n$ of $\mathrm{A128628}$ agrees with $\mathrm{A308355}$ is
+\[
+\mathrm{A025065}(n) = \sum_{r=0}^{\lfloor n/2 \rfloor} p(r).
+\]
+\end{theorem}
+
+\begin{corollary}\label{cor:odd}
+For every $n \ge 1$, $\mathrm{A025065}(n) = \mathrm{A025065}(n+1)$ if and only if $n$ is even. Consequently, the conjecture on OEIS A025065 holds for every $n \ge 1$, whereas the conjecture displayed on OEIS A308355 fails for every odd $n = 2m+1 \ge 1$ by $p(m+1) > 0$.
+\end{corollary}
+
+Table~\ref{tab:small} illustrates the discrepancy for small $n$: at $n = 5$, row~$5$ is $(1,2,2,3,3,4,5)$ while A308355 begins $(1,2,2,3,2,3,4)$, giving exact agreement length $4 = \mathrm{A025065}(5)$ rather than $\mathrm{A025065}(6) = 7$.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{@{}rrrrl@{}}
+\toprule
+$n$ & Exact agreement & $\mathrm{A025065}(n)$ & $\mathrm{A025065}(n+1)$ & A308355 conjecture \\
+\midrule
+$1$ & $1$ & $1$ & $2$ & False \\
+$2$ & $2$ & $2$ & $2$ & True \\
+$3$ & $2$ & $2$ & $4$ & False \\
+$4$ & $4$ & $4$ & $4$ & True \\
+$5$ & $4$ & $4$ & $7$ & False \\
+$6$ & $7$ & $7$ & $7$ & True \\
+\bottomrule
+\end{tabular}
+\caption{Exact agreement lengths between row $n$ of A128628 and A308355 versus $\mathrm{A025065}(n)$ and $\mathrm{A025065}(n+1)$.}
+\label{tab:small}
+\end{table}
+
+The entire proof is formally verified in Lean~4 with no custom axioms.
+
+\section{Block Decomposition and Exact Common Prefix}
+
+\begin{lemma}[Block decomposition and row limit]\label{lem:limit}
+For each $r \ge 0$, let $B(r)$ denote the list of values $1 + \mathrm{len}(\tau)$ as $\tau$ ranges over all partitions of $r$ in descending lexicographic order. Then $|B(r)| = p(r) \ge 1$, and for every $R \ge 0$ and every $n \ge \max(1, 2R)$, row $n$ of $\mathrm{A128628}$ begins with the concatenation $B(0) \Vert B(1) \Vert \cdots \Vert B(R)$. Hence the limiting row sequence $\mathrm{A308355}$ exists and equals $B(0) \Vert B(1) \Vert B(2) \Vert \cdots$.
+\end{lemma}
+
+\begin{proof}
+Fix $n \ge 1$. Group the partitions of $n$ into consecutive blocks indexed by $r = 0, 1, \dots, n-1$ according to their largest part $n - r$. Since $n - r$ strictly decreases with $r$, these blocks appear consecutively in descending lexicographic order. Deleting the first part $n - r$ from each partition in block $r$ leaves precisely the partitions of $r$ whose parts are all at most $n - r$, still in descending lexicographic order. Thus block $r$ of row $n$ lists $1 + \mathrm{len}(\tau)$ over all partitions $\tau \vdash r$ with maximum part $\le n - r$.
+
+Whenever $2r \le n$, we have $r \le n - r$, so every partition of $r$ automatically has all parts at most $n - r$. Hence block $r$ of row $n$ equals $B(r)$ for every $0 \le r \le R$ whenever $n \ge \max(1, 2R)$. Since $|B(r)| = p(r) \ge 1$, the stabilized prefixes have length $\sum_{r=0}^R p(r) \ge R + 1 \to \infty$, proving that the row limit exists and equals $B(0) \Vert B(1) \Vert \cdots$.
+\end{proof}
+
+\begin{lemma}[Exact prefix length]\label{lem:prefix}
+For every $n \ge 1$, set $m := \lfloor n/2 \rfloor$ and $S(n) := \sum_{r=0}^m p(r)$. Row $n$ of $\mathrm{A128628}$ and $\mathrm{A308355}$ agree on all $0$-based indices $i < S(n)$ and disagree (or row $n$ terminates) at index $S(n)$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:limit}, row $n$ begins with $B(0) \Vert \cdots \Vert B(m)$, which has length $S(n)$, so agreement holds for all $i < S(n)$.
+
+If $n \in \{1, 2\}$, then $m + 1 = n$, so row $n$ has total length $S(n)$ ($1$ for $n=1$, $2$ for $n=2$) and has no entry at index $S(n)$.
+
+If $n \ge 3$, then $m + 1 < n$, so block $r = m + 1$ of row $n$ begins at index $S(n)$. Because $n - (m+1) \ge 1$, this block is nonempty (it contains the all-$1$s tail $(1^{m+1})$). Every tail $\tau$ in block $m+1$ of row $n$ sums to $m+1$ and has maximum part at most $n - (m+1) < m+1$, so $\tau$ has at least $2$ parts; hence the entry of row $n$ at index $S(n)$ is at least $3$. On the other hand, the first partition of $m+1$ in descending lexicographic order is the $1$-part partition $(m+1)$, so the first entry of $B(m+1)$ at index $S(n)$ in $\mathrm{A308355}$ is $1 + 1 = 2 \ne 3$.
+\end{proof}
+
+\section{Palindromic Partitions Bijection and Proof of Main Results}
+
+\begin{lemma}[Palindromic partitions count]\label{lem:pal}
+For every $n \ge 0$, $\mathrm{A025065}(n) = \sum_{r=0}^{\lfloor n/2 \rfloor} p(r)$.
+\end{lemma}
+
+\begin{proof}
+A finite multiset of positive integers can be arranged as a palindrome if and only if at most one value has odd multiplicity: peeling matching pairs from the outer ends of any palindrome preserves parity of every multiplicity until at most one central element remains, and conversely pairing equal elements around an optional single odd-multiplicity center constructs a palindrome.
+
+Given a palindromic partition $\lambda \vdash n$, let $m_x(\lambda)$ be the multiplicity of part $x$, and let $\tau$ be the partition formed by taking $\lfloor m_x(\lambda)/2 \rfloor$ copies of each $x$. Writing $r := \sum \tau$, we have $2r \le n$ (so $r \le \lfloor n/2 \rfloor$), and since at most one part has odd multiplicity, $c := n - 2r$ is either $0$ (all multiplicities even) or the unique odd-multiplicity part of $\lambda$. Conversely, given $0 \le r \le \lfloor n/2 \rfloor$ and any $\tau \vdash r$, doubling every part multiplicity of $\tau$ and inserting one copy of $n - 2r$ whenever $n - 2r > 0$ yields a palindromic partition of $n$. These two maps are mutual inverses, giving $\mathrm{A025065}(n) = \sum_{r=0}^{\lfloor n/2 \rfloor} p(r)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} and Corollary~\ref{cor:odd}]
+Combining Lemmas~\ref{lem:limit}, \ref{lem:prefix}, and~\ref{lem:pal} proves Theorem~\ref{thm:main}. For Corollary~\ref{cor:odd}, if $n = 2m$ is even, then $\lfloor n/2 \rfloor = \lfloor (n+1)/2 \rfloor = m$, whence $\mathrm{A025065}(n) = \mathrm{A025065}(n+1)$. If $n = 2m+1$ is odd, then $\lfloor (n+1)/2 \rfloor = m+1$, so
+\[
+\mathrm{A025065}(n+1) = \mathrm{A025065}(n) + p(m+1) > \mathrm{A025065}(n)
+\]
+because $p(m+1) \ge 1$.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{A025065} OEIS Foundation Inc., \emph{Entry A025065: Number of palindromic partitions of $n$}, The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A025065}.
+\bibitem{A080577} OEIS Foundation Inc., \emph{Entry A080577: Triangle of integer partitions in reverse lexicographic order}, The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A080577}.
+\bibitem{A128628} OEIS Foundation Inc., \emph{Entry A128628: Number of parts in each partition of $n$ (reverse lexicographic order)}, The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A128628}.
+\bibitem{A308355} OEIS Foundation Inc., \emph{Entry A308355: Limiting row sequence of the array A128628}, The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A308355}.
+\end{thebibliography}
+
+\end{document}

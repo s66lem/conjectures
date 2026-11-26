@@ -1,0 +1,260 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\title{Exact $2$-Adic Valuations for $k$-Tuples of Odd-Part Partitions with Designated Summands}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $f_m := \prod_{j \ge 1}(1 - q^{mj})$, let $G(q) := f_4 f_6^2 / (f_1 f_3 f_{12})$ be the generating function for partitions into odd parts with designated summands, and let $B_k(n) := [q^n] G(q)^k$. We prove Conjecture~6.2 of Yaqubi and Mirzavaziri (\texttt{arXiv:2611.05623v1}): for every integer $k \ge 1$, the largest power of $2$ dividing $B_k(4n+3)$ for all $n \ge 0$ is $2^{v_2(B_k(3))}$, except when $k \equiv 1 \pmod 8$ (where it is $2^2$) or $k \equiv 6 \pmod 8$ (where it is $2^3$). Our proof is completely self-contained and formally verified end-to-end in Lean~4, deriving Gauss's theta identities via a finite polynomial Jacobi triple product, the $2$-dissection of $\psi(q)\psi(q^3)$ via an explicit bijection, all required modulo-$4$ and modulo-$8$ dissections algebraically, a uniform odd-index bound $2^{v_2(k)} \mid B_k(2m+1)$, and exactness witnesses from $B_k(3)$ and $B_k(7)$.
+\end{abstract}
+
+\section{Introduction}
+
+Let $f_m := \prod_{j \ge 1} (1 - q^{mj}) \in \mathbb{Z}[[q]]$ for $m \ge 1$. Andrews, Lewis, and Lovejoy~\cite{ALL} introduced partitions into odd parts with designated summands, whose generating function is
+\[
+G(q) := \prod_{\substack{t \ge 1 \\ t \text{ odd}}} \Bigl(1 + \sum_{m \ge 1} m\, q^{tm}\Bigr) = \frac{f_4 f_6^2}{f_1 f_3 f_{12}} = \sum_{n \ge 0} \mathrm{PDO}(n)\, q^n.
+\]
+Yaqubi and Mirzavaziri~\cite{YM} studied the $k$-tuple generalizations defined by
+\[
+\sum_{n \ge 0} B_k(n)\, q^n := G(q)^k \qquad (k \ge 1),
+\]
+proved several modulo-$2$, modulo-$4$, and modulo-$8$ congruences for $B_k(4n+3)$ including exactness of $2^3$ for $k \equiv 6 \pmod 8$, and posed the following conjecture based on computations for $k \le 96$.
+
+\begin{theorem}[Yaqubi--Mirzavaziri Conjecture~6.2]\label{thm:main}
+For every integer $k \ge 1$, define
+\[
+e(k) := \begin{cases}
+2 & \text{if } k \equiv 1 \pmod 8, \\
+3 & \text{if } k \equiv 6 \pmod 8, \\
+v_2(B_k(3)) & \text{otherwise.}
+\end{cases}
+\]
+Then $2^{e(k)} \mid B_k(4n+3)$ for every $n \ge 0$, and there exists $n \in \{0, 1\}$ such that $2^{e(k)+1} \nmid B_k(4n+3)$. Equivalently, $\min_{n \ge 0} v_2(B_k(4n+3)) = e(k)$ takes the values in Table~\ref{tab:vals}.
+\end{theorem}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+$k \pmod 8$ & $\min_{n \ge 0} v_2(B_k(4n+3))$ & Exactness witness \\
+\midrule
+$3, 7$ & $0 = v_2(B_k(3))$ & $n = 0$ ($B_k(3)$) \\
+$5$ & $1 = v_2(B_k(3))$ & $n = 0$ ($B_k(3)$) \\
+$1$ & $2$ & $n = 0$ ($k \equiv 1 \pmod{16}$), $n = 1$ ($k \equiv 9 \pmod{16}$) \\
+$2$ & $2 = v_2(B_k(3))$ & $n = 0$ ($B_k(3)$) \\
+$6$ & $3$ & $n = 0$ ($k \equiv 6 \pmod{16}$), $n = 1$ ($k \equiv 14 \pmod{16}$) \\
+$0, 4$ & $v_2(k) = v_2(B_k(3))$ & $n = 0$ ($B_k(3)$) \\
+\bottomrule
+\end{tabular}
+\caption{Exact $2$-adic valuation of $\gcd_{n \ge 0} B_k(4n+3)$ for every $k \ge 1$.}
+\label{tab:vals}
+\end{table}
+
+The entire proof is elementary, self-contained modulo Mathlib's pentagonal number theorem, and formally verified in Lean~4 without custom axioms or external dissection assumptions (\texttt{Conjectures/YaqubiMirzavaziriPDO.lean}).
+
+\section{Finite Polynomial Jacobi Triple Product and Gauss Identities}
+
+Define Ramanujan's theta series $\varphi(q) := 1 + 2\sum_{k \ge 1} q^{k^2}$ and $\psi(q) := \sum_{k \ge 0} q^{k(k+1)/2}$ in $\mathbb{Z}[[q]]$.
+
+\begin{proposition}[Gauss identities]\label{prop:gauss}
+In $\mathbb{Z}[[q]]$,
+\begin{equation}\label{eq:J2}
+f_2(q)\,\varphi(-q) = f_1(q)^2,
+\end{equation}
+\begin{equation}\label{eq:J1}
+f_1(q)\,\psi(q) = f_2(q)^2.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+For $N \ge 1$, consider the polynomial in $z$ over $\mathbb{Z}[[q]]$
+\[
+P_N(z) := \prod_{j=0}^{N-1} (1 + q^{2j+1}z)(z + q^{2j+1}) = \sum_{m=0}^{2N} a_{N,m}(q)\, z^m.
+\]
+Each quadratic factor $q^{2j+1} + (1 + q^{4j+2})z + q^{2j+1}z^2$ is palindromic of degree $2$, so induction on $N$ yields $a_{N, 2N-m} = a_{N, m}$ for $0 \le m \le 2N$ and $a_{N, 2N} = q^{N^2}$. Replacing $z$ by $q^2 z$ telescopes the factors:
+\[
+(z + q^{2N-1})\, P_N(q^2 z) = q^{2N-1}(1 + q^{2N+1}z)\, P_N(z).
+\]
+Extracting $[z^{N+k}]$ ($1 \le k \le N$) and canceling $q^{2N-1}$ in the integral domain $\mathbb{Z}[[q]]$ gives
+\[
+q^{2k-1}\bigl(1 - q^{2(N+1-k)}\bigr)\, a_{N, N+k-1} = \bigl(1 - q^{2(N+k)}\bigr)\, a_{N, N+k}.
+\]
+By descending induction from $k = N$ down to $k = 0$, every $0 \le k \le N$ satisfies
+\begin{equation}\label{eq:coeff-id}
+a_{N, N+k} \prod_{j=1}^{N+k}(1 - q^{2j}) \prod_{j=1}^{N-k}(1 - q^{2j}) = q^{k^2} \prod_{j=1}^{2N}(1 - q^{2j}).
+\end{equation}
+Fix $d \ge 0$ and set $N = 2d+2$. For $k \le d$, all three finite products in~\eqref{eq:coeff-id} agree with $f_2(q)$ modulo $q^{d+1}$; canceling the unit $f_2(q)$ yields $a_{N, N+k} f_2(q) \equiv q^{k^2} \pmod{q^{d+1}}$. For $k > d$, $k^2 > d$, so canceling the unit products on the left of~\eqref{eq:coeff-id} yields $a_{N, N+k} \equiv 0 \pmod{q^{d+1}}$.
+
+To prove~\eqref{eq:J2}, evaluate at $z = -1$: $(-1)^N P_N(-1) = \prod_{j=0}^{N-1}(1 - q^{2j+1})^2$, so
+\[
+(-1)^N P_N(-1) f_2(q)^2 \equiv f_1(q)^2 \pmod{q^{d+1}}.
+\]
+Meanwhile, by palindromicity $a_{N, N-k} = a_{N, N+k}$,
+\[
+(-1)^N P_N(-1) f_2(q) = \Bigl(a_{N, N} + 2\sum_{k=1}^N (-1)^k a_{N, N+k}\Bigr) f_2(q) \equiv 1 + 2\sum_{k=1}^d (-1)^k q^{k^2} \equiv \varphi(-q) \pmod{q^{d+1}}.
+\]
+Multiplying by $f_2(q)$ yields $f_2(q)\varphi(-q) \equiv f_1(q)^2 \pmod{q^{d+1}}$ for all $d$.
+
+To prove~\eqref{eq:J1}, fix $m \ge 0$ and take $N = 4m+10$. Evaluating at $z = q$ gives
+\[
+P_N(q) = 2q^N(1 + q^{2N})\prod_{j=1}^{N-1}(1 + q^{2j})^2,
+\]
+so $P_N(q)f_2(q)^2 \equiv 2q^N f_4(q)^2 \pmod{q^{N+m+1}}$. On the other hand, pairing $N+r$ with $N-(r+1)$ for $0 \le r < N$ and using $a_{N, N-(r+1)} = a_{N, N+r+1}$ together with~\eqref{eq:coeff-id} gives
+\[
+P_N(q)f_2(q) \equiv 2q^N \sum_{r=0}^{N-1} q^{r(r+1)} \equiv 2q^N \psi(q^2) \pmod{q^{N+m+1}}.
+\]
+Multiplying by $f_2(q)$, extracting $[q^{N+m}]$, and canceling $2$ yields $f_2(q)\psi(q^2) = f_4(q)^2$; substituting $q^2 \mapsto q$ establishes~\eqref{eq:J1}.
+\end{proof}
+
+\section{Bijective Dissection of $\psi(q)\psi(q^3)$ and Congruences (P1)--(P3)}
+
+\begin{lemma}\label{lem:psi3}
+In $\mathbb{Z}[[q]]$,
+\[
+\psi(q)\,\psi(q^3) = \varphi(q^6)\,\psi(q^4) + q\,\varphi(q^2)\,\psi(q^{12}).
+\]
+\end{lemma}
+
+\begin{proof}
+For each $n \ge 0$, multiplying $a(a+1)/2 + 3b(b+1)/2 = n$ by $8$ and adding $4$ identifies $[q^n]\psi(q)\psi(q^3)$ with the cardinality of
+\[
+L(n) := \{(x, y) \in (2\mathbb{N}+1)^2 : x^2 + 3y^2 = 8n + 4\}.
+\]
+Likewise, $[q^n]\varphi(q^6)\psi(q^4)$ and $[q^n]q\varphi(q^2)\psi(q^{12})$ count
+\begin{align*}
+R_1(n) &:= \{(u, s) \in \mathbb{Z} \times (2\mathbb{N}+1) : s^2 + 12u^2 = 2n + 1\}, \\
+R_2(n) &:= \{(v, t) \in \mathbb{Z} \times (2\mathbb{N}+1) : 4v^2 + 3t^2 = 2n + 1\}.
+\end{align*}
+Given $(x, y) \in L(n)$, let $\tilde{y} \in \{y, -y\}$ be the unique choice with $4 \mid (x - \tilde{y})$, and put $p := (x + 3\tilde{y})/4 \in \mathbb{Z}$ and $q' := (x - \tilde{y})/4 \in \mathbb{Z}$. Then $p^2 + 3q'^2 = (x^2 + 3y^2)/4 = 2n+1$, so exactly one of $p, q'$ is odd. Mapping $(x, y)$ to $(\operatorname{sgn}(p)\cdot q'/2, |p|) \in R_1(n)$ when $p$ is odd and to $(\operatorname{sgn}(q')\cdot p/2, |q'|) \in R_2(n)$ when $q'$ is odd gives a bijection $L(n) \xrightarrow{\sim} R_1(n) \sqcup R_2(n)$, with explicit inverse $(u, s) \mapsto (|s+6u|, |s-2u|)$ on $R_1(n)$ and $(v, t) \mapsto (|2v+3t|, |2v-t|)$ on $R_2(n)$.
+\end{proof}
+
+\begin{proposition}\label{prop:P123}
+For every $n \ge 0$ and $s \ge 0$:
+\begin{enumerate}
+\item[(P1)] $4 \mid B_1(4n+3)$;
+\item[(P2)] $4 \mid B_2(4n+3)$;
+\item[(P3)] $8 \mid B_{8s+6}(4n+3)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Applying~\eqref{eq:J1} at $q$ and $q^3$ and~\eqref{eq:J2} at $q^2$ gives
+\[
+G(q) = \frac{f_4 f_6^2}{f_1 f_3 f_{12}} = \frac{f_4 \psi(q)\psi(q^3)}{f_2^2 f_{12}} = \frac{\psi(q)\psi(q^3)}{\varphi(-q^2) f_{12}}.
+\]
+By Lemma~\ref{lem:psi3}, $G(q) = E_1(q^2) + q\, O_1(q^2)$ where
+\[
+E_1(x) := \frac{\varphi(x^3)\psi(x^2)}{\varphi(-x)f_6(x)}, \qquad O_1(x) := \frac{\varphi(x)\psi(x^6)}{\varphi(-x)f_6(x)}.
+\]
+Write $\varphi(x) = 1 + 2S(x)$ with $S(x) = \sum_{k \ge 1} x^{k^2}$, $a(y) := \psi(y)/f_3(y)$, and $b(y) := \psi(y^3)/f_3(y)$. Modulo $4$, $\varphi(-x) \equiv \varphi(x)$ and $\varphi(x)^2 = 1 + 4S(x) + 4S(x)^2 \equiv 1$, hence $\varphi(-x)^{-1} \equiv \varphi(x) \pmod 4$.
+
+\emph{Proof of (P1).} Modulo $4$, $O_1(x) \equiv \varphi(x)^2 b(x^2) \equiv b(x^2)$ is purely even in $x$, so $B_1(4n+3) = [x^{2n+1}]O_1(x) \equiv 0 \pmod 4$.
+
+\emph{Proof of (P2).} Squaring $G(q)$ yields $G(q)^2 = E_2(q^2) + 2q\, W_2(q^2)$ with $E_2(x) := E_1(x)^2 + x O_1(x)^2$ and $W_2(x) := E_1(x)O_1(x)$. Modulo $2$, $\varphi \equiv 1$, so $W_2(x) \equiv a(x^2)b(x^2)$ is purely even in $x$, and therefore $B_2(4n+3) = 2[x^{2n+1}]W_2(x) \equiv 0 \pmod 4$.
+
+\emph{Proof of (P3).} Expand $G(q)^{8s+6} = (E_2(q^2) + 2q W_2(q^2))^{4s+3}$. Terms with index $j \ge 3$ carry $2^j \equiv 0 \pmod 8$, while $j \in \{0, 2\}$ contain only even powers of $q$. Hence
+\[
+B_{8s+6}(4n+3) \equiv 2(4s+3)\,[x^{2n+1}]\bigl(W_2(x) E_2(x)^{4s+2}\bigr) \pmod 8.
+\]
+By Lemma~\ref{lem:frob} below, $E_2(x)^4 \equiv E_2(x^2)^2 \pmod 4$ is purely even, so it suffices to show that $4 \mid [x^{2n+1}](W_2(x)E_2(x)^2)$. Modulo $4$,
+\begin{align*}
+E_2(x)^2 &\equiv a(x^2)^4 + x^2 b(x^2)^4 + 2x\, a(x^2)^2 b(x^2)^2, \\
+W_2(x) &\equiv \bigl(1 + 2(S(x^3) + S(x))\bigr) a(x^2) b(x^2).
+\end{align*}
+The leading product $a(x^2)b(x^2)(a(x^2)^4 + x^2 b(x^2)^4)$ is purely even. Since odd squares satisfy $(2m+1)^2 = 8\binom{m+1}{2} + 1$, the odd-degree coefficients of $S(x) + S(x^3)$ satisfy
+\[
+[x^{2k+1}]\bigl(S(x) + S(x^3)\bigr) = [y^k]\bigl(\psi(y^4) + y\psi(y^{12})\bigr).
+\]
+Thus $[x^{2n+1}](W_2(x)E_2(x)^2) \equiv 2\,[y^n] M(y) \pmod 4$, where
+\[
+M(y) := \bigl(\psi(y^4) + y\psi(y^{12})\bigr)\, a(y)b(y)\bigl(a(y)^4 + y b(y)^4\bigr) + a(y)^3 b(y)^3.
+\]
+Reducing Lemma~\ref{lem:psi3} modulo $2$ gives $\psi(y^4) + y\psi(y^{12}) \equiv \psi(y)\psi(y^3) \pmod 2$. Together with the mod-$2$ Frobenius identity $H(y)^4 \equiv H(y^4) \pmod 2$, this gives $a(y)^4 + yb(y)^4 \equiv \psi(y)\psi(y^3)/f_3(y)^4 \pmod 2$, and therefore
+\[
+M(y) \equiv \frac{(\psi(y)\psi(y^3))^3}{f_3(y)^6} + \frac{(\psi(y)\psi(y^3))^3}{f_3(y)^6} \equiv 0 \pmod 2.
+\]
+Hence $4 \mid [x^{2n+1}](W_2 E_2^2)$ and $8 \mid B_{8s+6}(4n+3)$.
+\end{proof}
+
+\section{Frobenius Reductions, Exactness Witnesses, and Proof of Theorem~\ref{thm:main}}
+
+\begin{lemma}[Frobenius congruence]\label{lem:frob}
+For any $H \in \mathbb{Z}[[q]]$ and $j \ge 1$, $H(q)^{2^j} \equiv H(q^2)^{2^{j-1}} \pmod{2^j}$.
+\end{lemma}
+
+\begin{proof}
+For $j = 1$, cross terms in $H(q)^2$ cancel in pairs modulo $2$. If $A \equiv B \pmod{2^j}$, then $A^2 - B^2 = (A - B)((A - B) + 2B) \equiv 0 \pmod{2^{j+1}}$; induction on $j$ completes the proof.
+\end{proof}
+
+\begin{lemma}[Uniform odd-index bound]\label{lem:odd}
+For every $k \ge 1$ and every $m \ge 0$, $2^{v_2(k)} \mid B_k(2m+1)$.
+\end{lemma}
+
+\begin{proof}
+Write $k = 2^a r$ with $a = v_2(k)$. If $a = 0$ the claim is trivial. If $a \ge 1$, Lemma~\ref{lem:frob} gives $G(q)^{2^a} \equiv G(q^2)^{2^{a-1}} \pmod{2^a}$, so $G(q)^k \equiv G(q^2)^{2^{a-1} r} \pmod{2^a}$, whose odd-degree coefficients vanish.
+\end{proof}
+
+\begin{lemma}[Residue reductions]\label{lem:res}
+For all $n \ge 0$: (a) $k \equiv 1 \pmod 4 \implies 2 \mid B_k(4n+3)$; (b) $k \equiv 1 \pmod 8 \implies 4 \mid B_k(4n+3)$; (c) $k \equiv 2 \pmod 8 \implies 4 \mid B_k(4n+3)$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:frob}, $G(q)^4 \equiv G(q^4) \pmod 2$ and
+$G(q)^8 \equiv (G(q^2)^2)^2 = G(q^2)^4 \equiv G(q^4)^2 \pmod 4$.
+Multiplying a series whose $(4j+3)$-coefficients vanish modulo $M$ by a series in $q^4$ preserves vanishing of $(4n+3)$-coefficients modulo $M$. Combine with (P1) and (P2) from Proposition~\ref{prop:P123}.
+\end{proof}
+
+\begin{lemma}[Formulas for $B_k(3)$ and $B_k(7)$ and exactness witnesses]\label{lem:witness}
+For every $k \ge 1$:
+\begin{enumerate}
+\item $6\, B_k(3) = k(k+2)(k+7) > 0$.
+\item $B_k(7) = 16\binom{k}{1} + 96\binom{k}{2} + 180\binom{k}{3} + 148\binom{k}{4} + 60\binom{k}{5} + 12\binom{k}{6} + \binom{k}{7}$.
+\item If $k \equiv 9 \pmod{16}$, then $B_k(7) \equiv 4 \pmod 8$, so $8 \nmid B_k(7)$.
+\item If $k \equiv 14 \pmod{16}$, then $B_k(7) \equiv 8 \pmod{16}$, so $16 \nmid B_k(7)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Expanding $G(q) = f_4 f_6^2 / (f_1 f_3 f_{12})$ modulo $q^8$ yields
+\[
+G(q) \equiv 1 + q + 2q^2 + 4q^3 + 5q^4 + 8q^5 + 12q^6 + 16q^7 \pmod{q^8}.
+\]
+Writing $G^k = (1 + (G-1))^k$ gives $B_k(n) = \sum_{i=0}^n \binom{k}{i} [q^n](G-1)^i$. Direct computation of $(G-1)^i \pmod{q^8}$ yields $[q^3](G-1)^i = (0, 4, 4, 1)$ for $0 \le i \le 3$ and $[q^7](G-1)^i = (0, 16, 96, 180, 148, 60, 12, 1)$ for $0 \le i \le 7$, establishing (1) and (2).
+
+By Vandermonde's identity, $\binom{k+P}{i} = \binom{k}{i} + \sum_{j=1}^i \binom{P}{j}\binom{k}{i-j}$. For $1 \le j \le 7$, $8 \mid \binom{32}{j}$ and $16 \mid \binom{64}{j}$, so $B_k(7) \pmod 8$ has period $32$ in $k$ and $B_k(7) \pmod{16}$ has period $64$ in $k$. Direct evaluation via (2) gives $B_9(7) = 45\,972 \equiv 4 \pmod 8$ and $B_{25}(7) = 8\,109\,100 \equiv 4 \pmod 8$, proving (3), and
+\[
+B_{14}(7) = 382\,216,\quad B_{30}(7) = 22\,540\,440,\quad B_{46}(7) = 275\,155\,624,\quad B_{62}(7) = 1\,707\,301\,688,
+\]
+all congruent to $8 \pmod{16}$, proving (4).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Lemma~\ref{lem:witness}(1), $1 + v_2(B_k(3)) = v_2(k) + v_2(k+2) + v_2(k+7)$. We partition $k \ge 1$ modulo $8$:
+\begin{itemize}
+\item $k \equiv 3, 7 \pmod 8$: $v_2(B_k(3)) = 0 + 0 + 1 - 1 = 0$, so $e(k) = 0$ is exact at $n = 0$.
+\item $k \equiv 5 \pmod 8$: $v_2(B_k(3)) = 0 + 0 + 2 - 1 = 1$. Lemma~\ref{lem:res}(a) gives $2 \mid B_k(4n+3)$, exact at $n = 0$.
+\item $k \equiv 1 \pmod 8$: $e(k) = 2$, and Lemma~\ref{lem:res}(b) gives $4 \mid B_k(4n+3)$. If $k \equiv 1 \pmod{16}$, then $v_2(B_k(3)) = 0 + 0 + 3 - 1 = 2$, so $8 \nmid B_k(3)$; if $k \equiv 9 \pmod{16}$, Lemma~\ref{lem:witness}(3) gives $8 \nmid B_k(7)$.
+\item $k \equiv 2 \pmod 8$: $v_2(B_k(3)) = 1 + 2 + 0 - 1 = 2$. Lemma~\ref{lem:res}(c) gives $4 \mid B_k(4n+3)$, exact at $n = 0$.
+\item $k \equiv 6 \pmod 8$: $e(k) = 3$, and Proposition~\ref{prop:P123}(P3) gives $8 \mid B_k(4n+3)$. If $k \equiv 6 \pmod{16}$, then $v_2(B_k(3)) = 1 + 3 + 0 - 1 = 3$, so $16 \nmid B_k(3)$; if $k \equiv 14 \pmod{16}$, Lemma~\ref{lem:witness}(4) gives $16 \nmid B_k(7)$.
+\item $k \equiv 0, 4 \pmod 8$: $v_2(k+2) = 1$ and $v_2(k+7) = 0$, so $v_2(B_k(3)) = v_2(k)$. Lemma~\ref{lem:odd} gives $2^{v_2(k)} \mid B_k(4n+3)$, exact at $n = 0$. \qedhere
+\end{itemize}
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{ALL} G. E. Andrews, R. P. Lewis, and J. Lovejoy, \emph{Partitions with designated summands}, Acta Arith.\ \textbf{105} (2002), 51--66.
+\bibitem{YM} D. Yaqubi and M. Mirzavaziri, \emph{Partitions with designated summands: $k$-tuples and their congruences}, \texttt{arXiv:2611.05623v1} (2026).
+\end{thebibliography}
+
+\end{document}

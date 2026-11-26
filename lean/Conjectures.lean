@@ -25,3 +25,6 @@ import Conjectures.EaslickNontransitiveDice
 import Conjectures.GhafariWanlessLatinTransversals
 import Conjectures.MandalMohanFibonacciHarmonic
 import Conjectures.ZaiLvSabirSplitHamilton
+import Conjectures.YaqubiMirzavaziriPDO
+import Conjectures.KimberlingA308355
+import Conjectures.HussainA402341

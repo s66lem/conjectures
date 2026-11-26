@@ -37,6 +37,9 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **25.** [Ghafari–Wanless Conjecture 3 (Wormald's Question on Latin square transversals)](results/ghafari-wanless-latin-transversals/) | Proved for every even $n \ge 22, n \ne 24$ (settling $n = 30$ and all even $n > 10\,000$ via modular $\Delta$-sum Latin squares + 8 mod-16 parametric tail families + 42 small witnesses) | [DOI](https://doi.org/10.5281/zenodo.24548884) | **Lean 4** · Cross-Model Audit · Python |
 | **26.** [Mandal–Mohan Conjecture 1.19 (harmonic-type means of Fibonacci powers)](results/mandal-mohan-fibonacci-harmonic/) | Proved completely for all $n, k \ge 1$ ($n^k / \sum_{i=1}^n F_i^{-k} \in \mathbb{N} \iff n \in \{1, 2\}$ or $(n, k) = (3, 2)$ via Bertrand's postulate + strong divisibility) | [DOI](https://doi.org/10.5281/zenodo.24549268) | **Lean 4** · Cross-Model Audit · Python |
 | **27.** [Zai–Lv–Sabir / Tian–Dong Conjecture 1.14 (Hamilton-connectedness of split graphs)](results/zai-lv-sabir-split-hamilton/) | Disproved for every $r \ge 5$ (22-vertex Paley $(11, 5, 2)$ biplane split graph at $r = 5$ + $(2r + 8)$-vertex circulant split family for all $r \ge 6$) | [DOI](https://doi.org/10.5281/zenodo.24549479) | **Lean 4** · Cross-Model Audit · Python |
+| **28.** [Yaqubi–Mirzavaziri Conjecture 6.2 ($2$-adic valuations of $k$-tuple $\mathrm{PDO}$ partitions)](results/yaqubi-mirzavaziri-pdo/) | Proved unconditionally for every $k \ge 1$ (all $8$ classes $\bmod 8$, including exceptional $k \equiv 1, 6 \pmod 8$ via $B_k(7)$ period certificates & self-contained Jacobi/$\psi\psi(q^3)$ dissections) | [DOI](https://doi.org/10.5281/zenodo.24552279) | **Lean 4** · Cross-Model Audit · Python |
+| **29.** [Clark Kimberling’s OEIS A308355 & A025065 conjectures (lex-order partition part counts)](results/kimberling-a308355/) | Complete resolution: A025065 conjecture proved for all $n \ge 1$ ($\sum_{r=0}^{\lfloor n/2 \rfloor} p(r)$); A308355 $\mathrm{A025065}(n+1)$ formula disproved for every odd $n \ge 1$ | [DOI](https://doi.org/10.5281/zenodo.24552281) | **Lean 4** · Cross-Model Audit · Python |
+| **30.** [Sajid Khan Hussain’s OEIS A402341 conjecture (central polynomial $2$-adic valuations)](results/hussain-a402341/) | Proved for every even $n \ge 0$ and generalized to every power-of-two block length $2^r$ ($a_r(2m) \equiv \binom{2N}{N} \pmod{2^{s_2(N)+1}}$, $v_2(a_r(2m)) = s_2((2^r-1)m)$) | [DOI](https://doi.org/10.5281/zenodo.24552348) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -70,6 +73,9 @@ python3 results/easlick-nontransitive-dice/verify.py
 python3 results/ghafari-wanless-latin-transversals/verify.py
 python3 results/mandal-mohan-fibonacci-harmonic/verify.py
 python3 results/zai-lv-sabir-split-hamilton/verify.py
+python3 results/yaqubi-mirzavaziri-pdo/verify.py
+python3 results/kimberling-a308355/verify.py
+python3 results/hussain-a402341/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

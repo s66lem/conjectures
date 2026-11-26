@@ -1,0 +1,200 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Exact $2$-Adic Valuation of Central Coefficients of $(1 + x + \cdots + x^{2^r - 1})^{2m}$ and Proof of the OEIS A402341 Conjecture}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $P_r(x) = 1 + x + \cdots + x^{2^r - 1}$ for an integer $r \ge 1$, and let $s_2(t)$ denote the sum of the binary digits of a nonnegative integer $t$ (OEIS~\texttt{A000120}). We prove that for every $r \ge 1$ and every even integer $n = 2m \ge 0$, setting $N = (2^r - 1)m$, the central coefficient $a_r(2m) = [x^N] P_r(x)^{2m}$ satisfies the congruence
+\[
+  a_r(2m) \equiv \binom{2N}{N} \pmod{2^{s_2(N) + 1}},
+\]
+and consequently has exact $2$-adic valuation $v_2(a_r(2m)) = s_2((2^r - 1)m)$. The case $r = 4$ settles the $2$-adic valuation conjecture on OEIS~\texttt{A402341} (Sajid Khan Hussain, November~2026) for every even $n \ge 0$. The proof uses a recursive polynomial factorization in $y = x/(1+x)^2$ together with a binary-weight divisibility invariant that gains one extra power of $2$ upon squaring. The entire proof has been formally verified in Lean~4 without axioms beyond the standard foundations.
+\end{abstract}
+
+\section{Introduction}
+
+For an integer $L \ge 2$ and $n \ge 0$, the central (largest) coefficient of $(1 + x + \cdots + x^{L-1})^n$ is the coefficient of $x^{\lfloor (L-1)n/2 \rfloor}$; by the theorem of de~Bruijn, van~Ebbenhorst~Tengbergen, and Kruyswijk~\cite{dBTK1951}, it equals the size of a largest antichain in the product of $n$ chains of length $L$. On November~17, 2026, Sajid Khan Hussain added the case $L = 16$ as OEIS~\texttt{A402341}~\cite{OEIS-A402341},
+\[
+  a(n) = [x^{\lfloor 15n/2 \rfloor}] (1 + x + x^2 + \cdots + x^{15})^n,
+\]
+proved its parity characterization via Lucas's theorem, and stated the following conjecture (verified numerically for $n \le 1500$):
+
+\begin{quote}
+\emph{Conjecture (\cite{OEIS-A402341}): For even $n$, the $2$-adic valuation of $a(n)$ equals $\mathrm{A000120}(15n/2)$.}
+\end{quote}
+
+Here $s_2(t) = \mathrm{A000120}(t)$ denotes the number of $1$s in the base-$2$ representation of $t$, and $v_2(M)$ denotes the exponent of the highest power of $2$ dividing a positive integer $M$.
+
+We prove this conjecture in a stronger congruence form and for all power-of-two block lengths $L = 2^r$. Write $P_r(x) = \sum_{i=0}^{2^r - 1} x^i$ and $a_r(n) = [x^{\lfloor (2^r - 1)n/2 \rfloor}] P_r(x)^n$.
+
+\begin{theorem}\label{thm:main}
+For every integer $r \ge 1$ and every even integer $n = 2m \ge 0$, let $N = (2^r - 1)m$. Then
+\[
+  a_r(2m) \equiv \binom{2N}{N} \pmod{2^{s_2(N) + 1}},
+\]
+and hence
+\[
+  v_2(a_r(2m)) = s_2\!\left((2^r - 1)m\right) = s_2\!\left(\frac{(2^r - 1)n}{2}\right).
+\]
+\end{theorem}
+
+\begin{corollary}\label{cor:A402341}
+For $r = 4$, every even $n = 2m \ge 0$ satisfies $a(2m) \equiv \binom{30m}{15m} \pmod{2^{s_2(15m)+1}}$ and $v_2(a(n)) = s_2(15n/2) = \mathrm{A000120}(15n/2)$.
+\end{corollary}
+
+The cases $r = 2$ and $r = 3$ likewise yield the exact $2$-adic valuations of even-indexed central quadrinomial (\texttt{A005190}) and central octonomial (\texttt{A025013}) coefficients, while $r = 1$ reduces to Legendre's classic identity $v_2\bigl(\binom{2m}{m}\bigr) = s_2(m)$.
+
+\begin{remark}
+The hypothesis that $n$ is even is sharp. For $r = 4$ and $n = 3$, one has $a(3) = 192 = 2^6 \cdot 3$, so $v_2(a(3)) = 6$, whereas $s_2(\lfloor 45/2 \rfloor) = s_2(22) = 3$.
+\end{remark}
+
+\section{Binary Digit Sums and Central Binomials}
+
+\begin{lemma}\label{lem:s2}
+For all integers $u, v, k, t \ge 0$:
+\begin{enumerate}
+  \item $s_2(0) = 0$, $s_2(2u) = s_2(u)$, $s_2(2u+1) = s_2(u) + 1$, and $s_2(2^k) = 1$.
+  \item If $u > 0$, then $s_2(u) \ge 1$.
+  \item $s_2(u + v) \le s_2(u) + s_2(v)$.
+  \item $v_2\!\left(\binom{2t}{t}\right) = s_2(t)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Properties (1) and (2) are immediate from binary expansion. For (3), we first note $s_2(w+1) \le s_2(w) + 1$ by strong induction on $w$: if $w = 2q$ then $s_2(2q+1) = s_2(q) + 1 = s_2(w) + 1$; if $w = 2q+1$ then $s_2(2q+2) = s_2(q+1) \le s_2(q) + 1 = s_2(w)$. Now prove (3) by strong induction on $u+v$, writing $u = 2a+b$ and $v = 2c+d$ with $b, d \in \{0, 1\}$. If $b+d \le 1$, then
+\[
+  s_2(u+v) = s_2(a+c) + b + d \le s_2(a) + s_2(c) + b + d = s_2(u) + s_2(v).
+\]
+If $b = d = 1$, then
+\[
+  s_2(u+v) = s_2(a+c+1) \le s_2(a+c) + 1 \le s_2(a) + s_2(c) + 1 < s_2(u) + s_2(v).
+\]
+
+For (4), induction on $m$ gives $v_2((2m)!) = m + v_2(m!)$, because $(2(m+1))! = 2(m+1)(2m+1)(2m)!$ and $2m+1$ is odd. Strong induction on $t$ then yields $v_2(t!) + s_2(t) = t$: for $t = 2m$, $v_2((2m)!) + s_2(2m) = m + v_2(m!) + s_2(m) = 2m$; for $t = 2m+1$, $v_2((2m+1)!) + s_2(2m+1) = v_2((2m)!) + s_2(m) + 1 = 2m+1$. From $\binom{2t}{t}(t!)^2 = (2t)!$, we conclude
+\[
+  v_2\!\left(\binom{2t}{t}\right) = v_2((2t)!) - 2v_2(t!) = \bigl(t + v_2(t!)\bigr) - 2v_2(t!) = t - v_2(t!) = s_2(t). \qedhere
+\]
+\end{proof}
+
+\section{Polynomial Homogenization in $y = x/(1+x)^2$}
+
+For $D \in \mathbb{Z}_{\ge 0}$ and a polynomial $F(y) = \sum_j c_j y^j \in \mathbb{Z}[y]$, say that $F$ \emph{fits degree $D$} if $2j \le D$ whenever $c_j \ne 0$, and define its homogenization
+\[
+  \mathcal{E}_D(F)(x) = \sum_{j} c_j x^j (1 + x)^{D - 2j} \in \mathbb{Z}[x].
+\]
+Clearly $\mathcal{E}_D$ is $\mathbb{Z}$-linear. If $F$ fits $D_1$ and $G$ fits $D_2$, then $FG$ fits $D_1 + D_2$ and
+\[
+  \mathcal{E}_{D_1 + D_2}(FG) = \mathcal{E}_{D_1}(F)\,\mathcal{E}_{D_2}(G),
+\]
+since $(D_1 - 2j) + (D_2 - 2k) = (D_1 + D_2) - 2(j+k)$ whenever $2j \le D_1$ and $2k \le D_2$.
+
+Define polynomials $R_k(y) \in \mathbb{Z}[y]$ recursively by
+\[
+  R_0(y) = 1, \qquad R_{k+1}(y) = R_k(y)^2 - 2 y^{2^k} \qquad (k \ge 0).
+\]
+Explicitly, $R_1(y) = 1 - 2y$, $R_2(y) = 1 - 4y + 2y^2$, and $R_3(y) = 1 - 8y + 20y^2 - 16y^3 + 2y^4$.
+
+\begin{lemma}\label{lem:Rk}
+For every $k \ge 0$, $R_k$ fits degree $2^k$ and $\mathcal{E}_{2^k}(R_k)(x) = 1 + x^{2^k}$.
+\end{lemma}
+
+\begin{proof}
+Induction on $k$. For $k = 0$, $R_0 = 1$ fits degree $1$ and $\mathcal{E}_1(1) = 1 + x$. Assuming the claim for $k$, both $R_k^2$ and $2y^{2^k}$ fit degree $2^{k+1}$, so $R_{k+1}$ fits degree $2^{k+1}$ and
+\[
+  \mathcal{E}_{2^{k+1}}(R_{k+1}) = \mathcal{E}_{2^k}(R_k)^2 - 2x^{2^k} = (1 + x^{2^k})^2 - 2x^{2^k} = 1 + x^{2^{k+1}}. \qedhere
+\]
+\end{proof}
+
+Set $Q_r(y) = \prod_{k=0}^{r-1} R_k(y)$. Because $\sum_{k=0}^{r-1} 2^k = 2^r - 1$ and $\prod_{k=0}^{r-1}(1 + x^{2^k}) = \sum_{i=0}^{2^r - 1} x^i = P_r(x)$, multiplicativity of $\mathcal{E}$ yields the following identity.
+
+\begin{proposition}\label{prop:Qr}
+For every $r \ge 0$ and $m \ge 0$, writing $N = (2^r - 1)m$, the polynomial $Q_r(y)^{2m}$ fits degree $2N$, satisfies $\mathcal{E}_{2N}(Q_r^{2m}) = P_r(x)^{2m}$, and gives
+\begin{equation}\label{eq:central-expansion}
+  a_r(2m) = \sum_{j = 0}^{N} c_j \binom{2(N-j)}{N-j}, \qquad c_j = [y^j] Q_r(y)^{2m}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Since each $R_k$ fits $2^k$, $Q_r$ fits $2^r - 1$ with $\mathcal{E}_{2^r - 1}(Q_r) = P_r(x)$. Raising to the $2m$-th power shows $Q_r^{2m}$ fits $2m(2^r - 1) = 2N$ and $\mathcal{E}_{2N}(Q_r^{2m}) = P_r(x)^{2m}$. Every nonzero term $c_j y^j$ of $Q_r^{2m}$ has $2j \le 2N$, hence $j \le N$, and contributes
+\[
+  [x^N]\bigl(c_j x^j (1 + x)^{2(N-j)}\bigr) = c_j [x^{N-j}](1 + x)^{2(N-j)} = c_j \binom{2(N-j)}{N-j}. \qedhere
+\]
+\end{proof}
+
+\section{Binary-Weight Admissibility and Proof of Theorem~\ref{thm:main}}
+
+Call a polynomial $F(y) \in \mathbb{Z}[y]$ \emph{admissible} if $2^{s_2(j)} \mid [y^j]F$ for all $j \ge 0$, and \emph{strongly admissible} if $[y^0]F = 1$ and $2^{s_2(j)+1} \mid [y^j]F$ for all $j > 0$.
+
+\begin{lemma}\label{lem:adm}
+\begin{enumerate}
+  \item Admissible polynomials are closed under subtraction and multiplication.
+  \item For every $k \ge 0$ and $r \ge 0$, the polynomials $R_k$ and $Q_r$ are admissible with constant term $1$.
+  \item If $F$ is admissible with $[y^0]F = 1$, then $F^2$ is strongly admissible.
+  \item Strongly admissible polynomials are closed under multiplication.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Closure under subtraction is immediate. For $FG$, each convolution term $([y^u]F)([y^v]G)$ with $u + v = j$ is divisible by $2^{s_2(u) + s_2(v)}$, hence by $2^{s_2(j)}$ by Lemma~\ref{lem:s2}(3).
+
+(2) Clearly $R_0 = 1$ is admissible with constant term $1$. If $R_k$ is admissible with constant term $1$, then $R_k^2$ is admissible by (1), while $2y^{2^k}$ is admissible since $s_2(2^k) = 1$; thus $R_{k+1} = R_k^2 - 2y^{2^k}$ is admissible, and $[y^0]R_{k+1} = 1$ because $2^k > 0$. Taking products gives the same for $Q_r$.
+
+(3) Write $f_u = [y^u]F$. Clearly $[y^0](F^2) = f_0^2 = 1$. For any $j > 0$,
+\[
+  [y^j](F^2) = 2 \sum_{\substack{u+v=j \\ u < v}} f_u f_v + \sum_{\substack{u+v=j \\ u = v}} f_u f_v.
+\]
+Each term in the first sum has $2^{s_2(j)} \mid f_u f_v$ by admissibility and Lemma~\ref{lem:s2}(3), so multiplication by $2$ yields divisibility by $2^{s_2(j)+1}$. The second sum is nonempty only when $j = 2u$ with $u > 0$, in which case $2^{2 s_2(u)} \mid f_u^2$; by Lemma~\ref{lem:s2}(1)--(2), $s_2(u) \ge 1$ and $s_2(2u) = s_2(u)$, so $2 s_2(u) \ge s_2(j) + 1$.
+
+(4) Clearly $[y^0](FG) = 1$. For $j > 0$ and any pair $u + v = j$, at least one of $u, v$ is positive. If $u > 0$, then $2^{s_2(u)+1} \mid [y^u]F$ and $2^{s_2(v)} \mid [y^v]G$, so $2^{s_2(u) + s_2(v) + 1} \mid ([y^u]F)([y^v]G)$, which is divisible by $2^{s_2(j)+1}$ by Lemma~\ref{lem:s2}(3). If $u = 0$, then $v = j > 0$ and $([y^0]F)([y^j]G) = [y^j]G$ is divisible by $2^{s_2(j)+1}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Lemma~\ref{lem:adm}(2)--(4), $Q_r(y)^{2m} = (Q_r(y)^2)^m$ is strongly admissible. In the expansion~\eqref{eq:central-expansion}, therefore, $c_0 = 1$ and $2^{s_2(j)+1} \mid c_j$ for every $j > 0$. For every $1 \le j \le N$, Lemma~\ref{lem:s2}(4) gives $2^{s_2(N-j)} \mid \binom{2(N-j)}{N-j}$, so
+\[
+  2^{s_2(j) + s_2(N-j) + 1} \;\Big|\; c_j \binom{2(N-j)}{N-j}.
+\]
+By Lemma~\ref{lem:s2}(3), $s_2(j) + s_2(N-j) + 1 \ge s_2(N) + 1$. Hence every $j \ge 1$ summand in~\eqref{eq:central-expansion} vanishes modulo $2^{s_2(N)+1}$, yielding
+\[
+  a_r(2m) \equiv \binom{2N}{N} \pmod{2^{s_2(N)+1}}.
+\]
+Since $v_2\!\left(\binom{2N}{N}\right) = s_2(N)$ by Lemma~\ref{lem:s2}(4), we have $2^{s_2(N)} \mid \binom{2N}{N}$ and $2^{s_2(N)+1} \nmid \binom{2N}{N}$. The congruence transfers both divisibility and non-divisibility to $a_r(2m)$, proving $v_2(a_r(2m)) = s_2(N)$.
+\end{proof}
+
+\section{Formal Verification}
+
+All results of this paper have been formally verified in Lean~4 (using Mathlib) in the module \texttt{Conjectures.HussainA402341} without \texttt{sorry}, custom axioms, or \texttt{native\_decide}:
+\begin{itemize}
+  \item \texttt{centralPolyCoeff\_congr\_centralBinom} proves Theorem~\ref{thm:main}'s congruence for all $r, m \in \mathbb{N}$.
+  \item \texttt{padicValNat\_centralPolyCoeff\_even} proves $v_2(a_r(2m)) = s_2((2^r-1)m)$ for all $r, m \in \mathbb{N}$.
+  \item \texttt{oeis\_A402341\_conjecture} specializes to $r = 4$ and proves $v_2(a(n)) = \mathrm{A000120}(15n/2)$ for every even $n \in \mathbb{N}$.
+\end{itemize}
+An independent Python script (\texttt{verify.py}) additionally checks the published OEIS~\texttt{A402341} terms ($n \le 19$), the identities and admissibility of $R_k, Q_r$ for $r \le 6$, dense polynomial powers for $r \le 5$, and large even exponents up to $n = 2048$ via inclusion--exclusion.
+
+\begin{thebibliography}{9}
+\bibitem{dBTK1951}
+N.~G. de~Bruijn, Ca.~van~Ebbenhorst~Tengbergen, and D.~Kruyswijk,
+\emph{On the set of divisors of a number},
+Nieuw Archief voor Wiskunde (2) \textbf{23} (1951), 191--193.
+
+\bibitem{OEIS-A402341}
+S.~K. Hussain,
+\emph{Sequence A402341: Central (largest) coefficient of $(1 + x + x^2 + \dots + x^{15})^n$},
+The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A402341}, November~17, 2026.
+\end{thebibliography}
+
+\end{document}
