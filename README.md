@@ -48,6 +48,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **36.** [Rahid Zaman’s OEIS A395348 conjecture (two-color spiral queen recurrence)](results/zaman-a395348/) | Proved for every $n \ge 2$ ($a(n + 4) = a(n) + 8n + 34$ via exact diagonal-parity separation, contiguous line-set invariants & exact closed-form coordinates for A395348 and A395349) | [DOI](https://doi.org/10.5281/zenodo.24560206) | **Lean 4** · Cross-Model Audit · Python |
 | **37.** [Palacios–Tamura–Wiberg–Petojević Tree Hitting-Time Index Conjecture (`arXiv:2611.34295v1`, §3)](results/palacios-hitting-time-trees/) | Proved for all $n \ge 1$ ($HT(T) \le HT(P_n)$ with equality iff $T \cong P_n$, via first-step Markov uniqueness & strict pendant-path grafting monotonicity) | [DOI](https://doi.org/10.5281/zenodo.24560498) | **Lean 4** · Cross-Model Audit · Python |
 | **38.** [Li–Nešetřil–Yang Problems 3.5 & 3.6 (`arXiv:2611.33681v1`, directed weak coloring numbers)](results/li-nesetril-yang-wcol/) | Disproved for all $k \ge 2$ ($\overrightarrow{\mathrm{wcol}}_k(P_4) = 3 > 2\,\overrightarrow{\mathrm{wcol}}^+_k(P_4) = 2$ & unbounded separation $\overrightarrow{\mathrm{wcol}}_k(P_{2^t - 1}) \ge t$ vs $\overrightarrow{\mathrm{wcol}}^+_k = 1$; sharp at $k = 1$) | [DOI](https://doi.org/10.5281/zenodo.24560441) | **Lean 4** · Cross-Model Audit · Python |
+| **39.** [Werner Schulte's OEIS A397048 conjectures (shifted falling-factorial connection coefficients)](results/schulte-a397048/) | All three conjectures proved + general base-point $c$ Stirling shift identity ($T_c(n, k) = \sum_{m=0}^{c} s(c, m)\,S(n + m, c + k)$, row sums $= \mathrm{A134980}(n)$, falling-factorial evaluation $(n + k)^n$ for all $k \ge 0$) | [DOI](https://doi.org/10.5281/zenodo.24562734) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -92,6 +93,7 @@ python3 results/mathar-a401159/verify.py
 python3 results/zaman-a395348/verify.py
 python3 results/palacios-hitting-time-trees/verify.py
 python3 results/li-nesetril-yang-wcol/verify.py
+python3 results/schulte-a397048/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
