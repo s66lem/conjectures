@@ -1,0 +1,112 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Proof of Takuto Nakai's Conjecture on Interior Triangle Points with Integer-Multiple Angles (OEIS~A400474)}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove Takuto Nakai's formula conjecture for \texttt{OEIS~A400474}: for every integer $n \ge 3$, the maximum over all nondegenerate Euclidean triangles $\triangle ABC$ of the number of strictly interior points $P$ whose viewing angles $\angle BPC, \angle CPA, \angle APB$ are pairwise distinct integer multiples of $\pi/n$ equals $(n^2 - 4n + c)/3$, where $c = 6, -3, 4, 3, 0, -5$ according as $n \equiv 0, 1, 2, 3, 4, 5 \pmod 6$. We establish a bijection between interior points and admissible angle triples, reduce the maximum to minimizing a sum of three disjoint exclusion counts over integer floor triples summing to $n - 2$, and prove by a discrete convexity transfer that balanced triples are optimal for all $n \ge 16$, with finite verification covering $3 \le n \le 15$. The real-angle floor reduction and combinatorial maximization are formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+For an integer $n \ge 3$, define $a(n)$ (\texttt{OEIS~A400474}~\cite{Nakai2026}) as the maximum, over all nondegenerate Euclidean triangles $\triangle ABC$, of the number of strictly interior points $P$ for which the angles $\angle BPC, \angle CPA, \angle APB$ are pairwise distinct integer multiples of $\pi / n$. Nakai conjectured~\cite{Nakai2026} (verified numerically for $n \le 1000$) that $a(n)$ is given by a quadratic quasi-polynomial of period~$6$. We prove this conjecture for every $n \ge 3$.
+
+\begin{theorem}\label{thm:main}
+For every integer $n \ge 3$,
+\[
+  a(n) = \frac{n^2 - 4n + c(n \bmod 6)}{3}, \qquad c(0, 1, 2, 3, 4, 5) = (6, -3, 4, 3, 0, -5).
+\]
+\end{theorem}
+
+\section{Geometric Bijection and Floor Reduction}
+
+Let $\triangle ABC$ be a nondegenerate triangle with interior angles $A, B, C \in (0, \pi)$, $A + B + C = \pi$.
+
+\begin{lemma}\label{lem:geom}
+The map $P \mapsto (\angle BPC, \angle CPA, \angle APB)$ is a bijection from the strict interior of $\triangle ABC$ onto
+\[
+  \Omega(A, B, C) = \{(x, y, z) \in \mathbb{R}^3 : x + y + z = 2\pi,\; A < x < \pi,\; B < y < \pi,\; C < z < \pi\}.
+\]
+\end{lemma}
+
+\begin{proof}
+For any strictly interior point $P$, the rays $PA, PB, PC$ partition the full angle around $P$, so $x + y + z = 2\pi$ and $0 < x, y, z < \pi$. Moreover, $\angle PAB < A$ and $\angle PBA < B$, giving $z = \pi - \angle PAB - \angle PBA > \pi - A - B = C$, and symmetrically $x > A$ and $y > B$.
+
+Conversely, fix $(x, y, z) \in \Omega(A, B, C)$. For $t \in (0, \pi - z)$, rays from $A$ and $B$ on the $C$-side of $AB$ making angles $t$ with $AB$ and $\pi - z - t$ with $BA$ meet at a unique point $P(t)$ with $\angle AP(t)B = z$, depending continuously on $t$ by the Law of Sines. The point $P(t)$ lies strictly inside $\triangle ABC$ precisely when $t_{\min} < t < t_{\max}$, where $t_{\min} = \max(0, \pi - z - B)$ and $t_{\max} = \min(A, \pi - z)$; this interval is nonempty since $z > \pi - A - B$. As $t \to t_{\min}^+$, either $\pi - z - B > 0$ (so $P(t)$ approaches the interior of $BC$ and $\angle BP(t)C \to \pi$) or $\pi - z - B \le 0$ (so $P(t) \to B$ along the ray at angle $\pi - z$ from $BA$ and $\angle BP(t)C \to 2\pi - z - B$); hence the left limit is $\min(\pi, 2\pi - z - B)$. Symmetrically, as $t \to t_{\max}^-$, either $A < \pi - z$ (so $P(t)$ approaches the interior of $AC$ with $\angle CPA \to \pi$ and $\angle BP(t)C \to \pi - z$) or $A \ge \pi - z$ (so $P(t) \to A$ and $\angle BP(t)C \to A$); hence the right limit is $\max(A, \pi - z)$. Because $A < x < \pi$, $x = 2\pi - y - z > \pi - z$, and $x = 2\pi - y - z < 2\pi - B - z$, the value $x$ lies strictly between these two limits, so the Intermediate Value Theorem yields $t \in (t_{\min}, t_{\max})$ with $\angle BP(t)C = x$ and $\angle CP(t)A = y$.
+
+For uniqueness, all points on the $C$-side of $AB$ with $\angle APB = z$ lie on a unique circle $\Gamma_1$ through $A, B$, and all points on the $A$-side of $BC$ with $\angle BPC = x$ lie on a unique circle $\Gamma_2$ through $B, C$. If $\Gamma_1 = \Gamma_2$, it is the circumcircle of $\triangle ABC$, which contains no strictly interior point by strict convexity of the disk. Otherwise $\Gamma_1 \ne \Gamma_2$ meet in at most two points, one of which is $B$, leaving at most one interior intersection $P$.
+\end{proof}
+
+Fix $n \ge 3$ and set $p = \lfloor nA/\pi \rfloor$, $q = \lfloor nB/\pi \rfloor$, $r = \lfloor nC/\pi \rfloor$. Writing $(X, Y, Z) = (n - u, n - v, n - w)$, the integer triples $(X, Y, Z)$ with $X, Y, Z$ pairwise distinct, $X + Y + Z = 2n$, and $(X\pi/n, Y\pi/n, Z\pi/n) \in \Omega(A, B, C)$ correspond bijectively to
+\[
+  \mathcal{S}_n(p, q, r) = \bigl\{(u, v, w) \in \mathbb{N}_+^3 : u + v + w = n,\; u, v, w \text{ distinct},\; u < n - p,\; v < n - q,\; w < n - r\bigr\}.
+\]
+Since $nA/\pi < p + 1$, $nB/\pi < q + 1$, $nC/\pi < r + 1$, summing yields $p + q + r \ge n - 2$. Decreasing any coordinate of $(p, q, r)$ only enlarges $\mathcal{S}_n(p, q, r)$, and every $(p, q, r) \in \mathbb{N}^3$ with $p + q + r = n - 2$ is realized by the positive angles $(p + 2/3)\pi/n, (q + 2/3)\pi/n, (r + 2/3)\pi/n$. Therefore,
+\begin{equation}\label{eq:reduction}
+  a(n) = \max_{\substack{p, q, r \in \mathbb{N} \\ p + q + r = n - 2}} |\mathcal{S}_n(p, q, r)|.
+\end{equation}
+
+\section{Disjoint Exclusions and Discrete Convexity}
+
+Let $\mathcal{U}_n = \{(u, v, w) \in \mathbb{N}_+^3 : u + v + w = n,\; u, v, w \text{ distinct}\}$.
+
+\begin{lemma}\label{lem:excl}
+Set $T(n) = |\mathcal{U}_n|$ and $D_n(s) = s - 1 - [2 \mid s] - 2[2s > n \wedge 3s \ne 2n]$, $E_n(p) = \sum_{s=1}^p D_n(s)$. Then:
+\begin{enumerate}
+  \item $T(n) = \frac{(n - 1)(n - 2)}{2} - 3\lfloor (n - 1)/2 \rfloor + 2[3 \mid n]$.
+  \item For every $(p, q, r) \in \mathbb{N}^3$ with $p + q + r = n - 2$,
+  \[
+    |\mathcal{S}_n(p, q, r)| = T(n) - E_n(p) - E_n(q) - E_n(r).
+  \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Part~(1) follows by inclusion--exclusion on the $\binom{n-1}{2}$ positive compositions of $n$: each equality $u = v$, $v = w$, $w = u$ has $\lfloor (n-1)/2 \rfloor$ solutions, and any two force $u = v = w = n/3$ (present iff $3 \mid n$).
+
+For~(2), if $u \ge n - p$ and $v \ge n - q$, then $u + v \ge 2n - p - q = n + r + 2 > n$, leaving no positive $w$. Thus the three forbidden sets $\{u \ge n - p\}$, $\{v \ge n - q\}$, $\{w \ge n - r\}$ in $\mathcal{U}_n$ are pairwise disjoint, and by symmetry each has size $E_n(p)$ (resp.\ $q, r$). Setting $s = n - u = v + w$, the constraint $u \ge n - p$ is $1 \le s \le p$. For fixed $s$, there are $s - 1$ positive pairs $(v, w)$ summing to $s$: one has $v = w$ iff $2 \mid s$, and pairs with $v = u = n - s$ or $w = u = n - s$ exist iff $2s > n$, contributing two distinct pairs unless $n - s = 2s - n$ (i.e.\ $3s = 2n$, in which case that single pair equals $(s/2, s/2)$ and was already excluded by $[2 \mid s]$). Hence the count at $s$ is $D_n(s)$.
+\end{proof}
+
+\begin{lemma}\label{lem:balance}
+For every $n \ge 16$, the minimum of $E_n(p) + E_n(q) + E_n(r)$ over $p + q + r = n - 2$ is achieved by a balanced triple ($\max - \min \le 1$) with all coordinates at most $n/2$.
+\end{lemma}
+
+\begin{proof}
+Choose a minimizer $(p, q, r)$ minimizing $p^2 + q^2 + r^2$, and order $p \ge r \ge q$. If $2p > n$, then $2p \ge n + 1$ and $2q \le q + r = n - 2 - p$, so $4q \le n - 5$ while $4p \ge 2n + 2$, yielding $4(p - q) \ge n + 7 \ge 23$, hence $p - q \ge 6$. Replacing $(p, q)$ by $(p - 1, q + 1)$ changes the exclusion sum by $D_n(q + 1) - D_n(p) \le q - (p - 4) \le -2 < 0$, contradicting minimality. Thus $p \le n/2$.
+
+On $1 \le s \le n/2$, we have $2s \le n$, so $D_n(s) = s - 1 - [2 \mid s]$ is weakly increasing. If $p \ge q + 2$, then $q + 1 \le p - 1 < p \le n/2$, so $D_n(q + 1) \le D_n(p)$ and transferring $(p, q) \mapsto (p - 1, q + 1)$ does not increase $E_n(p) + E_n(q) + E_n(r)$ while strictly decreasing $p^2 + q^2 + r^2$, contradiction. Hence $p - q \le 1$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+For $0 \le p \le n/2$, summing $D_n(s) = s - 1 - [2 \mid s]$ gives $E_n(2k - 1) = 2(k - 1)^2$, $E_n(2k) = 2k(k - 1)$, and $E_n(2k + 1) = 2k^2$ (for $k \ge 1$, with $E_n(0) = 0$). Writing $n = 6k + j$ ($0 \le j \le 5$) for $n \ge 16$, the balanced triples summing to $n - 2$ are $(2k-1,2k-1,2k)$, $(2k-1,2k,2k)$, $(2k,2k,2k)$, $(2k,2k,2k+1)$, $(2k,2k+1,2k+1)$, and $(2k+1,2k+1,2k+1)$, with exclusion sums $6k^2 - 10k + 4$, $6k^2 - 8k + 2$, $6k^2 - 6k$, $6k^2 - 4k$, $6k^2 - 2k$, and $6k^2$. Subtracting from $T(6k + j)$ in each residue class yields $(n^2 - 4n + c(j))/3$ identically.
+
+For $3 \le n \le 15$, direct evaluation of~\eqref{eq:reduction} via Lemma~\ref{lem:excl} gives
+\[
+  0, 0, 0, 6, 6, 12, 16, 20, 24, 34, 38, 48, 56,
+\]
+agreeing with $(n^2 - 4n + c(n \bmod 6))/3$ in every case.
+\end{proof}
+
+\section{Formal Verification}
+
+The real-angle floor reduction~\eqref{eq:reduction}, Lemma~\ref{lem:excl}, Lemma~\ref{lem:balance}, and Theorem~\ref{thm:main} for all $n \ge 3$ (including finite cases $3 \le n \le 15$) have been formally verified in Lean~4 with Mathlib (module \texttt{NakaiA400474}) using only the standard axioms (no \texttt{sorry}, custom axioms, or \texttt{native\_decide}). An independent Python verifier (\texttt{verify.py}) checks exact enumeration for $3 \le n \le 25$, balancing optimality for $16 \le n \le 120$, and explicitly constructs Euclidean interior points via circle intersections for $6 \le n \le 12$.
+
+\begin{thebibliography}{9}
+\bibitem{Nakai2026}
+T.~Nakai,
+\emph{OEIS Sequence A400474},
+The On-Line Encyclopedia of Integer Sequences, October~25, 2026,
+\url{https://oeis.org/A400474}.
+\end{thebibliography}
+
+\end{document}

@@ -30,3 +30,6 @@ import Conjectures.KimberlingA308355
 import Conjectures.HussainA402341
 import Conjectures.PolA400974
 import Conjectures.SnellmanKozlovVolume
+import Conjectures.BasakWaldschmidtMonomial
+import Conjectures.NakaiA400474
+

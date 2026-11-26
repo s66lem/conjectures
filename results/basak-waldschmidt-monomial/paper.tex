@@ -1,0 +1,107 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\Ass}{\operatorname{Ass}}
+\newcommand{\Min}{\operatorname{Min}}
+\newcommand{\htp}{\operatorname{ht}}
+
+\title{Counterexamples to a Lower Bound for the Waldschmidt Constant of Monomial Ideals}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We answer Question~4.14 of Basak, Bijender, and Kumar (arXiv:2611.19424v1) negatively: not every monomial ideal $I$ of big-height $e$ satisfies $\widehat{\alpha}(I) \ge (\alpha(I) + e - 1)/(e + 1)$. For all integers $T \ge 4$ and $r \ge 1$ with $r(T - 3) > T(T - 1)$, we construct an unmixed monomial ideal $I$ whose associated primes are all minimal of height $e = r + 1$, with initial degree $\alpha(I) = T$ and exact Waldschmidt constant $\widehat{\alpha}(I) = 2r / (2r - T + 1) < (T + r)/(r + 2)$. In particular, $(T, r) = (4, 13)$ gives an explicit $455$-component ideal with $\alpha(I) = 4$, $e = 14$, and $\widehat{\alpha}(I) = 26/23 < 17/15$. The construction, irredundant primary decomposition, localization identity, initial degree, exact Waldschmidt limit, and strict violation are formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+Let $R = K[z_1, \dots, z_N]$ be a polynomial ring over a field $K$. For a nonzero homogeneous ideal $J \subset R$, let $\alpha(J) = \min\{d \ge 0 : J_d \ne 0\}$ denote its initial degree. For a monomial ideal $I \subset R$, let $I^{(m)} = \bigcap_{P \in \Ass(I)} (I^m R_P \cap R)$ be its $m$-th symbolic power, $\widehat{\alpha}(I) = \lim_{m \to \infty} \alpha(I^{(m)})/m = \inf_{m \ge 1} \alpha(I^{(m)})/m$ its Waldschmidt constant, and $e = \max\{\htp(P) : P \in \Ass(I)\}$ its big-height.
+
+In~\cite{Basak2026}, Basak, Bijender, and Kumar disprove the Cooper--Embree--H\`a--Hoefel bound $\widehat{\alpha}(I) \ge (\alpha(I) + e - 1)/e$ for non-squarefree monomial ideals, establish the weaker bound with denominator $e + 1$ under an auxiliary hypothesis, and pose Question~4.14:
+\begin{quote}
+\emph{Let $I \subset R$ be a monomial ideal of big-height $e$. Is the lower bound $\widehat{\alpha}(I) \ge (\alpha(I) + e - 1)/(e + 1)$ always satisfied?}
+\end{quote}
+
+We answer Question~4.14 negatively with an explicit infinite family of unmixed monomial ideals.
+
+\begin{theorem}\label{thm:main}
+Let $T \ge 4$ and $r \ge 1$ be integers satisfying $r(T - 3) > T(T - 1)$, and set $B = \{b \in \mathbb{N}^r : b_1 + \dots + b_r = T - 1\}$. In the polynomial ring $R = K[x_1, \dots, x_r, y_b : b \in B]$, define
+\[
+  q_b = \bigl(x_1^{b_1 + 1}, \dots, x_r^{b_r + 1},\, y_b\bigr), \qquad I = \bigcap_{b \in B} q_b.
+\]
+Then $I$ is an unmixed monomial ideal with $\Ass(I) = \Min(I) = \{P_b : b \in B\}$ where $P_b = (x_1, \dots, x_r, y_b)$ has height $e = r + 1$, $I^{(m)} = \bigcap_{b \in B} q_b^m$ for all $m \ge 1$, $\alpha(I) = T$, and
+\[
+  \widehat{\alpha}(I) = \frac{2r}{2r - T + 1} < \frac{T + r}{r + 2} = \frac{\alpha(I) + e - 1}{e + 1}.
+\]
+In particular, $(T, r) = (4, 13)$ ($|B| = \binom{15}{3} = 455$) yields $\alpha(I) = 4$, $e = 14$, and $\widehat{\alpha}(I) = \frac{26}{23} < \frac{17}{15}$.
+\end{theorem}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+Fix $T \ge 4$ and $r \ge 1$ with $r(T - 3) > T(T - 1)$; note that $r \ge T$ follows immediately. Write $P_b = (x_1, \dots, x_r, y_b)$.
+
+\begin{lemma}\label{lem:mem}
+A polynomial $f \in R$ belongs to $q_b^m$ if and only if every monomial $x^c y^d$ occurring in $f$ with nonzero coefficient satisfies
+\[
+  \sum_{j=1}^r \left\lfloor \frac{c_j}{b_j + 1} \right\rfloor + d_b \ge m.
+\]
+\end{lemma}
+
+\begin{proof}
+Let $J_m \subset R$ be the $K$-span of all monomials $x^c y^d$ satisfying the displayed inequality. Since $\lfloor (c_j + c'_j)/w \rfloor \ge \lfloor c_j/w \rfloor + \lfloor c'_j/w \rfloor$, each $J_m$ is an ideal with $J_{m_1} J_{m_2} \subseteq J_{m_1 + m_2}$. Every generator of $q_b$ lies in $J_1$, so $q_b^m \subseteq J_m$. Conversely, if $x^c y^d \in J_m$, choose integers $0 \le e_j \le \lfloor c_j/(b_j + 1) \rfloor$ and $0 \le e_0 \le d_b$ with $e_0 + \sum_j e_j = m$; then $\bigl(\prod_j (x_j^{b_j+1})^{e_j}\bigr) y_b^{e_0} \in q_b^m$ divides $x^c y^d$, whence $x^c y^d \in q_b^m$.
+\end{proof}
+
+\begin{lemma}\label{lem:primary}
+For every $b \in B$ and $m \ge 1$, $q_b^m$ is $P_b$-primary and $P_b$ is prime of height $r + 1$. Moreover, $I = \bigcap_{b \in B} q_b$ is an irredundant primary decomposition, $\Ass(I) = \Min(I) = \{P_b : b \in B\}$, $e = r + 1$, and $I^{(m)} = \bigcap_{b \in B} q_b^m$ for all $m \ge 1$.
+\end{lemma}
+
+\begin{proof}
+Since $R/P_b \cong K[y_{b'} : b' \ne b]$ is an integral domain, $P_b$ is prime of height $r + 1$. Clearly $q_b^m \subseteq P_b$ and $\sqrt{q_b^m} = P_b$. Suppose $fg \in q_b^m$ with $g \notin P_b$. Write $f = f_1 + f_2$ ($f_1 \in q_b^m$, no term of $f_2$ in $q_b^m$) and $g = g_1 + g_2$ ($g_1 \in P_b$, $g_2 \in K[y_{b'} : b' \ne b] \setminus \{0\}$). If $f_2 \ne 0$, consider the nonzero component $f_2^{(\delta)}$ of minimal total $(x, y_b)$-degree $\delta$. Every term of $f_2 g_1$ has $(x, y_b)$-degree at least $\delta + 1$, so the degree-$\delta$ component of $f_2 g$ is $f_2^{(\delta)} g_2$. Since $K[y_{b'} : b' \ne b]$ is a domain, $f_2^{(\delta)} g_2$ is nonzero and every one of its monomials shares its $(x, y_b)$-exponent with a term of $f_2^{(\delta)}$ and thus lies outside $q_b^m$ by Lemma~\ref{lem:mem}, contradicting $f_2 g = fg - f_1 g \in q_b^m$. Hence $f_2 = 0$ and $f \in q_b^m$, proving $q_b^m$ is $P_b$-primary.
+
+The primes $P_b$ are pairwise incomparable, and $U_b := \prod_{b' \ne b} y_{b'}$ lies in $\bigcap_{b' \ne b} q_{b'} \setminus q_b$, so the decomposition is irredundant, $\Ass(I) = \Min(I) = \{P_b\}$, and $e = r + 1$. Finally, if $f \in I^m R_{P_b} \cap R$ then $uf \in I^m \subseteq q_b^m$ for some $u \notin P_b$, giving $f \in q_b^m$ by $P_b$-primarity; conversely, $f \in q_b^m$ gives $U_b^m f \in I^m$ with $U_b^m \notin P_b$, so $I^m R_{P_b} \cap R = q_b^m$ and $I^{(m)} = \bigcap_{b \in B} q_b^m$.
+\end{proof}
+
+\begin{lemma}\label{lem:alpha}
+$\alpha(I) = T$.
+\end{lemma}
+
+\begin{proof}
+Since $b_1 + 1 \le T$ for all $b \in B$, we have $x_1^T \in I$, so $\alpha(I) \le T$. Conversely, let $x^c y^d \in I$. If $s := |c| \ge T$, then $\deg(x^c y^d) \ge T$. If $s \le T - 1$, let $B_c = \{b \in B : b_j \ge c_j\ \forall j\}$. Each $b \in B_c$ satisfies $c_j < b_j + 1$ for all $j$, so Lemma~\ref{lem:mem} forces $d_b \ge 1$ and hence $|d| \ge |B_c|$. For $s = T - 1$, $c \in B_c$ gives $|B_c| = 1$ and $s + |B_c| = T$. For $s \le T - 2$, adding $(T - 1 - s)$ to any single coordinate of $c$ produces $r$ distinct elements of $B_c$, so $|B_c| \ge r \ge T$ and $s + |B_c| \ge T$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Fix $k \ge 1$ and set $u_k = \prod_{j=1}^r x_j^{2k}$, of degree $2rk$. For any $b \in B$, let $p, q, \beta$ be the numbers of entries of $b$ equal to $0$, equal to $1$, and at least $2$, respectively. Then $p + q + \beta = r$ and $q + 2\beta \le \sum_j b_j = T - 1$, so
+\[
+  \sum_{j=1}^r \left\lfloor \frac{2k}{b_j + 1} \right\rfloor \ge 2kp + kq = k(2r - q - 2\beta) \ge (2r - T + 1)k.
+\]
+By Lemmas~\ref{lem:mem} and~\ref{lem:primary}, $u_k \in I^{((2r - T + 1)k)}$, whence $\alpha(I^{((2r - T + 1)k)}) \le 2rk$.
+
+For the matching lower bound, let $O = \{b \in B : b_j \in \{0, 1\}\ \forall j\}$, of cardinality $|O| = \binom{r}{T - 1}$. For any $m \ge 1$ and any monomial $x^c y^d \in I^{(m)}$, Lemma~\ref{lem:mem} gives $\sum_{j=1}^r \frac{c_j}{b_j + 1} + d_b \ge m$ for every $b \in O$. Summing over $b \in O$, each coordinate $j$ has $b_j = 1$ in $\binom{r - 1}{T - 2}$ vectors and $b_j = 0$ in $\binom{r - 1}{T - 1}$ vectors, giving uniform column weight
+\[
+  \lambda = \frac{1}{2}\binom{r - 1}{T - 2} + \binom{r - 1}{T - 1} = \frac{2r - T + 1}{2r} |O| \ge 1.
+\]
+Therefore $\lambda(|c| + |d|) \ge \lambda|c| + \sum_{b \in O} d_b \ge |O|m$, i.e.\ $(2r - T + 1)(|c| + |d|) \ge 2rm$. Hence $\alpha(I^{(m)})/m \ge \frac{2r}{2r - T + 1}$ for every $m \ge 1$. Together with $I^{(m+1)} \subseteq I^{(m)}$ and the upper bound along $m = (2r - T + 1)k$, this yields $\widehat{\alpha}(I) = \frac{2r}{2r - T + 1}$.
+
+Finally, $\frac{2r}{2r - T + 1} < \frac{T + r}{r + 2}$ is equivalent to $2r(r + 2) < (T + r)(2r - T + 1)$, which simplifies to $r(T - 3) > T(T - 1)$.
+\end{proof}
+
+\section{Formal Verification}
+
+Theorem~\ref{thm:main} and Lemmas~\ref{lem:mem}--\ref{lem:alpha} have been formally verified in Lean~4 with Mathlib (module \texttt{Basak}\allowbreak\texttt{Waldschmidt}\allowbreak\texttt{Monomial}) over multivariate polynomial rings \texttt{MvPolynomial}. The formalization establishes $P_b$-primarity of $q_b^m$, irredundancy of $I = \bigcap_{b \in B} q_b$, $\Min(I) = \{P_b\}$ (with each $P_b$ generated by $r + 1$ variables), the localization identity $I^m R_{P_b} \cap R = q_b^m$, the initial degree $\alpha(I) = T$, the exact Waldschmidt constant $\widehat{\alpha}(I) = 2r/(2r - T + 1)$ for $I^{(m)} = \bigcap_{b \in B} (I^m R_{P_b} \cap R)$, and the strict counterexample bound with $e := r + 1$ for all $r(T - 3) > T(T - 1)$, using only the standard axioms (no \texttt{sorry}, custom axioms, or \texttt{native\_decide}). The standard commutative-algebra identifications $\Ass(I) = \Min(I)$ (from the irredundant primary decomposition) and $\htp(P_b) = r + 1$ (for a prime generated by $r + 1$ indeterminates) are given in Lemma~\ref{lem:primary}. An independent Python verifier (\texttt{verify.py}) additionally checks the headline instance $(4, 13)$, four further family instances, and two boundary cases in exact rational arithmetic.
+
+\begin{thebibliography}{9}
+\bibitem{Basak2026}
+N.~Basak, Bijender, and A.~Kumar,
+\emph{On the Waldschmidt constant of monomial ideals},
+\texttt{arXiv:2611.19424v1}, November~14, 2026.
+\end{thebibliography}
+
+\end{document}

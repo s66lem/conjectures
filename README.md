@@ -42,6 +42,8 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **30.** [Sajid Khan Hussain’s OEIS A402341 conjecture (central polynomial $2$-adic valuations)](results/hussain-a402341/) | Proved for every even $n \ge 0$ and generalized to every power-of-two block length $2^r$ ($a_r(2m) \equiv \binom{2N}{N} \pmod{2^{s_2(N)+1}}$, $v_2(a_r(2m)) = s_2((2^r-1)m)$) | [DOI](https://doi.org/10.5281/zenodo.24552348) | **Lean 4** · Cross-Model Audit · Python |
 | **31.** [Jan Snellman’s Conjecture 21 (`arXiv:2611.26110v1`, rank-two Kozlov polytope volume monotonicity)](results/snellman-kozlov-volume/) | Proved for all $n \ge 1, d \ge 0$ (explicit lower bound $\bigl(\binom{n}{d}-1\bigr)t_d(n-d)\,\mathrm{NV}(\mathrm{Koz}(n))$, strict for $0 \le d \le n - 2$ except $(n,d)=(2,0)$) | [DOI](https://doi.org/10.5281/zenodo.24553538) | **Lean 4** · Cross-Model Audit · Python |
 | **32.** [Omar E. Pol’s OEIS A400974, A280940 & A384225 conjectures (symmetric representation subparts & $2$-dense divisor blocks)](results/pol-a400974/) | All four conjectures proved for every $n \ge 1$ ($\mathrm{A280940} = \mathrm{A384225}$, $\mathrm{A384222} = \mathrm{A001511}\cdot\mathrm{A384225}$, $\mathrm{A400974} = \mathrm{A001511}\cdot\mathrm{A384230}$) | [DOI](https://doi.org/10.5281/zenodo.24556521) | **Lean 4** · Cross-Model Audit · Python |
+| **33.** [Basak–Bijender–Kumar Question 4.14 (`arXiv:2611.19424v1`, Waldschmidt constant of monomial ideals)](results/basak-waldschmidt-monomial/) | Disproved (infinite two-parameter unmixed family $r(T-3) > T(T-1)$ with $\hat{\alpha}(I) = 2r/(2r-T+1) < (T+r)/(r+2)$; headline $455$-component ideal: $\alpha = 4, e = 14, \hat{\alpha} = 26/23 < 17/15$) | [DOI](https://doi.org/10.5281/zenodo.24558264) | **Lean 4** · Cross-Model Audit · Python |
+| **34.** [Takuto Nakai’s OEIS A400474 conjecture (triangle interior integer-angle maximum)](results/nakai-a400474/) | Proved for every $n \ge 3$ ($a(n) = (n^2 - 4n + c(n \bmod 6))/3$ with $c = (6, -3, 4, 3, 0, -5)$ via real-angle floor reduction, disjoint exclusions & discrete convexity balancing) | [DOI](https://doi.org/10.5281/zenodo.24559747) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -80,6 +82,8 @@ python3 results/kimberling-a308355/verify.py
 python3 results/hussain-a402341/verify.py
 python3 results/snellman-kozlov-volume/verify.py
 python3 results/pol-a400974/verify.py
+python3 results/basak-waldschmidt-monomial/verify.py
+python3 results/nakai-a400474/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
