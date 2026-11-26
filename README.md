@@ -1,6 +1,6 @@
 # Solved conjectures in combinatorics, graph theory, and number theory
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24519466.svg)](https://doi.org/10.5281/zenodo.24519466)
+[![Zenodo](https://img.shields.io/badge/Zenodo-All%20Preprints-blue?logo=zenodo)](https://zenodo.org/search?q=metadata.creators.person_or_org.name%3A%22Levinstein%2C+Salem%22&sort=newest)
 
 Mathematical proofs, counterexamples, and reproducible verification code for open conjectures in combinatorics, algorithmic game theory, graph theory, and number theory.
 

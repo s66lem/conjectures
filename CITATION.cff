@@ -6,10 +6,9 @@ authors:
   - family-names: Levinstein
     given-names: Salem
     alias: s66lem
-version: "0.1.0"
-doi: "10.5281/zenodo.24519466"
+url: "https://zenodo.org/search?q=metadata.creators.person_or_org.name%3A%22Levinstein%2C+Salem%22&sort=newest"
 repository-code: "https://github.com/s66lem/conjectures"
-date-released: "2026-11-24"
+date-released: "2026-11-26"
 keywords:
   - combinatorics
   - graph theory
