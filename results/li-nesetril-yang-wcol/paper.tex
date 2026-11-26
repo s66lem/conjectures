@@ -1,0 +1,107 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\newcommand{\wcol}{\overrightarrow{\mathrm{wcol}}}
+\newcommand{\dcol}{\overrightarrow{\mathrm{col}}}
+\newcommand{\wcolp}{\overrightarrow{\mathrm{wcol}}\,^{+}}
+\newcommand{\dcolp}{\overrightarrow{\mathrm{col}}\,^{+}}
+
+\title{Unbounded Separation Between Directed Weak Coloring Numbers and Negative Answers to Problems~3.5 and~3.6 of Li, Ne\v{s}et\v{r}il, and Yang}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve Problem~3.6 and the weak-coloring half of Problem~3.5 of Li, Ne\v{s}et\v{r}il, and Yang (\texttt{arXiv:2611.33681v1}) in the negative for every $k \ge 2$. First, every orientation $D$ of every finite forest $F$ admits a topological ordering, yielding $\dcolp_k(D) = \wcolp_k(D) = 1$ for all $k \ge 1$. Second, for the $4$-vertex path $P_4$ and every $k \ge 2$, $\wcol_k(P_4) = 3 > 2 = 2\,\wcolp_k(P_4)$, and no orientation $D$ of $P_4$ attains $\wcolp_k(D) = \lceil \wcol_k(P_4)/2 \rceil = 2$; by subgraph monotonicity, every forest containing a $3$-edge path fails Problem~3.6. Third, for every $t \ge 1$, $N = 2^t - 1$, and $k \ge N - 1$, a binary-halving argument shows $\wcol_k(P_N) \ge t$ while $\wcolp_k(P_N) = 1$, ruling out any uniform bound $\wcol_k(G) \le g(\wcolp_k(G))$ across all graphs $G$ and $k \ge 1$. We also record that Problem~3.6 holds at the sharp boundary $k = 1$. The forest lemma, the $P_4$ disproof, subgraph monotonicity, and the unbounded path separation are formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+Let $D$ be an oriented graph, $\sigma$ a linear ordering of $V(D)$, and $k \ge 1$ an integer. Following Section~3.2 of Li, Ne\v{s}et\v{r}il, and Yang~\cite{LNY2026}, a vertex $x$ is \emph{weakly $(k, +)$-reachable} from $y$ under $\sigma$ if $x \le_\sigma y$ and there is a directed $y \to x$ path of length at most $k$ whose vertices $z$ all satisfy $x \le_\sigma z$; it is \emph{strongly $(k, +)$-reachable} if every internal vertex $z$ additionally satisfies $y <_\sigma z$. Replacing directed $y \to x$ paths by directed $x \to y$ paths defines $(k, -)$-reachability. Denoting the corresponding reachability sets (each containing $y$) by $W^{k, \pm}_{D, \sigma}(y)$ and $S^{k, \pm}_{D, \sigma}(y)$, one sets
+\[
+  \wcolp_k(D) = \min_\sigma \max_{y \in V(D)} \bigl|W^{k, +}_{D, \sigma}(y)\bigr|, \qquad
+  \wcol_k(D) = \min_\sigma \max_{y \in V(D)} \bigl|W^{k, +}_{D, \sigma}(y) \cup W^{k, -}_{D, \sigma}(y)\bigr|,
+\]
+and analogously $\dcolp_k(D)$ and $\dcol_k(D)$ using $S$. For an undirected graph $G$, each parameter is defined as the maximum over all orientations $D$ of $G$.
+
+In~\cite{LNY2026}, the authors pose two problems:
+\begin{itemize}
+  \item \textbf{Problem~3.5:} Do there exist linear functions $f, g$ such that $\dcol_k(G) \le f(\dcolp_k(G))$ and $\wcol_k(G) \le g(\wcolp_k(G))$ for all graphs $G$ and $k \ge 1$? In particular, do $\dcol_k(G) \le 2\,\dcolp_k(G)$ and $\wcol_k(G) \le 2\,\wcolp_k(G)$ hold?
+  \item \textbf{Problem~3.6:} For every graph $G$ and every $k \ge 1$, does there exist an orientation $\vec{G}$ of $G$ such that $\dcolp_k(\vec{G}) = \lceil \dcol_k(G)/2 \rceil$ and $\wcolp_k(\vec{G}) = \lceil \wcol_k(G)/2 \rceil$?
+\end{itemize}
+
+We answer Problem~3.6 and the weak-coloring half of Problem~3.5 negatively for every $k \ge 2$.
+
+\section{Main Results}
+
+\begin{lemma}[Forest Lemma]\label{lem:forest}
+For every finite forest $F$, every orientation $D$ of $F$, and every $k \ge 1$, $\dcolp_k(D) = \wcolp_k(D) = 1$, and consequently $\dcolp_k(F) = \wcolp_k(F) = 1$.
+\end{lemma}
+
+\begin{proof}
+Since $F$ is acyclic, any orientation $D$ of $F$ contains no directed cycle. Every finite nonempty directed acyclic graph contains a source (a vertex of in-degree~$0$), so induction on $|V(F)|$ yields a topological ordering $\sigma$ of $V(D)$ satisfying $u <_\sigma v$ for every arc $u \to v$ of $D$. Along any directed path $y = w_0 \to w_1 \to \dots \to w_\ell = x$ of length $\ell \ge 1$, we have $y <_\sigma x$, contradicting $x \le_\sigma y$. Hence $W^{k, +}_{D, \sigma}(y) = S^{k, +}_{D, \sigma}(y) = \{y\}$ for all $y \in V(D)$, giving $\wcolp_k(D) = \dcolp_k(D) = 1$.
+\end{proof}
+
+\begin{lemma}[Subgraph Monotonicity]\label{lem:mono}
+If $H$ is a subgraph of $G$, then $\wcol_k(G) \ge \wcol_k(H)$ for every $k \ge 1$.
+\end{lemma}
+
+\begin{proof}
+Choose an orientation $D_H$ of $H$ attaining $\wcol_k(H)$ and extend it arbitrarily to an orientation $D$ of $G$. For any ordering $\sigma$ of $V(G)$ with restriction $\sigma_H$ to $V(H)$ and any $y \in V(H)$, every path witnessing $x \in W^{k, \pm}_{D_H, \sigma_H}(y)$ remains valid in $D$ under $\sigma$. Hence $\max_{y \in V(G)} |W^{k, +}_{D, \sigma}(y) \cup W^{k, -}_{D, \sigma}(y)| \ge \wcol_k(H)$ for all $\sigma$, so $\wcol_k(G) \ge \wcol_k(H)$.
+\end{proof}
+
+\begin{theorem}\label{thm:p4}
+For the $4$-vertex path $P_4 = abcd$ and every integer $k \ge 2$, $\wcol_k(P_4) = 3$ whereas $\wcolp_k(D) = 1$ for every orientation $D$ of $P_4$. In particular, for every $k \ge 2$:
+\begin{enumerate}
+  \item $\wcol_k(P_4) = 3 > 2 = 2\,\wcolp_k(P_4)$, disproving the factor-$2$ weak inequality of Problem~3.5;
+  \item no orientation $D$ of $P_4$ satisfies $\wcolp_k(D) = \lceil \wcol_k(P_4)/2 \rceil = 2$, disproving Problem~3.6;
+  \item by Lemmas~\ref{lem:forest} and~\ref{lem:mono}, every forest containing a $3$-edge path fails Problem~3.6.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Lemma~\ref{lem:forest} gives $\wcolp_k(D) = 1$ for every orientation $D$ of $P_4$. For $\wcol_k(P_4) \ge 3$ ($k \ge 2$), monotonicity in $k$ reduces to $k = 2$. Orient $P_4$ as the directed path $\vec{P}_4 : a \to b \to c \to d$. Every pair of vertices at distance at most~$2$ is joined by a directed path in one direction, so $x \in W(y) := W^{2,+}(y) \cup W^{2,-}(y)$ holds iff $x \le_\sigma y$, $\mathrm{dist}(x, y) \le 2$, and every vertex on the $x$--$y$ subpath is $\ge_\sigma x$. Fix any ordering $\sigma$ with minimum vertex $f$:
+\begin{itemize}
+  \item If $f = b$: when $c <_\sigma d$ we have $\{d, c, b\} \subseteq W(d)$; when $d <_\sigma c$ we have $\{c, b, d\} \subseteq W(c)$.
+  \item If $f = c$: symmetric to $f = b$ by reversing the path.
+  \item If $f = a$: let $g$ be the $\sigma$-minimum of $\{b, c, d\}$. If $g = b$ then $\{c, b, a\} \subseteq W(c)$; if $g = c$ then $\{b, a, c\} \subseteq W(b)$; if $g = d$ then $\{c, d, a\} \subseteq W(c)$.
+  \item If $f = d$: symmetric to $f = a$.
+\end{itemize}
+Thus $\wcol_k(P_4) \ge 3$. Conversely, for any orientation of $P_4$, the ordering $b < c < a < d$ gives $|W(b)| \le 1$, $|W(c)| \le 2$, $|W(a)| \le 3$, and $a \notin W(d)$ (every $d$--$a$ path visits $b <_\sigma a$), so $|W(d)| \le 3$ and $\wcol_k(P_4) = 3$.
+\end{proof}
+
+\begin{theorem}[Unbounded Separation]\label{thm:unbounded}
+For every integer $t \ge 1$, let $N = 2^t - 1$ and $k \ge N - 1$. Then $\wcol_k(P_N) \ge t$ while $\wcolp_k(P_N) = 1$. Consequently, there exists no function $g : \mathbb{N} \to \mathbb{N}$ such that $\wcol_k(G) \le g(\wcolp_k(G))$ holds for all finite graphs $G$ and all $k \ge 1$.
+\end{theorem}
+
+\begin{proof}
+Lemma~\ref{lem:forest} yields $\wcolp_k(P_N) = 1$. Orient $P_N$ as $0 \to 1 \to \dots \to N - 1$ and fix any linear ordering $\sigma$ of $\{0, \dots, N - 1\}$. Define intervals $Q_0 \supset Q_1 \supset \dots \supset Q_{t-1}$ recursively: set $Q_0 = [0, N - 1]$ (size $2^t - 1$). Given $Q_i = [\ell, r]$ of size at least $2^{t-i} - 1$ with $i + 1 < t$, let $m_i = \min_\sigma Q_i$ and let $Q_{i+1}$ be the larger of $[\ell, m_i - 1]$ and $[m_i + 1, r]$. Since their sizes sum to $|Q_i| - 1 \ge 2^{t-i} - 2$, we have $|Q_{i+1}| \ge 2^{t-i-1} - 1 \ge 1$.
+
+Set $y = m_{t-1} \in Q_{t-1}$. Because $m_i \notin Q_{i+1} \supseteq Q_j$ for all $j > i$, the vertices $m_0, \dots, m_{t-1}$ are pairwise distinct. For every $i < t - 1$, $y \in Q_{i+1} \subset Q_i$ implies $m_i <_\sigma y$, and the subpath between $y$ and $m_i$ lies wholly inside $Q_i$ (so all its vertices are $\ge_\sigma m_i$), is directed in one direction, and has length at most $N - 1 \le k$. Hence $\{m_0, \dots, m_{t-1}\} \subseteq W^{k,+}(y) \cup W^{k,-}(y)$, giving $\wcol_k(P_N) \ge t$. Any uniform bound $\wcol_k(G) \le g(\wcolp_k(G))$ would force $g(1) \ge t$ for all $t \ge 1$, a contradiction.
+\end{proof}
+
+\begin{proposition}[Sharpness at $k = 1$]
+For $k = 1$, Problem~3.6 has a positive answer for every finite graph $G$.
+\end{proposition}
+
+\begin{proof}
+By degeneracy duality, $\dcolp_1(D) = \wcolp_1(D) = 1 + \max_{S \subseteq V(G)} \delta^+(D[S])$. Reversing a single arc changes this invariant by at most~$1$, acyclic orientations achieve value~$1$, and extending a balanced Euler-tour orientation of a subgraph $H \subseteq G$ with $\delta(H) = \mathrm{col}(G) - 1$ yields an orientation $D^*$ with $\dcolp_1(D^*) \ge 1 + \lfloor (\mathrm{col}(G) - 1)/2 \rfloor = \lceil \mathrm{col}(G)/2 \rceil$. Since every orientation is connected to an acyclic one by single-arc reversals, discrete continuity supplies an orientation attaining $\lceil \mathrm{col}(G)/2 \rceil$ (and $\dcol_1 = \wcol_1 = \mathrm{col}$).
+\end{proof}
+
+\section{Formal Verification}
+
+The Lean~4 module \texttt{Conjectures.LiNesetrilYangWcol} formally verifies Lemma~\ref{lem:forest}, Lemma~\ref{lem:mono}, Theorem~\ref{thm:p4}, and Theorem~\ref{thm:unbounded} using only the standard Lean axioms (\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}), with no \texttt{sorry}, custom axioms, or \texttt{native\_decide}. The proof notes, Lean source, and standalone Python verifier are available at \url{https://github.com/s66lem/conjectures}.
+
+\begin{thebibliography}{9}
+\bibitem{LNY2026}
+W.~Li, J.~Ne\v{s}et\v{r}il, and D.~Yang, \emph{Generalized oriented chromatic numbers and directed generalized coloring numbers of graphs}, \texttt{arXiv:2611.33681v1}, November~25, 2026.
+\end{thebibliography}
+\end{document}
