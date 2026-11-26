@@ -1,0 +1,112 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\title{Exact Motzkin-Power Enumeration of Backgammon Parking Outcomes: Resolution of Clifton--Harris--Khaqan Question~5.2}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve Question~5.2 of Clifton, Harris, and Khaqan (\texttt{arXiv:2611.29890v1}) in the affirmative for every $k \ge 1$. Under the backgammon parking scheme, let
+\[
+  T(n, k) = \bigl|\mathcal{O}_B^{-1}\bigl(12\cdots k\, n(n-1)\cdots(k+1)\bigr)\bigr|
+\]
+count preference lists in $[n]^n$ whose final car arrangement fixes $1, \dots, k$ in order and reverses $k + 1, \dots, n$. Tracking the longest distinct prefix length $L(\alpha)$ via $P_\pi(y) = \sum_{\mathcal{O}_B(\alpha) = \pi} y^{L(\alpha)}$, we prove a general car-$1$ reduction $P_{1 \oplus \sigma} = \Phi(P_\sigma)$ valid for every outcome $\sigma \in S_{n-1}$, where $\Phi(y^j) = y + \dots + y^{j+1}$. Combined with a bijection for the fully decreasing outcome $\delta_n$, this yields the bivariate generating function $(1 - y(x + x^2 m(x)))^{-1}$ and the exact closed form
+\[
+  \sum_{n \ge k} T(n, k)\, x^n = x^k \sum_{i=0}^{k-1} B(k - 1, i)\, m(x)^{k + 1 - i},
+\]
+where $m(x)$ is the Motzkin generating function and $B(r, i) = \frac{r - i + 1}{r + 1}\binom{r + i}{i}$ is Catalan's triangle.
+\end{abstract}
+
+\section{Introduction}
+
+In~\cite{CHK2026}, Clifton, Harris, and Khaqan introduce the \emph{backgammon parking scheme}: cars $1, \dots, n$ arrive in order with preferences $\alpha = (a_1, \dots, a_n) \in [n]^n$; car $i$ parks in spot $a_i$, and if a car $j$ was already there, car $j$ moves to the leftmost unoccupied spot. Writing $\mathcal{O}_B(\alpha) = \pi \in S_n$ for the resulting car order across spots $1, \dots, n$, the authors enumerate $\mathcal{O}_B^{-1}(\pi_k(n))$ for $\pi_k(n) = 12\cdots k\, n(n-1)\cdots(k+1)$ only for $k = 0, 1, 2$ ($M_n$, $M_{n+1} - M_n$, and $M_{n+2} - 2M_{n+1} + M_n - M_{n-1}$), and ask~\cite[Question~5.2]{CHK2026} whether $T(n, k) := |\mathcal{O}_B^{-1}(\pi_k(n))|$ can be expressed as a sum involving Motzkin numbers for every fixed $k \in \mathbb{N}$. We answer this affirmatively with an explicit formula for all $n \ge k \ge 1$.
+
+Let $m(x) = \sum_{n \ge 0} M_n x^n$ be the Motzkin generating function ($m = 1 + xm + x^2 m^2$), and let $B(r, i) = \frac{r - i + 1}{r + 1}\binom{r + i}{i}$ ($0 \le i \le r$) be Catalan's triangle, given recursively by $B(0, 0) = 1$ and $B(r, i) = \sum_{t=0}^{\min(i, r - 1)} B(r - 1, t)$.
+
+\begin{theorem}\label{thm:main}
+For every integer $k \ge 1$,
+\[
+  \sum_{n \ge k} T(n, k)\, x^n = x^k \sum_{i=0}^{k-1} B(k - 1, i)\, m(x)^{k + 1 - i}.
+\]
+Equivalently, for all $n \ge k \ge 1$,
+\[
+  T(n, k) = \sum_{i=0}^{k-1} B(k - 1, i) \sum_{N_1 + \dots + N_{k + 1 - i} = n - k} M_{N_1} \cdots M_{N_{k + 1 - i}}.
+\]
+\end{theorem}
+
+\section{Prefix-Length Reductions and Proof of Theorem~\ref{thm:main}}
+
+Note two invariants of the backgammon scheme: \textbf{(F1)} once occupied, a spot never becomes free; \textbf{(F2)} any displaced car moves to the leftmost free spot. For $\alpha = (a_1, \dots, a_n)$, let $L(\alpha) = \max\{t \le n : a_1, \dots, a_t \text{ distinct}\}$, set $P_\pi(y) = \sum_{\alpha \in \mathcal{O}_B^{-1}(\pi)} y^{L(\alpha)}$ ($P_\emptyset = 1$), and define the $\mathbb{Q}$-linear operator $\Phi(y^j) = y + y^2 + \dots + y^{j + 1}$. Write $1 \oplus \sigma = (1, \sigma_1 + 1, \dots, \sigma_{n-1} + 1)$ for $\sigma \in S_{n-1}$.
+
+\begin{lemma}[General car-$1$ reduction]\label{lem:A}
+For every $n \ge 1$ and every $\sigma \in S_{n-1}$, $P_{1 \oplus \sigma}(y) = \Phi(P_\sigma(y))$.
+\end{lemma}
+
+\begin{proof}
+Partition $\mathcal{O}_B^{-1}(1 \oplus \sigma)$ by whether $a_1 = 1$ or $a_1 \ne 1$.
+
+If $a_1 = 1$, no subsequent car may choose spot~$1$ (else car~$1$ would be displaced and by~(F1) could never return to spot~$1$). Thus spot~$1$ stays fixed with car~$1$, the leftmost free spot always lies in $\{2, \dots, n\}$, and $\alpha' = (a_2 - 1, \dots, a_n - 1)$ ranges bijectively over $\mathcal{O}_B^{-1}(\sigma)$ with $L(\alpha) = 1 + L(\alpha')$, contributing $y P_\sigma(y)$.
+
+If $a_1 = p \in \{2, \dots, n\}$, car~$1$ must reach spot~$1$ via a bump. By~(F1) and~(F2), spot~$1$ remains empty (and hence the leftmost free spot) until that bump, so no earlier car chooses~$1$ and the very first bump of the entire process must displace car~$1$. If car $j \ge 2$ makes this first bump, then $a_2, \dots, a_{j-1}$ are pairwise distinct in $\{2, \dots, n\} \setminus \{p\}$, $a_j = p$ sends car~$1$ to spot~$1$, and thereafter no car chooses~$1$. Because car~$j$ replaces car~$1$ at spot~$p$ immediately as car~$1$ leaves $\{2, \dots, n\}$, $\alpha' = (a_2 - 1, \dots, a_n - 1)$ runs the backgammon process on $[n - 1]$ with outcome $\sigma$, its first $r = j - 1$ entries are distinct ($1 \le r \le L(\alpha')$), and $a_1 = a'_r + 1$. Conversely, every pair $(\alpha', r)$ with $\alpha' \in \mathcal{O}_B^{-1}(\sigma)$ and $1 \le r \le L(\alpha')$ determines a unique $\alpha$ with $L(\alpha) = r$, contributing $\sum_{\alpha'} \sum_{r=1}^{L(\alpha')} y^r$. Adding both cases yields $\Phi(P_\sigma(y))$.
+\end{proof}
+
+\begin{lemma}[Decreasing outcomes]\label{lem:B}
+For $\delta_n = n(n - 1)\cdots 1$ and $n \ge 2$, $P_{\delta_n}(y) = y P_{\delta_{n-1}}(y) + P_{1 \oplus \delta_{n-2}}(y)$.
+\end{lemma}
+
+\begin{proof}
+Car~$1$ ends in spot~$n$. If car~$1$ is never bumped, then $a_1 = n$, no later car chooses~$n$, and $\alpha' = (a_2, \dots, a_n) \in \mathcal{O}_B^{-1}(\delta_{n-1})$ with $L(\alpha) = 1 + L(\alpha')$, giving $y P_{\delta_{n-1}}(y)$. If car~$1$ is bumped, by~(F1) it enters spot~$n$ via a bump when spot~$n$ is the leftmost free spot, so spots $1, \dots, n - 1$ are full and the bump occurs at step~$n$. Car~$n$ takes car~$1$'s spot, which must be spot~$1$ since car~$n$ ends in spot~$1$. Thus $\alpha'' = (a_1, \dots, a_{n-1})$ avoids spot~$n$ and belongs bijectively to $\mathcal{O}_B^{-1}(1 \oplus \delta_{n-2})$, with $a_n = 1$ and $L(\alpha) = L(\alpha'')$ (if $L(\alpha'') = n - 1$, then $1$ already occurs in $\alpha''$).
+\end{proof}
+
+\begin{proposition}\label{prop:base}
+With $p(x) = x + x^2 m(x)$ (so $m = 1/(1 - p)$), we have $A_0(x, y) := \sum_{n \ge 0} P_{\delta_n}(y) x^n = (1 - y p(x))^{-1}$.
+\end{proposition}
+
+\begin{proof}
+Lemmas~\ref{lem:A} and~\ref{lem:B} give $P_{\delta_n} = y P_{\delta_{n-1}} + \Phi(P_{\delta_{n-2}})$ for $n \ge 2$ with $P_{\delta_0} = 1$, $P_{\delta_1} = y$, which uniquely characterizes $A_0$ as the formal solution to $F = 1 + xy F + x^2 \Phi(F)$. Applying $\Phi$ termwise to $F = \sum_{j \ge 0} p^j y^j$ gives
+\[
+  \Phi(F) = \sum_{j \ge 0} p^j \left(y^{j+1} + \sum_{r=1}^{j} y^r\right) = \frac{y}{1 - yp} + \frac{yp}{(1 - yp)(1 - p)} = \frac{ym}{1 - yp},
+\]
+and $1 + xy F + x^2 \Phi(F) = 1 + y(x + x^2 m) F = 1 + yp F = F$.
+\end{proof}
+
+\begin{lemma}\label{lem:C}
+Let $c(k, j) = \Phi^k(y^j)|_{y=1}$ and $G_k(p) = \sum_{j \ge 0} c(k, j) p^j$. For every $k \ge 1$,
+\[
+  G_k(p) = \sum_{i=0}^{k-1} B(k - 1, i)\, m^{k + 1 - i}, \qquad m = \frac{1}{1 - p}.
+\]
+\end{lemma}
+
+\begin{proof}
+Since $c(0, j) = 1$ and $c(k, j) = \sum_{r=1}^{j+1} c(k - 1, r)$, summing over $j \ge 0$ gives $G_k(p) = \frac{m}{p}(G_{k-1}(p) - c(k - 1, 0))$. For $k = 1$, $G_0 = m$ gives $G_1 = \frac{m}{p}(m - 1) = m^2$. For $k \ge 2$, write $G_{k-1} = Q(m) := \sum_{i=0}^{k-2} B(k - 2, i) m^{k - i}$ by induction. Since $c(k - 1, 0) = G_{k-1}(0) = Q(1)$ and $m^{k - i} - 1 = (m - 1)\sum_{s=0}^{k - 1 - i} m^s = pm \sum_{s=0}^{k - 1 - i} m^s$, we obtain
+\[
+  G_k(p) = \frac{m}{p}\bigl(Q(m) - Q(1)\bigr) = m^2 \sum_{j=0}^{k-1} \left(\sum_{t=0}^{\min(j, k - 2)} B(k - 2, t)\right) m^{k - 1 - j} = \sum_{j=0}^{k-1} B(k - 1, j)\, m^{k + 1 - j}. \qedhere
+\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Since $\pi_k(n) = 1 \oplus \pi_{k-1}(n - 1)$ for $n \ge k \ge 1$, Lemma~\ref{lem:A} gives $A_k(x, y) := \sum_{n \ge k} P_{\pi_k(n)}(y) x^n = x \Phi(A_{k-1}(x, y)) = x^k \Phi^k(A_0(x, y))$. Setting $y = 1$ and applying Proposition~\ref{prop:base} and Lemma~\ref{lem:C} yields
+\[
+  \sum_{n \ge k} T(n, k)\, x^n = A_k(x, 1) = x^k G_k(p(x)) = x^k \sum_{i=0}^{k-1} B(k - 1, i)\, m(x)^{k + 1 - i}. \qedhere
+\]
+\end{proof}
+
+Using $x^2 m^2 = (1 - x)m - 1$, Theorem~\ref{thm:main} reduces $T(n, k)$ to a signed linear combination of $M_{n + k}, \dots, M_{n - k + 1}$ for every fixed $k$ (e.g., $T(n, 3) = M_{n+3} - 3M_{n+2} + 3M_{n+1} - 3M_n + 2M_{n-1} - 2M_{n-2}$ for $n \ge 3$). Theorem~\ref{thm:main} and all intermediate lemmas are formally verified in Lean~4 (\texttt{CliftonHarrisKhaqanBackgammon.lean}) without \texttt{sorry} or non-standard axioms.
+
+\begin{thebibliography}{9}
+\bibitem{CHK2026}
+A.~Clifton, P.~E.~Harris, and M.~Khaqan,
+\emph{Parking functions inspired by board games},
+\texttt{arXiv:2611.29890v1}, November~23, 2026.
+\end{thebibliography}
+
+\end{document}

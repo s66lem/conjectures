@@ -37,3 +37,6 @@ import Conjectures.ZamanA395348
 import Conjectures.PalaciosHittingTimeTrees
 import Conjectures.LiNesetrilYangWcol
 import Conjectures.SchulteA397048
+import Conjectures.CliftonHarrisKhaqanBackgammon
+import Conjectures.MannaMandalPrimeIndexGraph
+import Conjectures.TalmageListReversal

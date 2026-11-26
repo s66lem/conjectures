@@ -1,0 +1,94 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+
+\title{Counterexamples to Monotonicity in Mu\~{n}iz's List Reversal Game}
+\author{Salem Levinstein}
+\date{November 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We disprove the monotonicity conjecture of Talmage (\texttt{arXiv:2611.25115v1}, Discussion) for Mu\~{n}iz's list reversal game in both possible readings. Replacing the maximum entry $n$ of a list with $n + 1$ preserves neither irreversibility nor reversibility: $(2, 6)$ is irreversible (its entire reachable component has $7$ states and omits $(6, 2)$) while $(2, 7)$ reverses in $4$ moves; conversely, $(1, 3, 7, 4)$ reverses in $18$ moves while $(1, 3, 8, 4)$ is irreversible (its entire reachable component has $5$ states and omits $(4, 8, 3, 1)$).
+\end{abstract}
+
+\section{Introduction}
+
+In Mu\~{n}iz's list reversal game, as formalized by Talmage~\cite{Talmage2026}, a state is a finite sequence of pairwise distinct positive integers with maximum entry at most a fixed bound $n$ (set to the maximum of the initial list). A single move either replaces two adjacent entries by their sum or replaces one entry by two adjacent positive integers with the same sum, provided all entries remain pairwise distinct and at most $n$. A list $L$ is \emph{reversible} if a finite sequence of moves transforms $L$ into its reverse $L^{\mathrm{rev}}$.
+
+In the Discussion section of~\cite{Talmage2026}, Talmage states the following open conjecture:
+\begin{quote}
+\emph{``The irreversible lists found by computer search in [Appendix~A] suggest a conjecture that reversibility is monotonic in $n$, in the sense that replacing the maximum value $n$ in an irreversible list with $n+1$ (leaving the rest of the list unchanged) must yield an irreversible list. No counterexamples to the conjecture are presently known, but it is not clear if that is an artifact of only having data on short lists.''}
+\end{quote}
+Denote by $\mathrm{bump}(L)$ the list obtained from $L$ by replacing its maximum entry $n$ with $n + 1$. We show that reversibility is not monotonic in $n$ in either direction.
+
+\section{Main Result and Proofs}
+
+\begin{theorem}\label{thm:main}
+Under Mu\~{n}iz's list reversal rules:
+\begin{enumerate}
+  \item $(2, 6)$ is irreversible, whereas $\mathrm{bump}(2, 6) = (2, 7)$ is reversible.
+  \item $(1, 3, 7, 4)$ is reversible, whereas $\mathrm{bump}(1, 3, 7, 4) = (1, 3, 8, 4)$ is irreversible.
+\end{enumerate}
+\end{theorem}
+
+Note that part~(1) disproves the conjecture as stated (which also conflicts with the paper's Corollary that each length admits only finitely many irreversible lists), while part~(2) disproves the converse reading (``reversible lists remain reversible when the maximum is increased by~$1$'').
+
+\begin{proof}
+\emph{(1a) Irreversibility of $(2, 6)$ ($n = 6$).} Let
+\[
+  S_{2, 6} = \bigl\{(2, 6),\; (2, 1, 5),\; (2, 5, 1),\; (3, 5),\; (1, 2, 5),\; (3, 1, 4),\; (3, 4, 1)\bigr\}.
+\]
+Every state in $S_{2, 6}$ has sum $8$, and the complete set of legal moves from each state under upper bound $6$ is:
+\begin{itemize}
+  \item $(2, 6)$: $2 + 6 = 8 > 6$; $2 = 1 + 1$ repeats; $6 = 2 + 4, 3 + 3$ collide or repeat; only $6 \to (1, 5), (5, 1)$, giving $(2, 1, 5)$ and $(2, 5, 1)$.
+  \item $(2, 1, 5)$: $2 + 1 = 3 \to (3, 5)$ and $1 + 5 = 6 \to (2, 6)$; no legal split ($5 = 1 + 4, 2 + 3$ collide with $1, 2$).
+  \item $(2, 5, 1)$: only $5 + 1 = 6 \to (2, 6)$; no legal split.
+  \item $(3, 5)$: $3 + 5 = 8 > 6$; $3 \to (1, 2), (2, 1)$ and $5 \to (1, 4), (4, 1)$ ($5 = 2 + 3$ collides with $3$), giving $(1, 2, 5), (2, 1, 5), (3, 1, 4), (3, 4, 1)$.
+  \item $(1, 2, 5)$: only $1 + 2 = 3 \to (3, 5)$; no legal split.
+  \item $(3, 1, 4)$ and $(3, 4, 1)$: only $1 + 4 = 5 \to (3, 5)$ ($3 + 1 = 4$ collides; $3 + 4 = 7 > 6$); no legal split ($3 = 1 + 2$, $4 = 1 + 3, 2 + 2$ collide or repeat).
+\end{itemize}
+Hence $S_{2, 6}$ is closed under all legal moves. Since $(6, 2) \notin S_{2, 6}$, the list $(2, 6)$ is irreversible.
+
+\emph{(1b) Reversibility of $(2, 7)$ ($n = 7$).} Four legal moves suffice:
+\[
+  (2, 7) \to (2, 1, 6) \to (3, 6) \to (3, 4, 2) \to (7, 2).
+\]
+
+\emph{(2a) Reversibility of $(1, 3, 7, 4)$ ($n = 7$).} Eighteen legal moves suffice:
+\begin{align*}
+  (1, 3, 7, 4) &\to (1, 3, 5, 2, 4) \to (1, 3, 5, 6) \to (4, 5, 6) \to (3, 1, 5, 6) \to (3, 1, 5, 2, 4) \\
+  &\to (3, 6, 2, 4) \to (3, 5, 1, 2, 4) \to (3, 5, 1, 6) \to (3, 5, 7) \to (1, 2, 5, 7) \\
+  &\to (1, 2, 5, 3, 4) \to (1, 7, 3, 4) \to (1, 5, 2, 3, 4) \to (6, 2, 3, 4) \to (6, 5, 4) \\
+  &\to (6, 5, 3, 1) \to (4, 2, 5, 3, 1) \to (4, 7, 3, 1).
+\end{align*}
+
+\emph{(2b) Irreversibility of $(1, 3, 8, 4)$ ($n = 8$).} Let
+\[
+  S_{1, 3, 8, 4} = \bigl\{(1, 3, 8, 4),\; (1, 3, 2, 6, 4),\; (1, 3, 6, 2, 4),\; (1, 5, 6, 4),\; (1, 2, 3, 6, 4)\bigr\}.
+\]
+Under upper bound $8$, the legal moves from each state are:
+\begin{itemize}
+  \item $(1, 3, 8, 4)$: $1 + 3 = 4$ collides and $3 + 8, 8 + 4 > 8$; $3 = 1 + 2$ and $4 = 1 + 3, 2 + 2$ collide or repeat; for $8$, only $2 + 6$ and $6 + 2$ avoid $\{1, 3, 4\}$ and repetition, giving $(1, 3, 2, 6, 4)$ and $(1, 3, 6, 2, 4)$.
+  \item $(1, 3, 2, 6, 4)$: $3 + 2 = 5 \to (1, 5, 6, 4)$ and $2 + 6 = 8 \to (1, 3, 8, 4)$ ($1 + 3 = 4$ collides; $6 + 4 > 8$); no legal split (every split of $2, 3, 4, 6$ repeats or hits $\{1, 2, 3, 4\}$).
+  \item $(1, 3, 6, 2, 4)$: only $6 + 2 = 8 \to (1, 3, 8, 4)$ ($1 + 3 = 4, 2 + 4 = 6$ collide; $3 + 6 > 8$); no legal split.
+  \item $(1, 5, 6, 4)$: no legal combine ($1 + 5 = 6$ collides; $5 + 6, 6 + 4 > 8$); only $5 \to (2, 3), (3, 2)$ avoid $\{1, 4, 6\}$, giving $(1, 2, 3, 6, 4)$ and $(1, 3, 2, 6, 4)$.
+  \item $(1, 2, 3, 6, 4)$: only $2 + 3 = 5 \to (1, 5, 6, 4)$ ($1 + 2 = 3$ collides; $3 + 6, 6 + 4 > 8$); no legal split.
+\end{itemize}
+Thus $S_{1, 3, 8, 4}$ is closed under all legal moves. Since $(4, 8, 3, 1) \notin S_{1, 3, 8, 4}$, the list $(1, 3, 8, 4)$ is irreversible.
+\end{proof}
+
+\noindent\textbf{Formal verification.} Theorem~\ref{thm:main} is verified in Lean~4 (\texttt{TalmageListReversal.lean}), proving completeness of the move enumerator against the inductive single-step relation, closure of both finite reachable components, and validity of both reversal sequences without \texttt{sorry} or non-standard axioms.
+
+\begin{thebibliography}{9}
+\bibitem{Talmage2026}
+A.~Talmage,
+\emph{A density bound for Mu\~{n}iz's list reversal},
+Preprint \texttt{arXiv:2611.25115v1} [math.CO], 18~November 2026.
+\end{thebibliography}
+
+\end{document}

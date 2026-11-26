@@ -49,6 +49,9 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **37.** [Palacios–Tamura–Wiberg–Petojević Tree Hitting-Time Index Conjecture (`arXiv:2611.34295v1`, §3)](results/palacios-hitting-time-trees/) | Proved for all $n \ge 1$ ($HT(T) \le HT(P_n)$ with equality iff $T \cong P_n$, via first-step Markov uniqueness & strict pendant-path grafting monotonicity) | [DOI](https://doi.org/10.5281/zenodo.24560498) | **Lean 4** · Cross-Model Audit · Python |
 | **38.** [Li–Nešetřil–Yang Problems 3.5 & 3.6 (`arXiv:2611.33681v1`, directed weak coloring numbers)](results/li-nesetril-yang-wcol/) | Disproved for all $k \ge 2$ ($\overrightarrow{\mathrm{wcol}}_k(P_4) = 3 > 2\,\overrightarrow{\mathrm{wcol}}^+_k(P_4) = 2$ & unbounded separation $\overrightarrow{\mathrm{wcol}}_k(P_{2^t - 1}) \ge t$ vs $\overrightarrow{\mathrm{wcol}}^+_k = 1$; sharp at $k = 1$) | [DOI](https://doi.org/10.5281/zenodo.24560441) | **Lean 4** · Cross-Model Audit · Python |
 | **39.** [Werner Schulte's OEIS A397048 conjectures (shifted falling-factorial connection coefficients)](results/schulte-a397048/) | All three conjectures proved + general base-point $c$ Stirling shift identity ($T_c(n, k) = \sum_{m=0}^{c} s(c, m)\,S(n + m, c + k)$, row sums $= \mathrm{A134980}(n)$, falling-factorial evaluation $(n + k)^n$ for all $k \ge 0$) | [DOI](https://doi.org/10.5281/zenodo.24562734) | **Lean 4** · Cross-Model Audit · Python |
+| **40.** [Clifton–Harris–Khaqan Question 5.2 (`arXiv:2611.29890v1`, backgammon parking Motzkin enumeration)](results/clifton-harris-khaqan-backgammon/) | Proved affirmatively for all $n \ge k \ge 1$ ($\sum_{n \ge k} T(n, k)x^n = x^k \sum_{i=0}^{k-1} B(k-1, i)\,m(x)^{k+1-i}$, general car-$1$ prefix-length reduction $P_{1 \oplus \sigma} = \Phi(P_\sigma)$) | [DOI](https://doi.org/10.5281/zenodo.24564921) | **Lean 4** · Cross-Model Audit · Python |
+| **41.** [Manna–Mandal Problem 7.10, Q2 (`arXiv:2611.27642v1`, prime index elements graph `(H1) ⇏ (H2)`)](results/manna-mandal-prime-index-graph/) | Disproved via explicit irregular $3$-group $|P| = 243$ ($K = P \times \mathbb{Z}_5$: $N_3(P) = 4 \le 10$, $N_5(\mathbb{Z}_5) = 1 \le 486$, yet $c_P(\langle u \rangle) = 30 > 19$; direct $20$-vertex cut into $31$ branches in $\Gamma(P \times \mathbb{Z}_{10})$) | [DOI](https://doi.org/10.5281/zenodo.24565009) | **Lean 4** · Cross-Model Audit · Python |
+| **42.** [Alan Talmage's Monotonicity Conjecture (`arXiv:2611.25115v1`, Muñiz's list reversal game)](results/talmage-list-reversal-monotonicity/) | Disproved in both directions ($(2, 6)$ irreversible via $7$-state closed component vs $(2, 7)$ reversible in $4$ moves; $(1, 3, 7, 4)$ reversible in $18$ moves vs $(1, 3, 8, 4)$ irreversible via $5$-state closed component) | [DOI](https://doi.org/10.5281/zenodo.24565022) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -94,6 +97,9 @@ python3 results/zaman-a395348/verify.py
 python3 results/palacios-hitting-time-trees/verify.py
 python3 results/li-nesetril-yang-wcol/verify.py
 python3 results/schulte-a397048/verify.py
+python3 results/clifton-harris-khaqan-backgammon/verify.py
+python3 results/manna-mandal-prime-index-graph/verify.py
+python3 results/talmage-list-reversal-monotonicity/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
