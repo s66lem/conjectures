@@ -1,0 +1,210 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\title{Extremal Heap-Type Permutation Generation for Every Odd $n$}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We answer in the affirmative an open question of Lu\'is M. S. Russo
+(\texttt{arXiv:2611.22780v1}, Section~10, item~2) by proving that for every
+odd integer $n \ge 3$, there exists a Heap-type single-swap enumeration of all
+$n!$ permutations starting at $(1,2,\dots,n)$ and terminating at the
+lexicographically largest odd permutation $a^*_n$. Only level $n-1$ departs
+from Russo's cyclic schedule (using an explicit zigzag parking order), and both
+the level-$(n-1)$ and top-level parking orders are given in closed form. The
+entire construction and its end-to-end equivalence to the recursive swap
+algorithm are formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+A \emph{Heap-type} permutation generator of order $n$ is specified by swap
+schedules $s_k : \{1,\dots,k-1\} \to \{1,\dots,k-1\}$ for levels $2 \le k \le n$:
+the procedure $\mathrm{Heap}(k)$ invokes $\mathrm{Heap}(k-1)$, then for
+$m = 1,\dots,k-1$ swaps positions $s_k(m)$ and $k$ and invokes $\mathrm{Heap}(k-1)$
+again. Starting from the identity array $(1,2,\dots,n)$, any valid Heap-type
+generator visits all $n!$ permutations once, advancing by a single transposition
+at each step. Because $n! - 1$ is odd for $n \ge 2$, the final arrangement must
+be an odd permutation, so it is lexicographically bounded above by the largest
+odd permutation $a^*_n$:
+\[
+a^*_n = \begin{cases}
+(n,\, n-1,\, \dots,\, 2,\, 1) & \text{if } n \equiv 2,3 \pmod 4, \\
+(n,\, n-1,\, \dots,\, 3,\, 1,\, 2) & \text{if } n \equiv 0,1 \pmod 4.
+\end{cases}
+\]
+
+In~\cite{Russo2026}, Russo constructed a Heap-type generator reaching $a^*_n$ for
+every $n \equiv 0 \pmod 4$ and showed that keeping levels $2,\dots,n-1$ cyclic
+fails for odd $7 \le n \le 31$, leaving open (Section~10, item~2; Section~7
+remark):
+\begin{quote}
+\emph{``We found no closed formula for the parking order at the top level and no
+variant for odd $n \ge 7$ with the cyclic variant below it; whether other lower
+levels make the largest attainable arrangement reachable for odd $n$ is open.''}
+\end{quote}
+Here we settle this question completely for every odd $n \ge 3$.
+
+\begin{theorem}\label{thm:main}
+For every odd integer $n \ge 3$, there exists a valid Heap-type swap schedule on
+$\{1,\dots,n\}$ that starts at $(1,2,\dots,n)$, visits every permutation in
+$S_n$ exactly once with one transposition per step, and terminates at $a^*_n$.
+Both the level-$(n-1)$ and level-$n$ parking orders admit explicit closed forms.
+\end{theorem}
+
+Combined with Russo's construction for $n \equiv 0 \pmod 4$ and independent work
+for $n \equiv 2 \pmod 4$, Theorem~\ref{thm:main} implies that the lexicographic
+upper bound $a^*_n$ is attained by a Heap-type enumeration for every $n \ge 2$.
+
+\section{Level Lifting via Parking Orders}
+
+We adopt Russo's state convention: permutations compose right to left, an array
+$a$ corresponds to the inverse state $g = a^{-1}$, and swapping positions $i$
+and $j$ of $a$ multiplies $g$ on the left by $(i\;j)$.
+
+\begin{lemma}[Level lifting]\label{lem:lift}
+Suppose levels $1,\dots,k-1$ form a valid Heap-type enumeration of $S_{k-1}$
+with net state $C \in S_{k-1}$ (fixing all positions $\ge k$). For any ordering
+$(e_0, e_1, \dots, e_{k-1})$ of $\{1,\dots,k\}$ with $e_0 = k$, there exists a
+level-$k$ swap schedule $s_k : \{1,\dots,k-1\} \to \{1,\dots,k-1\}$ such that
+$\mathrm{Heap}(k)$ is valid and has net state
+\[
+\pi_k = C^k (k\; e_1\; e_2\; \cdots\; e_{k-1}).
+\]
+\end{lemma}
+
+\begin{proof}
+Define block-initial states inductively by $g_0 = \mathrm{id}$ and, for
+$0 \le m < k-1$, set $h_m = C g_m$, $s_k(m+1) = h_m(e_{m+1})$, and
+$g_{m+1} = (s_k(m+1)\;k)\,h_m$. By induction on $m$, $g_m(e_m) = k$, whence
+$h_m(e_m) = C(k) = k$. Since $e_{m+1} \neq e_m$ and $h_m \in S_k$, we have
+$s_k(m+1) \in \{1,\dots,k-1\}$, so every swap is in range. Conjugating by $h_m$
+gives
+\[
+g_{m+1} = (h_m(e_{m+1})\; h_m(e_m))\, h_m = h_m (e_{m+1}\;e_m) = C g_m (e_{m+1}\;e_m),
+\]
+and therefore $g_m = C^m (e_1\;e_0)(e_2\;e_1)\cdots(e_m\;e_{m-1})$. Every state
+$p g_m$ visited during block $m$ satisfies $(p g_m)^{-1}(k) = g_m^{-1}(k) = e_m$.
+Because $e_0,\dots,e_{k-1}$ are pairwise distinct, the $k$ blocks are disjoint
+cosets of $S_{k-1}$, so $\mathrm{Heap}(k)$ visits all $k!$ permutations once.
+Finally, its net state is
+\[
+\pi_k = C g_{k-1} = C^k (e_1\;e_0)(e_2\;e_1)\cdots(e_{k-1}\;e_{k-2})
+= C^k (k\; e_1\; e_2\; \cdots\; e_{k-1}). \qedhere
+\]
+\end{proof}
+
+\begin{lemma}[Cyclic lower levels]\label{lem:cyclic}
+For every $k \ge 2$, there is a valid Heap-type schedule through level $k$ whose
+net state is the $k$-cycle $(k\;1\;2\;\cdots\;k-1)$ when $k$ is even and the
+transposition $(1\;k)$ when $k$ is odd.
+\end{lemma}
+
+\begin{proof}
+Induct on $k$. For $k=2$, $C = \mathrm{id}$ and $e_1 = 1$ give net $(2\;1)$.
+For even $k \ge 4$, the previous odd net $C = (1\;k-1)$ satisfies $C^k = \mathrm{id}$,
+so Lemma~\ref{lem:lift} with $(e_1,\dots,e_{k-1}) = (1,2,\dots,k-1)$ gives
+$(k\;1\;2\;\cdots\;k-1)$. For odd $k \ge 3$, the previous even net
+$C = (k-1\;1\;2\;\cdots\;k-2)$ has order $k-1$, so $C^k = C$; applying
+Lemma~\ref{lem:lift} with descending order $(e_1,\dots,e_{k-1}) = (k-1,k-2,\dots,1)$
+gives $C (k\;k-1\;\cdots\;1) = (1\;k)$.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+For $n = 3$, Lemma~\ref{lem:cyclic} yields a valid Heap-type schedule with net
+$(1\;3)$, whose inverse array is $(3,2,1) = a^*_3$.
+
+Now assume $n \ge 5$ is odd, and set $h = (n - 3)/2 \ge 1$.
+\begin{enumerate}
+\item \textbf{Levels $2,\dots,n-2$.} Apply Lemma~\ref{lem:cyclic} through the odd
+level $n - 2$, obtaining net $C = (1\;n-2)$.
+
+\item \textbf{Level $n - 1$ (zigzag parking order).} Because $C = (1\;n-2)$ has
+order $2$ and $n - 1$ is even, $C^{n-1} = \mathrm{id}$. Apply
+Lemma~\ref{lem:lift} at level $n - 1$ with the zigzag parking order
+\[
+E' = (1,\; n-2,\; 2,\; n-3,\; \dots,\; h,\; h+2,\; h+1).
+\]
+Its net is the $(n - 1)$-cycle $Z' = (n - 1\; e'_1\;\cdots\; e'_{n-2})$, given
+explicitly by
+\[
+Z'(x) = \begin{cases}
+n - 1 - x & 1 \le x \le h, \\
+n - 1 & x = h + 1, \\
+n - x & h + 2 \le x \le n - 1, \\
+n & x = n,
+\end{cases}
+\qquad
+(Z')^{-1}(y) = \begin{cases}
+n - y & 1 \le y \le h + 1, \\
+n - 1 - y & h + 2 \le y \le n - 2, \\
+h + 1 & y = n - 1, \\
+n & y = n.
+\end{cases}
+\]
+Since $Z'$ is an $(n - 1)$-cycle, $(Z')^{n-1} = \mathrm{id}$ and hence $(Z')^n = Z'$.
+
+\item \textbf{Level $n$ (three-phase top order).} The target state is
+$T = (a^*_n)^{-1}$, which satisfies $T(v) = n + 1 - v$ for $3 \le v \le n$,
+$(T(1), T(2)) = (n, n - 1)$ if $n \equiv 3 \pmod 4$, and
+$(T(1), T(2)) = (n - 1, n)$ if $n \equiv 1 \pmod 4$. Set $Z = (Z')^{-1} T$.
+Evaluating $(Z')^{-1}(T(v))$ directly yields:
+\begin{itemize}
+\item $Z(v) = v - 2$ for $3 \le v \le h + 2$ (as $T(v) \in [h + 2, n - 2]$);
+\item $Z(v) = v - 1$ for $h + 3 \le v \le n$ (as $T(v) \in [1, h + 1]$);
+\item $(Z(1), Z(2)) = (n, h + 1)$ if $n \equiv 3 \pmod 4$, and
+$(Z(1), Z(2)) = (h + 1, n)$ if $n \equiv 1 \pmod 4$.
+\end{itemize}
+\end{enumerate}
+
+We verify that $Z$ is a single $n$-cycle by following the orbit of $n$:
+\begin{itemize}
+\item \emph{Phase~1:} $n \mapsto n - 1 \mapsto \dots \mapsto h + 2$ (decreasing by $1$).
+\item \emph{Phase~2:} from $h + 2 = (n + 1)/2$, decreasing by $2$ traverses every
+integer in $[1, h + 2]$ of the same parity as $h + 2$, reaching $r \in \{1, 2\}$
+with $r \equiv h + 2 \pmod 2$. If $n \equiv 3 \pmod 4$ then $h + 2$ is even,
+$r = 2$, and $Z(2) = h + 1$; if $n \equiv 1 \pmod 4$ then $h + 2$ is odd,
+$r = 1$, and $Z(1) = h + 1$.
+\item \emph{Phase~3:} from $h + 1 = (n - 1)/2$ (the opposite parity), decreasing
+by $2$ traverses every integer in $[1, h + 1]$ of the parity of $h + 1$, reaching
+$3 - r \in \{1, 2\}$, where $Z(3 - r) = n$.
+\end{itemize}
+The three phases cover $[h + 2, n]$ and both parity classes of $[1, h + 1]$
+disjointly, so $Z$ is an $n$-cycle with explicit top-level parking order
+\[
+E = (n - 1,\, n - 2,\, \dots,\, h + 2,\; h,\, h - 2,\, \dots,\, r,\; h + 1,\, h - 1,\, \dots,\, 3 - r).
+\]
+Applying Lemma~\ref{lem:lift} at level $n$ with order $E$ produces a valid
+Heap-type schedule with net $\pi_n = (Z')^n Z = Z' (Z')^{-1} T = T$, hence final
+array $T^{-1} = a^*_n$. \qed
+
+\section{Formal and Computational Verification}
+
+The entire proof---including the recursive definition of Heap-type enumerations,
+Lemmas~\ref{lem:lift} and~\ref{lem:cyclic}, the sign and lexicographic
+maximality of $a^*_n$, and Theorem~\ref{thm:main}---is formally verified in
+Lean~4 (\texttt{Conjectures/RussoHeapOddExtremal.lean}, theorem
+\texttt{russo\_open\_question\_item2}) with zero \texttt{sorry} and standard
+axioms only. An independent Python script (\texttt{verify.py}) directly
+simulates the recursion for $n \in \{3, 5, 7, 9\}$ and verifies all closed-form
+identities for every odd $5 \le n \le 1201$.
+
+\begin{thebibliography}{9}
+\bibitem{Russo2026}
+L.~M.~S. Russo,
+\emph{Heap-type permutation generation with a prescribed final arrangement},
+arXiv:2611.22780v1, November 2026.
+\end{thebibliography}
+
+\end{document}
