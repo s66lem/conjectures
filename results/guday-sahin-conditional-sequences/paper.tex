@@ -1,0 +1,152 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\title{Disproof and Exact Correction of the G\"uday--\c{S}ahin Conditional-Sequence Conjectures}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve Open Problem~1, Conjecture~1, and Conjecture~2 of E.~G\"uday and M.~\c{S}ahin (\emph{INTEGERS} \textbf{26}, 2026, \#A5) on the $r$-decimated linear recurrences satisfied by general conditional sequences $q_n = \sum_{j=1}^{m} a_{n \bmod r,\, j}\, q_{n-j}$. Using a block-companion and monodromy-matrix determinant expansion, we prove an exact signed bijection formula for the decimated recurrence coefficients $c_s$ valid for all $r, m \ge 1$, settling Open Problem~1. We show that Conjecture~1 holds for $r \le 3$ (with the proved signs) and is false for every $r \ge 4$: at the minimal case $r = 4, m = 5$, the conjectured support for $A_4$ contains $17$ monomials whereas the true coefficient $c_1$ has $15$, and an explicit integer instance rules out every choice of $\pm 1$ signs over $\mathbb{R}$ and every eventual cutoff $N$. Finally, we prove that Conjecture~2 holds for $m \le 5$ and fails for every $m \ge 6$ (smallest counterexample $m = 6, d = 9$, where $|\mathcal{A}_9| = 25 \ne 22 = 37 - 30/2$), and establish the exact corrected formula $2|\mathcal{A}_d| = 2 w_{3,m}(d) - w^{\bmod 3}_{3,m}(d)$ for all $m \ge 1$ and $3 \mid d$. All refutations, threshold characterizations, and corrected counting formulas are machine-verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+For positive integers $r, m$ with $m > r$, G\"uday and \c{S}ahin~\cite{GudaySahin2026} consider the general conditional sequence $\{q_n\}_{n \ge 0}$ defined over $\mathbb{R}$ by
+\begin{equation}\label{eq:cond}
+q_n = \sum_{j=1}^{m} a_{i, j}\, q_{n-j} \qquad (n \equiv i \pmod{r},\; n \ge m),
+\end{equation}
+with convention $a_{i,0} = -1$. In~\cite[pp.~15--18]{GudaySahin2026}, they pose three open questions:
+\begin{itemize}
+\item \textbf{Open Problem~1 (p.~15):} Determine the signs of the coefficients in the $3$-decimated recurrence (Relation~(12)).
+\item \textbf{Conjecture~1 (p.~16):} For all $m > r$, $\{q_n\}$ satisfies $q_n = \sum_{s=1}^{m} A_{sr} q_{n-sr}$, where $A_d$ is a $\pm 1$-signed sum over all tuples $d = (d_0, \dots, d_{r-1}) \in \{0, \dots, m\}^r$ with $\sum_{k=0}^{r-1} d_k = d$ satisfying the residue condition
+\begin{equation}\label{eq:R}
+d_k \not\equiv k + d_0 \pmod{r} \qquad \text{for all } 1 \le k \le r - 1.
+\end{equation}
+\item \textbf{Conjecture~2 (p.~18):} For $r = 3$ and $d \in \{0, 3, \dots, 3m\}$, let $\mathcal{A}_d$ be the set of monomials $a_{0,d_0} a_{1,d_1} a_{2,d_2}$ indexed by tuples $(d_0, d_1, d_2) \in \{0, \dots, m\}^3$ of sum $d$ satisfying~\eqref{eq:R}. Then $|\mathcal{A}_d| = w_{3,m}(d) - \tfrac{1}{2} w^*_{3,m}(d)$, where $w_{3,m}(d)$ counts all compositions of $d$ into $3$ parts in $\{0, \dots, m\}$ and $w^*_{3,m}(d)$ counts those with pairwise distinct parts.
+\end{itemize}
+
+\section{Exact Decimated Recurrence and Open Problem~1}
+
+For any tuple $d = (d_0, \dots, d_{r-1}) \in \{0, \dots, m\}^r$, define $\sigma_d : \mathbb{Z}_r \to \mathbb{Z}_r$ by $\sigma_d(i) = (i - d_i) \bmod r$ and set $\mathrm{nz}(d) = \#\{i : d_i > 0\}$.
+
+\begin{theorem}[Exact decimated recurrence and Open Problem~1]\label{thm:exact}
+Let $R = \mathbb{Z}[a_{i,j}]$ and set $a_{i,0} = -1$. For all $r, m \ge 1$ and all $n \ge mr + m - 1$, the sequence~\eqref{eq:cond} satisfies $q_n = \sum_{s=1}^{m} c_s\, q_{n-sr}$, where
+\[
+c_s = \sum_{\substack{d \in \{0,\dots,m\}^r \\ \sum d_i = sr,\; \sigma_d \text{ bijective}}}
+\mathrm{sgn}(\sigma_d)\, (-1)^{\mathrm{nz}(d)+1} \prod_{d_i > 0} a_{i, d_i}.
+\]
+Distinct tuples produce distinct monomials, so as a polynomial in the indeterminates $a_{i,j}$, $c_s$ has coefficient $\mathrm{sgn}(\sigma_d)(-1)^{\mathrm{nz}(d)+1} \in \{\pm 1\}$ on bijective tuples and $0$ on all non-bijective tuples.
+\end{theorem}
+
+\begin{proof}
+Group consecutive values into blocks $X_k = (q_{kr}, \dots, q_{kr+r-1})^\top \in R^r$. With $a_{i,0} = -1$, equation~\eqref{eq:cond} for $n = kr + i$ becomes $\sum_{j=0}^{m} a_{i,j} q_{kr+i-j} = 0$. Writing $i - j = t - \ell r$ with $t \in \{0, \dots, r-1\}$ and $\ell \ge 0$ yields $\sum_{\ell=0}^{L} P_\ell X_{k-\ell} = 0$, where $(P_\ell)_{i,t} = a_{i,\, i-t+\ell r}$ (zero outside $0 \le j \le m$) and $L = \lceil m/r \rceil + 1$. Since $P_0$ is lower triangular with diagonal entries $-1$, we have $\det P_0 = (-1)^r$ and $P_0 \in \mathrm{GL}_r(R)$.
+
+Let $Q(\mu) = \sum_{\ell=0}^{L} P_\ell \mu^{L-\ell}$, and let $C$ be the $rL \times rL$ block companion matrix of the monic matrix polynomial $L(\mu) = P_0^{-1} Q(\mu)$ acting on $(X_{k-1}, \dots, X_{k-L}) \in R^{rL}$. Block Gaussian elimination over $R$ gives $\det(\mu I - C) = \det L(\mu) = (-1)^r \det Q(\mu)$.
+
+Let $\pi : R^{rL} \to R^m$ keep the $m$ most recent entries $v_{kr-1} = (q_{kr-1}, \dots, q_{kr-m})^\top$. Since~\eqref{eq:cond} has order $m$, $X_k$ depends only on $v_{kr-1}$, so $\pi C = M \pi$, where $M = C_{r-1} \cdots C_0$ is the product of the single-step $m \times m$ companion matrices $C_i$. On $\ker \pi$, $X_k = 0$ and the shift pushes zeros across the window, so $C|_{\ker \pi}$ is nilpotent. Because $\pi$ is split-surjective, $\det(\mu I - C) = \mu^{rL-m} \det(\mu I - M)$, whence
+\[
+\chi_M(\mu) = \det(\mu I - M) = (-1)^r \mu^m \det\!\left(\sum_{\ell=0}^{L} P_\ell \mu^{-\ell}\right).
+\]
+Entry $(i, t)$ of $\sum_\ell P_\ell \mu^{-\ell}$ equals $\sum_{j \equiv i-t \pmod r} a_{i,j} \mu^{\lfloor (i-j)/r \rfloor}$. In the Leibniz expansion of this $r \times r$ determinant, a nonzero summand chooses one $j = d_i \in \{0, \dots, m\}$ in each row $i$ such that $\sigma_d(i) = (i - d_i) \bmod r$ is a bijection on $\mathbb{Z}_r$, contributing sign $\mathrm{sgn}(\sigma_d)$ and power
+\[
+\sum_{i=0}^{r-1} \left\lfloor \frac{i - d_i}{r} \right\rfloor = \frac{1}{r} \sum_{i=0}^{r-1} \bigl(i - d_i - \sigma_d(i)\bigr) = -\frac{1}{r} \sum_{i=0}^{r-1} d_i.
+\]
+Thus $\chi_M(\mu) = \mu^m + (-1)^r \sum_{s=1}^{m} \mu^{m-s} \sum_{\sum d_i = sr,\, \sigma_d \text{ bij.}} \mathrm{sgn}(\sigma_d) \prod_{i=0}^{r-1} a_{i, d_i}$. For every residue class $\rho \in \mathbb{Z}_r$, the $r$-step monodromy matrix $M^{(\rho)}$ is a cyclic rotation of $C_{r-1} \cdots C_0$, hence shares the characteristic polynomial $\chi_M(\mu)$. By Cayley--Hamilton, $v_{n+mr} = \sum_{s=1}^{m} c_s v_{n+(m-s)r}$ with $c_s = -(-1)^r \sum \mathrm{sgn}(\sigma_d) \prod_{i=0}^{r-1} a_{i, d_i}$. Substituting $a_{i,0} = -1$ (which occurs $r - \mathrm{nz}(d)$ times) produces the sign $\mathrm{sgn}(\sigma_d)(-1)^{\mathrm{nz}(d)+1}$.
+\end{proof}
+
+\section{Threshold (\texorpdfstring{$r \le 3$ vs.\ $r \ge 4$}{r <= 3 vs. r >= 4}) and Disproof of Conjecture~1}
+
+Condition~\eqref{eq:R} is equivalent to $\sigma_d(k) \ne \sigma_d(0)$ for all $1 \le k \le r - 1$.
+
+\begin{proposition}\label{prop:thresh}
+Let $d \in \mathbb{N}^r$ satisfy $\sum_{i=0}^{r-1} d_i \equiv 0 \pmod{r}$.
+\begin{enumerate}
+\item If $r \in \{1, 2, 3\}$, then~\eqref{eq:R} holds if and only if $\sigma_d$ is bijective; hence Conjecture~1 holds for $r \le 3$ with the signs of Theorem~\ref{thm:exact}.
+\item For every $r \ge 4$, the tuple $d^* = (0, r-1, 0, 1, 0, \dots, 0)$ satisfies $\sum d^*_i = r$ and~\eqref{eq:R}, yet $\sigma_{d^*}(1) = \sigma_{d^*}(2) = \sigma_{d^*}(3) = 2 \pmod{r}$, so $\sigma_{d^*}$ is not bijective.
+\end{enumerate}
+\end{proposition}
+
+\begin{theorem}[Unconditional refutation of Conjecture~1 over $\mathbb{R}$]\label{thm:c1}
+For $r = 4, m = 5$ (and either convention $a_{i,0} = 1$ or $a_{i,0} = -1$), there exists no sign assignment $s : \{0, \dots, 5\}^4 \to \{-1, 1\}$ such that every real conditional sequence~\eqref{eq:cond} eventually satisfies $q_n = \sum_{k=1}^{5} A_{4k} q_{n-4k}$.
+\end{theorem}
+
+\begin{proof}
+Define integer coefficients $a_{1,3} = a_{3,1} = 1$ and $a_{i,j} = 3(((7i + 5j) \bmod 11) + 1)$ for all other $(i, j) \in \{0,1,2,3\} \times \{1,2,3,4,5\}$, with initial values $(q_0, q_1, q_2, q_3, q_4) = (2, -1, 5, 3, 7)$. The state vector $v_k = (q_{4k+4}, \dots, q_{4k})^\top$ satisfies $v_{k+1} = M v_k$ for all $k \ge 0$, where $M = C_0 C_3 C_2 C_1$ is
+\[
+M = \begin{pmatrix}
+12297 & 42294 & 2400 & 35847 & 63756 \\
+363 & 1248 & 72 & 1047 & 1881 \\
+171 & 591 & 33 & 507 & 891 \\
+6 & 21 & 1 & 18 & 33 \\
+1 & 0 & 0 & 0 & 0
+\end{pmatrix}.
+\]
+Direct integer matrix arithmetic confirms
+\[
+M^5 = 13596 M^4 + 68961 M^3 + 83853 M^2 - 562923 M + 74844 I,
+\]
+so $q_{4k+24} = \sum_{s=1}^{5} c_s q_{4k+24-4s}$ holds for all $k \ge 0$, where $c_1 = 13596$, $c_2 = 68961$, $c_3 = 83853$, $c_4 = -562923$, and $c_5 = 74844$.
+
+Let $K$ be the $5 \times 5$ companion matrix of $(c_1, \dots, c_5)$ and let $W(t)$ be the $5 \times 5$ Krylov matrix $W(t)_{s,j} = q_{4(t+j)+20-4s}$ ($0 \le s, j \le 4$). Then $W(t+1) = K W(t)$, so $W(t) = K^t W(0)$ and
+\begin{align*}
+\det W(t) &= (\det K)^t \det W(0) \\
+&= 74844^t \cdot 57854063997551257566686800189595316225787536 \ne 0
+\end{align*}
+for every $t \ge 0$. If Conjecture~1 held for some sign assignment $s$ and cutoff $N$, then setting $\delta_k = A_{4(k+1)} - c_{k+1}$ and evaluating at $n = 4(N + j) + 24 \ge N$ ($0 \le j \le 4$) would yield $\delta^\top W(N) = 0$. Multiplying on the right by $\mathrm{adj}(W(N))$ forces $\det(W(N))\,\delta = 0$, hence $\delta = 0$ and $A_4 = c_1 = 13596 \equiv 0 \pmod{3}$.
+
+Yet among the $17$ tuples in $\{0, \dots, 5\}^4$ of sum $4$ satisfying~\eqref{eq:R}, the unique tuple $t^* = (0, 3, 0, 1)$ has monomial value $a_{1,3} a_{3,1} = 1$, while every one of the other $16$ tuples contains a factor divisible by $3$. Consequently $A_4 \equiv s(t^*) \equiv \pm 1 \pmod{3}$, contradicting $A_4 \equiv 0 \pmod{3}$.
+\end{proof}
+
+\section{Exact Corrected Formula and Disproof of Conjecture~2}
+
+For $m \ge 1$ and $3 \mid d$, let $w^{\bmod 3}_{3,m}(d)$ denote the number of triples $(d_1, d_2, d_3) \in \{0, \dots, m\}^3$ with $d_1 + d_2 + d_3 = d$ whose residues modulo~$3$ are pairwise distinct.
+
+\begin{theorem}[Exact count and refutation of Conjecture~2]\label{thm:c2}
+For all $m \ge 1$ and all $d$ with $3 \mid d$:
+\begin{enumerate}
+\item $2|\mathcal{A}_d| = 2 w_{3,m}(d) - w^{\bmod 3}_{3,m}(d)$.
+\item If $m \le 5$, then $w^{\bmod 3}_{3,m}(d) = w^*_{3,m}(d)$, so Conjecture~2 holds.
+\item For every $m \ge 6$, Conjecture~2 fails at $d = 9$. At the minimal counterexample $m = 6, d = 9$, we have $w_{3,6}(9) = 37$, $w^*_{3,6}(9) = 30$, $w^{\bmod 3}_{3,6}(9) = 24$, and $|\mathcal{A}_9| = 25 \ne 22 = 37 - 30/2$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Because $d_1 + d_2 + d_3 \equiv 0 \pmod{3}$, any two parts with the same residue $x \pmod{3}$ force the third to satisfy $2x + y \equiv 0 \pmod{3}$, i.e., $y \equiv x \pmod{3}$. Hence the set $T$ of all compositions of $d$ into $3$ parts in $\{0, \dots, m\}$ partitions disjointly into $T_{\mathrm{eq}}$ (all parts congruent mod~$3$) and $T_{\mathrm{dist}}$ (residues mod~$3$ pairwise distinct). Every triple in $T_{\mathrm{eq}}$ satisfies~\eqref{eq:R}. On $T_{\mathrm{dist}}$, the involution $(d_1, d_2, d_3) \mapsto (d_1, d_3, d_2)$ swaps $T_{\mathrm{dist}} \cap D$ and $T_{\mathrm{dist}} \setminus D$, so $2|T_{\mathrm{dist}} \cap D| = |T_{\mathrm{dist}}|$. Therefore $2|\mathcal{A}_d| = 2|T_{\mathrm{eq}}| + |T_{\mathrm{dist}}| = 2|T| - |T_{\mathrm{dist}}| = 2 w_{3,m}(d) - w^{\bmod 3}_{3,m}(d)$.
+
+Clearly $T_{\mathrm{dist}} \subseteq T^*$ (distinct residues imply distinct integers). A triple belongs to $T^* \setminus T_{\mathrm{dist}}$ if and only if its parts are three distinct integers in the same residue class mod~$3$ within $\{0, \dots, m\}$, requiring $x < x+3 < x+6 \le m$. This is impossible for $m \le 5$, whereas $(0, 3, 6) \in T^* \setminus T_{\mathrm{dist}}$ for every $m \ge 6$ at $d = 9$, giving $w^{\bmod 3}_{3,m}(9) < w^*_{3,m}(9)$.
+\end{proof}
+
+\begin{remark}
+In Example~5 of~\cite[p.~18]{GudaySahin2026} ($m = 4, d = 6$), the table reports $w_{3,4}(6) = 13$ and $|\mathcal{A}_6| = 10$, omitting the six permutations of $(1, 2, 3)$. The true counts are $w_{3,4}(6) = 19$, $w^*_{3,4}(6) = 12$, and $|\mathcal{A}_6| = 13 = 19 - 12/2$.
+\end{remark}
+
+\section{Formal Verification}
+
+Proposition~\ref{prop:thresh}, Theorem~\ref{thm:c1}, and Theorem~\ref{thm:c2} are formalized and machine-checked in Lean~4 with zero \texttt{sorry}, zero custom axioms (standard axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound} only), and zero forbidden tokens:
+\begin{itemize}
+\item Lean~4 formalization: \texttt{lean/Conjectures/GudaySahinConditionalSequences.lean}.
+\item Standalone symbolic verifier (checking Theorem~\ref{thm:exact} for ten $(r, m)$ pairs, the $r=4, m=5$ instance, and Conjecture~2 for $m \le 12$):\\
+\texttt{results/guday-sahin-conditional-sequences/verify.py}.
+\end{itemize}
+
+\begin{thebibliography}{1}
+\bibitem{GudaySahin2026}
+E.~G\"uday and M.~\c{S}ahin,
+\emph{Linear Recurrence Relations Satisfied by the General Conditional Sequences},
+INTEGERS \textbf{26} (2026), \#A5,
+DOI: \href{https://doi.org/10.5281/zenodo.18154045}{10.5281/zenodo.18154045}.
+\end{thebibliography}
+
+\end{document}
