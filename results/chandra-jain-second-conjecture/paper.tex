@@ -1,0 +1,148 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{Proof of the Second Chandra--Jain Conjecture and Exact Degree Criterion for Discrete Landscape Coefficients}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove the Second Chandra--Jain Conjecture (Chandra and Jain, \texttt{arXiv:2608.11372v3}, Section~5), which asserts that for every integer $N \ge 3$ and every odd integer $k$ with $1 \le k < N$ and $d = \gcd(N,k) > 1$, the algebraic degree of the discrete landscape expansion coefficient $c_k(N) = \frac{1}{4}\sqrt{2/N}\cot(k\pi/(2N))\csc^2(k\pi/(2N))$ over $\mathbb{Q}$ belongs to $\{\varphi(N_0), 2\varphi(N_0)\}$, where $N_0 = N/d$. We also resolve the accompanying open question by establishing the exact arithmetic criterion distinguishing the two degrees for all odd $1 \le k < N$: $[\mathbb{Q}(c_k(N)) : \mathbb{Q}] = \varphi(N_0)$ whenever $N_0$ is odd or every prime $p$ with odd $p$-adic valuation $v_p(d)$ divides $N_0$, and $[\mathbb{Q}(c_k(N)) : \mathbb{Q}] = 2\varphi(N_0)$ otherwise. The proof is self-contained inside $\mathbb{Q}(\zeta_{8N})$, uses only elementary cyclotomic Galois actions and quadratic Gauss sums, and simultaneously recovers and generalizes the coprime case ($d = 1$).
+\end{abstract}
+
+\section{Introduction}
+
+For an integer $N \ge 3$, consider the discrete landscape function $u_N(j) = j(N-j)/2$ ($0 \le j \le N$) and the Dirichlet eigenfunctions $\psi_{N,k}(j) = \sqrt{2/N}\sin(k\pi j / N)$ ($1 \le k < N$) of the one-dimensional discrete Laplacian. Chandra and Jain~\cite{ChandraJain2026} evaluate the inner products $c_k(N) = \langle u_N, \psi_{N,k} \rangle$: they vanish for even $k$, and for odd $k$ satisfy
+\[
+c_k(N) = \frac{1}{4}\sqrt{\frac{2}{N}}\cot\!\left(\frac{k\pi}{2N}\right)\csc^2\!\left(\frac{k\pi}{2N}\right).
+\]
+In Section~5 of~\cite{ChandraJain2026} (\texttt{conj:chandra-jain-second}), they conjecture that whenever $k$ is odd, $1 \le k < N$, and $d = \gcd(N,k) > 1$, the algebraic degree satisfies
+\[
+[\mathbb{Q}(c_k(N)) : \mathbb{Q}] \in \{\varphi(N_0),\, 2\varphi(N_0)\}, \qquad N_0 = N/d,
+\]
+and leave open the determination of an arithmetic criterion separating the two cases. The first conjecture ($k = 1$, where $d = 1$ and the degree is $\varphi(N)$) was proved by Zhou~\cite{Zhou2026}.
+
+\begin{theorem}[Second Chandra--Jain Conjecture and Exact Criterion]\label{thm:main}
+Let $N \ge 3$ and let $k$ be an odd integer with $1 \le k < N$. Set $d = \gcd(N,k)$ and $N_0 = N/d$.
+\begin{enumerate}
+  \item If $N_0$ is odd, then $[\mathbb{Q}(c_k(N)) : \mathbb{Q}] = \varphi(N_0)$.
+  \item If $N_0$ is even, then
+  \[
+  [\mathbb{Q}(c_k(N)) : \mathbb{Q}] =
+  \begin{cases}
+    \varphi(N_0) & \text{if every prime } p \text{ with } v_p(d) \text{ odd divides } N_0, \\
+    2\varphi(N_0) & \text{otherwise.}
+  \end{cases}
+  \]
+\end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+For every $N \ge 3$ and odd $1 \le k < N$ with $d = \gcd(N,k) > 1$, we have $[\mathbb{Q}(c_k(N)) : \mathbb{Q}] \in \{\varphi(N_0), 2\varphi(N_0)\}$. Moreover, when $d = 1$, we have $[\mathbb{Q}(c_k(N)) : \mathbb{Q}] = \varphi(N)$ for every odd $k$ coprime to $N$.
+\end{corollary}
+
+\section{Galois Action in \texorpdfstring{$\mathbb{Q}(\zeta_{8N})$}{Q(zeta\_8N)}}
+
+Fix $N \ge 3$ and odd $k$ with $1 \le k < N$. Let $d = \gcd(N,k)$, $N_0 = N/d$, and $k' = k/d$. Since $k$ is odd and $k < N$, both $d$ and $k'$ are odd, $\gcd(k', N_0) = 1$, $1 \le k' < N_0$, and $N_0 \ge 2$. Define
+\[
+f(\theta) = \frac{\cos\theta}{\sin^3\theta}.
+\]
+Then $c := c_k(N) = \frac{1}{4}\sqrt{\frac{2}{N}}\,f\!\left(\frac{k'\pi}{2N_0}\right)$, and $f$ satisfies:
+\begin{enumerate}
+  \item[(F1)] $f(\theta + \pi) = f(\theta)$ for all $\theta \notin \pi\mathbb{Z}$;
+  \item[(F2)] $f(-\theta) = -f(\theta)$;
+  \item[(F3)] $f$ is positive and strictly decreasing on $(0, \pi/2)$.
+\end{enumerate}
+
+Let $M = 8N$, $\zeta_M = e^{2\pi i/M}$, and $K = \mathbb{Q}(\zeta_M) \subset \mathbb{C}$. The extension $K/\mathbb{Q}$ is Galois with $\mathrm{Gal}(K/\mathbb{Q}) = \{\sigma_a : a \in (\mathbb{Z}/M\mathbb{Z})^\times\}$, where $\sigma_a(\zeta_M) = \zeta_M^a$.
+
+\begin{lemma}[Membership and Galois Conjugates]\label{lem:galois}
+Factor $2N = m^2 \cdot 2^\epsilon \cdot \prod_{p \in S} p$ with $m \ge 1$, $\epsilon \in \{0,1\}$, and $S$ the set of odd primes with $v_p(N)$ odd. Let $r = |\{p \in S : p \equiv 3 \pmod 4\}|$. Then $c \in K$, and for every $a \in (\mathbb{Z}/M\mathbb{Z})^\times$,
+\begin{equation}\label{eq:conj}
+\sigma_a(c) = \chi(a)\,\frac{1}{4}\sqrt{\frac{2}{N}}\,f\!\left(\frac{a k'\pi}{2N_0}\right),
+\end{equation}
+where $\chi : (\mathbb{Z}/M\mathbb{Z})^\times \to \{\pm 1\}$ is the character
+\begin{equation}\label{eq:chi}
+\chi(a) = \chi_2(a)^\epsilon \cdot \bigl((-1)^{(a-1)/2}\bigr)^{1-r} \cdot \prod_{p \in S} \left(\frac{a}{p}\right),
+\end{equation}
+with $\chi_2(a) = 1$ for $a \equiv \pm 1 \pmod 8$ and $\chi_2(a) = -1$ for $a \equiv \pm 3 \pmod 8$.
+\end{lemma}
+
+\begin{proof}
+Set $z = \zeta_M^{2k} = e^{ik\pi/(2N)} \in K$ and $i = \zeta_M^{2N} \in K$. From $\cos y = (z+z^{-1})/2$ and $\sin y = (z-z^{-1})/(2i)$, we obtain $g := f(k\pi/(2N))/i = -4(z+z^{-1})/(z-z^{-1})^3 \in K$, and $\sigma_a(g) = f(ak\pi/(2N))/i = f(ak'\pi/(2N_0))/i$ since $\sigma_a(z) = e^{iak\pi/(2N)}$.
+
+Inside $K$, we have $\sqrt{2} = \zeta_M^N + \zeta_M^{-N}$ with $\sigma_a(\sqrt{2}) = \chi_2(a)\sqrt{2}$, and $\sigma_a(i) = (-1)^{(a-1)/2} i$. For each $p \in S$, putting $\zeta_p = \zeta_M^{M/p}$, the quadratic Gauss sum
+\[
+g_p = \sum_{x \in (\mathbb{Z}/p\mathbb{Z})^\times} \left(\frac{x}{p}\right)\zeta_p^x \in K
+\]
+satisfies $g_p^2 = (-1)^{(p-1)/2} p$ and $\sigma_a(g_p) = \left(\frac{a}{p}\right) g_p$ by the substitution $x \mapsto a^{-1}x$. Hence the element $\alpha = m (\sqrt{2})^\epsilon i^{1-r} \prod_{p \in S} g_p \in K$ satisfies $\alpha^2 = -2N$, so replacing $\alpha$ by $-\alpha$ if necessary gives $\alpha = i\sqrt{2N} \in K$ with $\sigma_a(\alpha) = \chi(a)\alpha$. Because $c = \frac{1}{4N}\alpha g$, applying $\sigma_a$ yields~\eqref{eq:conj}.
+\end{proof}
+
+\section{Orbit Size and Proof of the Main Theorem}
+
+Since $K/\mathbb{Q}$ is Galois, $[\mathbb{Q}(c) : \mathbb{Q}] = |\mathcal{O}|$, where $\mathcal{O} = \{\sigma_a(c) : a \in (\mathbb{Z}/M\mathbb{Z})^\times\}$. Define
+\[
+J' = \{j \in \mathbb{Z} : 0 < j < N_0,\; j \text{ odd},\; \gcd(j, N_0) = 1\}.
+\]
+
+\begin{lemma}[Absolute Values and Fibres]\label{lem:fibres}
+For each $a \in (\mathbb{Z}/M\mathbb{Z})^\times$, there is a unique $j(a) \in J'$ with $a k' \equiv \pm j(a) \pmod{2N_0}$, and $|\sigma_a(c)| = c_{d j(a)}(N)$. The map $a \mapsto j(a)$ is surjective onto $J'$, and the values $c_{dj}(N)$ ($j \in J'$) are pairwise distinct. Consequently,
+\[
+|\mathcal{O}| =
+\begin{cases}
+  2|J'| & \text{if } -c \in \mathcal{O}, \\
+  |J'|  & \text{if } -c \notin \mathcal{O}.
+\end{cases}
+\]
+Furthermore, $|J'| = \varphi(N_0)$ if $N_0$ is even and $|J'| = \varphi(N_0)/2$ if $N_0$ is odd.
+\end{lemma}
+
+\begin{proof}
+Let $r \in \{1, \dots, 2N_0 - 1\}$ be the residue of $a k'$ modulo $2N_0$. Since $a$ and $k'$ are odd and coprime to $N_0$, so is $r$; hence $r \ne N_0$ (for even $N_0$, $r$ is odd; for odd $N_0 \ge 3$, $\gcd(N_0, N_0) > 1$). If $r < N_0$, take $j = r \in J'$ and apply (F1); if $r > N_0$, take $j = 2N_0 - r \in J'$ and apply (F1)--(F2). Uniqueness holds because $\pm j \pmod{2N_0}$ are distinct for $0 < j < N_0$. Distinctness of $c_{dj}(N)$ follows from (F3) since $j\pi/(2N_0) \in (0, \pi/2)$. Every $j \in J'$ is a unit modulo $2N_0$, so $j(k')^{-1} \in (\mathbb{Z}/2N_0\mathbb{Z})^\times$ lifts to $(\mathbb{Z}/M\mathbb{Z})^\times$ by the Chinese Remainder Theorem since $2N_0 \mid M$, giving surjectivity.
+
+The map $x \mapsto |x|$ therefore surjects $\mathcal{O}$ onto $\{c_{dj}(N) : j \in J'\}$ with each fibre contained in $\{v, -v\}$. Because $\mathrm{Gal}(K/\mathbb{Q})$ acts transitively on $\mathcal{O}$ by $\mathbb{Q}$-linear automorphisms, $-x \in \mathcal{O}$ for one $x \in \mathcal{O}$ if and only if $-c \in \mathcal{O}$, in which case every fibre has size~$2$; otherwise every fibre has size~$1$. Finally, when $N_0$ is even every integer coprime to $N_0$ is odd, so $|J'| = \varphi(N_0)$; when $N_0 \ge 3$ is odd, $j \mapsto N_0 - j$ pairs odd and even units in $(0, N_0)$, so $|J'| = \varphi(N_0)/2$.
+\end{proof}
+
+\begin{lemma}[Sign-Flip Criterion]\label{lem:sign}
+Let $U = \{a \in (\mathbb{Z}/M\mathbb{Z})^\times : a \equiv 1 \pmod{2N_0}\}$. Then $-c \in \mathcal{O}$ if and only if there exists $u \in U$ such that $\chi(u) = -1$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:fibres}, $\sigma_a(c) = \pm c$ forces $a k' \equiv \pm k' \pmod{2N_0}$, hence $a \equiv \pm 1 \pmod{2N_0}$ as $\gcd(k', 2N_0) = 1$. For $a \in U$, \eqref{eq:conj} and (F1) give $\sigma_a(c) = \chi(a)c$. For $a \equiv -1 \pmod{2N_0}$, writing $a = -u$ with $u \in U$, \eqref{eq:conj}, (F1), and (F2) give $\sigma_a(c) = -\chi(-1)\chi(u)c$. Because $\sigma_{-1}$ is complex conjugation and $\alpha = i\sqrt{2N}$ is purely imaginary, $\chi(-1) = -1$, so $\sigma_a(c) = \chi(u)c$. Thus $-c \in \mathcal{O}$ if and only if $\chi(u) = -1$ for some $u \in U$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Write $N_0 = 2^e u_0$ with $u_0$ odd and $e \ge 0$. Because $d$ is odd, $2N = 2^{e+1} u_0 d$.
+
+\emph{Case 1: $N_0$ is odd ($e = 0$).} Then $N = u_0 d$ is odd, $\gcd(8, N) = 1$, and $\epsilon = 1$. By the Chinese Remainder Theorem, pick $a \in (\mathbb{Z}/M\mathbb{Z})^\times$ with $a \equiv 1 \pmod N$ and $a \equiv 5 \pmod 8$. Since $a$ is odd and $a \equiv 1 \pmod{N_0}$, we have $a \in U$. Moreover, $\chi_2(a) = -1$, $(-1)^{(a-1)/2} = 1$, and $\left(\frac{a}{p}\right) = \left(\frac{1}{p}\right) = 1$ for every $p \in S$ (as $p \mid N$). By~\eqref{eq:chi}, $\chi(a) = -1$. Lemmas~\ref{lem:fibres} and~\ref{lem:sign} yield $[\mathbb{Q}(c) : \mathbb{Q}] = 2(\varphi(N_0)/2) = \varphi(N_0)$.
+
+\emph{Case 2: $N_0$ is even ($e \ge 1$).} For any $a \in U$, we have $a \equiv 1 \pmod{2^{e+1} u_0}$. If $e$ is odd, then $e + 1$ is even so $\epsilon = 0$, and $4 \mid 2^{e+1}$ gives $(-1)^{(a-1)/2} = 1$. If $e$ is even, then $e \ge 2$ so $8 \mid 2^{e+1}$, giving both $\chi_2(a) = 1$ and $(-1)^{(a-1)/2} = 1$. In either case, every $a \in U$ satisfies
+\[
+\chi(a) = \prod_{p \in S} \left(\frac{a}{p}\right) = \prod_{p \in S_{\mathrm{ext}}} \left(\frac{a}{p}\right),
+\]
+where $S_{\mathrm{ext}} = \{p \in S : p \nmid N_0\}$, because $p \mid N_0$ implies $a \equiv 1 \pmod p$ and hence $\left(\frac{a}{p}\right) = 1$. Since $p \nmid N_0$ implies $v_p(N) = v_p(d)$, the set $S_{\mathrm{ext}}$ consists precisely of the primes $p \nmid N_0$ with $v_p(d)$ odd.
+
+If $S_{\mathrm{ext}} = \emptyset$, then $\chi(a) = 1$ for all $a \in U$, so $-c \notin \mathcal{O}$ and $[\mathbb{Q}(c) : \mathbb{Q}] = \varphi(N_0)$. If instead there exists $p_0 \in S_{\mathrm{ext}}$, let $r$ be a quadratic non-residue modulo $p_0$ and write $M = p_0^t M'$ with $\gcd(p_0, M') = 1$. Since $p_0$ is odd and $p_0 \nmid N_0$, we have $2N_0 \mid M'$ and $p \mid M'$ for all $p \in S_{\mathrm{ext}} \setminus \{p_0\}$. By the Chinese Remainder Theorem, choose $a \in (\mathbb{Z}/M\mathbb{Z})^\times$ with $a \equiv r \pmod{p_0^t}$ and $a \equiv 1 \pmod{M'}$. Then $a \in U$ and $\chi(a) = \left(\frac{r}{p_0}\right) = -1$, so $-c \in \mathcal{O}$ and $[\mathbb{Q}(c) : \mathbb{Q}] = 2\varphi(N_0)$.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{ChandraJain2026}
+A.~Chandra and S.~R.~Jain,
+\emph{On The Spectral Properties of Discrete Landscape Functions},
+arXiv:2608.11372v3 (2026).
+
+\bibitem{Zhou2026}
+Q.~Zhou,
+\emph{Algebraic degree of the fundamental discrete landscape expansion coefficient},
+Zenodo, doi:10.5281/zenodo.21935814 (2026).
+\end{thebibliography}
+
+\end{document}

@@ -69,6 +69,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **57.** [Abbaszadeh–Ansarifar–Latifian–Seddighin Conjecture (`arXiv:2601.02095v1`, AAAI 2026, two-alternative line-metric distortion with preference intensities)](results/abbaszadeh-line-metric-distortion/) | Proved for all $\alpha \in (0, 1]$ ($\mathrm{dist}_\alpha(f^{\mathsf{tal}}_\alpha) = \max\bigl(\frac{3-\alpha}{1+\alpha}, 1+2\alpha\bigr)$ via affine normalization and coefficientwise cross-alternative pairing $B_M^{(i)}(n) + B_M^{(j)}(\sigma n) \le 0$; universal optimality witnessed by $(1,1,0,0)$ and $(0,0,1,1)$) | [DOI](https://doi.org/10.5281/zenodo.24575678) | **Lean 4** · Cross-Model Audit · Python |
 | **58.** [Bozóki–Csató Open Question (`arXiv:2603.24274v1`, full rank reversal between right and inverse left Perron eigenvectors for four alternatives)](results/bozoki-csato-eigenvector-reversal/) | Resolved affirmatively (explicit $4 \times 4$ rational PCM $A_4$ with $\lambda_{\max} = 5$, right Perron vector $w_4 = (34, 33, 32, 22)$ ranking $1 \succ 2 \succ 3 \succ 4$, inverse left Perron vector $v_4^{-1} = (\frac{17}{42}, \frac{11}{27}, \frac{32}{77}, \frac{11}{26})$ ranking $4 \succ 3 \succ 2 \succ 1$; full-reversal class characterization via constant-row-sum rescaling + $n = 3$ sharpness) | [DOI](https://doi.org/10.5281/zenodo.24575976) | **Lean 4** · Cross-Model Audit · Python |
 | **59.** [Dufour–Heubach Conjecture 1 (INTEGERS 26 (2026) #G3 / `arXiv:2404.06608v3`, $\mathcal{P}$-positions of Slow $\{k, \dots, n\}$-Nim)](results/dufour-heubach-slow-a-nim/) | Disproved + exact corrected theorem proved for all positions ($p = (0,1,2,2)$ at $n=4, k=2$ breaks $o \equiv n \pmod 2$; infinite family $(3k-1)/2$ stacks of $2$ for odd $k \ge 3$ breaks $1 \le o$; exact universal law $p \in \mathcal{P} \iff \lfloor D(\tilde p)/k \rfloor = \lfloor E(\tilde p)/k \rfloor$) | [DOI](https://doi.org/10.5281/zenodo.24576433) | **Lean 4** · Cross-Model Audit · Python |
+| **60.** [Second Chandra–Jain Conjecture + Exact Degree Criterion (`arXiv:2608.11372v3`, Sec. 5, algebraic degree of discrete landscape coefficients $c_k(N)$)](results/chandra-jain-second-conjecture/) | Proved for all $N \ge 3$ and odd $1 \le k < N$ (exact rule: $[\mathbb{Q}(c_k(N)):\mathbb{Q}] = \varphi(N_0)$ iff $N_0 = N/\gcd(N,k)$ is odd or every prime $p$ with odd $v_p(\gcd(N,k))$ divides $N_0$, and $2\varphi(N_0)$ otherwise; elementary cyclotomic Galois + quadratic Gauss sums + CRT proof, also recovering Zhou's $d = 1$ theorem) | [DOI](https://doi.org/10.5281/zenodo.24578327) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -134,6 +135,7 @@ python3 results/thongjarast-cyclic-equalizability/verify.py
 python3 results/abbaszadeh-line-metric-distortion/verify.py
 python3 results/bozoki-csato-eigenvector-reversal/verify.py
 python3 results/dufour-heubach-slow-a-nim/verify.py
+python3 results/chandra-jain-second-conjecture/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

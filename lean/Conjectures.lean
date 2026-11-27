@@ -57,3 +57,4 @@ import Conjectures.ThongjarastCyclicEqualizability
 import Conjectures.AbbaszadehLineMetricDistortion
 import Conjectures.BozokiCsatoEigenvectorReversal
 import Conjectures.DufourHeubachSlowANim
+import Conjectures.ChandraJainSecondConjecture
