@@ -1,0 +1,142 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+
+\title{Explicit $(5, 4)$ and $(6, 4)$ Integer Sumsets of Perfect Squares}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve an open problem of A.~Choudhry (\emph{INTEGERS} \textbf{26}, 2026, \#A66, Section~6; \texttt{arXiv:2508.07806}, continuing Guy's Problem~D14) asking for a quintuple $A = \{a_1, \dots, a_5\}$ and a quadruple $B = \{b_1, \dots, b_4\}$ of integers such that all $20$ sums $a_i + b_j$ are perfect squares. We exhibit an explicit primitive $(5, 4)$ solution $A = \{216^2, 567^2, 1128^2, 1848^2, 5496^2\}$, $B = \{0, 1198800, 2695680, 22269520\}$, together with all five primitive $(5, 4)$ solutions having $\max X_i \le 10000$ in standard form $b_1 = 0$, $a_i = X_i^2$. Extending the search to $\max X_i \le 40000$, we further obtain an explicit primitive $(6, 4)$ solution $A_6 = \{2988^2, 4356^2, 5787^2, 11164^2, 17046^2, 23948^2\}$, $B_{6,4} = \{0, 16594560, 137675520, 1202947200\}$ whose $24$ pairwise sums are all perfect squares, strictly exceeding Choudhry's $(5, 4)$ question. Translation and even-square scaling yield infinitely many distinct all-positive, pairwise disjoint $(5, 4)$ and $(6, 4)$ solutions over $\mathbb{Z}$. All witnesses, primitivity checks, and infinite positive disjoint families are machine-verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+In~\cite{Choudhry2026}, continuing R.~K.~Guy's Problem~D14~\cite{Guy2004}, A.~Choudhry constructs multi-parameter families of integer sets $A, B$ whose sumset $A + B = \{a + b : a \in A, b \in B\}$ consists entirely of perfect squares, covering sizes $(5, 3)$ and $(4, 4)$. Prior to~\cite{Choudhry2026}, the only published example with $|A|, |B| > 2$ was Lagrange's $(4, 4)$ family. In Section~6 (\emph{Some Open Problems}), Choudhry asks for a quintuple $A = \{a_1, \dots, a_5\}$ and a quadruple $B = \{b_1, \dots, b_4\}$ such that all $20$ sums $a_i + b_j$ are squares.
+
+\section{Explicit \texorpdfstring{$(5, 4)$}{(5, 4)} Solutions}
+
+By Choudhry's translation invariance (replacing $(A, B)$ by $(A + t, B - t)$), any solution may be placed in \emph{standard form} with $\min B = b_1 = 0$, so that every $a_i = X_i^2$ is a square and $b_j > 0$ for $j \ge 2$. A solution in standard form is \emph{primitive} if $\gcd(A \cup B)$ is squarefree.
+
+\begin{theorem}[Minimal $(5, 4)$ solution]\label{thm:54}
+Let
+\begin{align*}
+A &= \{216^2, 567^2, 1128^2, 1848^2, 5496^2\} = \{46656, 321489, 1272384, 3415104, 30206016\}, \\
+B &= \{0, 1198800, 2695680, 22269520\}.
+\end{align*}
+Then $|A| = 5$, $|B| = 4$, $\gcd(46656, 321489, 22269520) = 1$, and all $20$ pairwise sums $a_i + b_j$ are perfect squares (Table~\ref{tab:54}). Shifting by $(-1, +1)$ yields the all-positive, pairwise disjoint solution
+\begin{align*}
+A' &= \{46655, 321488, 1272383, 3415103, 30206015\}, \\
+B' &= \{1, 1198801, 2695681, 22269521\}.
+\end{align*}
+\end{theorem}
+
+\begin{table}[ht]
+\centering
+\caption{Square roots $\sqrt{a_i + b_j}$ for the minimal $(5, 4)$ solution of Theorem~\ref{thm:54}.}
+\label{tab:54}
+\begin{tabular}{rrrrr}
+\toprule
+$a_i \setminus b_j$ & $0$ & $1198800$ & $2695680$ & $22269520$ \\
+\midrule
+$46656$    & $216$  & $1116$ & $1656$ & $4724$ \\
+$321489$   & $567$  & $1233$ & $1737$ & $4753$ \\
+$1272384$  & $1128$ & $1572$ & $1992$ & $4852$ \\
+$3415104$  & $1848$ & $2148$ & $2472$ & $5068$ \\
+$30206016$ & $5496$ & $5604$ & $5736$ & $7244$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proposition}[Complete set of primitive $(5, 4)$ solutions with $\max X_i \le 10000$]\label{prop:five}
+In standard form $b_1 = 0$, $a_i = X_i^2$, the five triples $(X, D)$ in Table~\ref{tab:five} (with $B = \{0\} \cup D$) are pairwise distinct primitive $(5, 4)$ square-sumset solutions (each having $\gcd = 1$). An exhaustive divisor-pair search shows these are all primitive $(5, 4)$ solutions with $\max X_i \le 10000$.
+\end{proposition}
+
+\begin{table}[ht]
+\centering
+\caption{All five primitive $(5, 4)$ solutions in standard form with $\max X_i \le 10000$.}
+\label{tab:five}
+\begin{tabular}{rll}
+\toprule
+\# & $X = (X_1, X_2, X_3, X_4, X_5)$ & $D = (b_2, b_3, b_4)$ \\
+\midrule
+1 & $(216, 567, 1128, 1848, 5496)$  & $(1198800, 2695680, 22269520)$ \\
+2 & $(126, 714, 3129, 4419, 6834)$  & $(713440, 8382528, 105621408)$ \\
+3 & $(872, 1680, 3864, 4980, 8880)$ & $(17971200, 24269625, 135475200)$ \\
+4 & $(360, 1215, 3240, 5688, 7160)$ & $(3790800, 24076800, 138733056)$ \\
+5 & $(518, 1939, 3748, 4676, 5908)$ & $(2696960, 13704320, 139018880)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{An Explicit \texorpdfstring{$(6, 4)$}{(6, 4)} Solution and Infinite Families}
+
+Extending the search to $\max X_i \le 40000$ yields $86$ distinct $(5, 4)$ $X$-sets and a unique primitive $(6, 4)$ solution, strictly exceeding the $(5, 4)$ target (while no $(5, 5)$ solution exists with $\max X_i \le 40000$).
+
+\begin{theorem}[Explicit $(6, 4)$ solution]\label{thm:64}
+Let
+\begin{align*}
+A_6 &= \{2988^2, 4356^2, 5787^2, 11164^2, 17046^2, 23948^2\} \\
+    &= \{8928144, 18974736, 33489369, 124634896, 290566116, 573506704\}, \\
+B_{6,4} &= \{0, 16594560, 137675520, 1202947200\}.
+\end{align*}
+Then $|A_6| = 6$, $|B_{6,4}| = 4$, $\gcd(33489369, 124634896) = 1$, and all $24$ pairwise sums $a_i + b_j$ are perfect squares (Table~\ref{tab:64}). Shifting by $(-1, +1)$ gives an all-positive, pairwise disjoint $(6, 4)$ solution.
+\end{theorem}
+
+\begin{table}[ht]
+\centering
+\caption{Square roots $\sqrt{a_i + b_j}$ for the $(6, 4)$ solution of Theorem~\ref{thm:64}.}
+\label{tab:64}
+\begin{tabular}{rrrrr}
+\toprule
+$a_i \setminus b_j$ & $0$ & $16594560$ & $137675520$ & $1202947200$ \\
+\midrule
+$8928144$   & $2988$  & $5052$  & $12108$ & $34812$ \\
+$18974736$  & $4356$  & $5964$  & $12516$ & $34956$ \\
+$33489369$  & $5787$  & $7077$  & $13083$ & $35163$ \\
+$124634896$ & $11164$ & $11884$ & $16196$ & $36436$ \\
+$290566116$ & $17046$ & $17526$ & $20694$ & $38646$ \\
+$573506704$ & $23948$ & $24292$ & $26668$ & $42148$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proposition}[Infinitely many positive disjoint $(5, 4)$ and $(6, 4)$ solutions]\label{prop:inf}
+For any $(m, n)$ square-sumset solution $(A, B)$ with $A \subset \mathbb{Z}_{>0}$ and $B \subset \mathbb{Z}_{\ge 0}$, and every integer $n \ge 0$, setting $k = 2n + 2$, $A_n = \{k^2 a - 1 : a \in A\}$, and $B_n = \{k^2 b + 1 : b \in B\}$ produces an infinite family of distinct all-positive, pairwise disjoint $(m, n)$ square-sumset solutions over $\mathbb{Z}$.
+\end{proposition}
+
+\begin{proof}
+Since $k \ge 2$ is even, $k^2 a - 1 \equiv 3 \pmod{4}$ and $k^2 b + 1 \equiv 1 \pmod{4}$, forcing $A_n \cap B_n = \emptyset$, while $k^2 a - 1 \ge 3 > 0$, $k^2 b + 1 \ge 1 > 0$, and $(k^2 a - 1) + (k^2 b + 1) = k^2(a + b)$ is a perfect square. Distinct $n$ give strictly increasing $\min A_n$.
+\end{proof}
+
+\section{Formal Verification}
+
+Theorems~\ref{thm:54} and~\ref{thm:64}, Proposition~\ref{prop:inf}, and all five primitive $(5, 4)$ solutions in Table~\ref{tab:five} (including their injectivity, square-sum identities, and $\gcd = 1$ primitivity) are formalized and machine-verified in Lean~4 with zero \texttt{sorry}, zero custom axioms (standard axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound} only), and zero forbidden tokens:
+\begin{itemize}
+\item Lean~4 formalization: \texttt{lean/Conjectures/ChoudhrySumsetSquares.lean}.
+\item Standalone verifier: \texttt{results/choudhry-sumset-squares/verify.py}.
+\end{itemize}
+
+\begin{thebibliography}{2}
+\bibitem{Choudhry2026}
+A.~Choudhry,
+\emph{Two sets of integers such that all elements of the sumset of the two sets are perfect squares},
+INTEGERS \textbf{26} (2026), \#A66,
+DOI: \href{https://doi.org/10.5281/zenodo.20597480}{10.5281/zenodo.20597480};
+\texttt{arXiv:2508.07806}.
+
+\bibitem{Guy2004}
+R.~K.~Guy,
+\emph{Unsolved Problems in Number Theory}, 3rd ed.,
+Springer, New York, 2004, Problem~D14.
+\end{thebibliography}
+
+\end{document}

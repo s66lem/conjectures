@@ -60,3 +60,4 @@ import Conjectures.DufourHeubachSlowANim
 import Conjectures.ChandraJainSecondConjecture
 import Conjectures.CycleConvexityHellyRadon
 import Conjectures.GudaySahinConditionalSequences
+import Conjectures.ChoudhrySumsetSquares
