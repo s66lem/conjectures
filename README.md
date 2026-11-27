@@ -73,6 +73,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **61.** [Nair–Anand–Chandran–Nascimento–Anil Conjecture 1 (`arXiv:2609.34236v1`, Sec. 5, cycle convexity Helly vs. Radon equality $\mathrm{hl}_{cc}(G) = \mathrm{rd}_{cc}(G)$)](results/cycle-convexity-helly-radon/) | Disproved (connected $16$-vertex, $36$-edge graph $G_{16}$ of three $K_5$ cliques + hub $x$ + three cyclic port edges has exact $\mathrm{hl}_{cc}(G_{16}) = 5 < 6 = \mathrm{rd}_{cc}(G_{16})$, alongside general Levi inequality $\mathrm{hl}_{cc}(G) \le \mathrm{rd}_{cc}(G)$ for all finite graphs) | [DOI](https://doi.org/10.5281/zenodo.24579187) | **Lean 4** · Cross-Model Audit · Python |
 | **62.** [Güday–Şahin Conjectures 1 & 2 and Open Problem 1 (INTEGERS 26 (2026) #A5, general conditional sequences)](results/guday-sahin-conditional-sequences/) | Resolved completely (Conjecture 1 holds for $r \le 3$ and fails for every $r \ge 4$: explicit $r=4, m=5$ integer instance rules out all $\pm 1$ signs over $\mathbb{R}$ and all cutoffs $N$; Conjecture 2 holds for $m \le 5$ and fails for every $m \ge 6$ at $d=9$, with exact corrected formula $2|\mathcal{A}_d| = 2w_{3,m}(d) - w^{\bmod 3}_{3,m}(d)$ and minimal $m=6, d=9$ witness $25 \ne 22$; exact signed-bijection recurrence settles Open Problem 1) | [DOI](https://doi.org/10.5281/zenodo.24580791) | **Lean 4** · Cross-Model Audit · Python |
 | **63.** [Choudhry Sec. 6 Open Problem / Guy D14 (INTEGERS 26 (2026) #A66 / `arXiv:2508.07806`, $(5, 4)$ and $(6, 4)$ integer sumsets of perfect squares)](results/choudhry-sumset-squares/) | Resolved affirmatively + extended to $(6, 4)$ (minimal primitive $(5, 4)$ solution $A = \{216^2, 567^2, 1128^2, 1848^2, 5496^2\}$, $B = \{0, 1198800, 2695680, 22269520\}$ + all 5 primitive $(5, 4)$ solutions for $\max X \le 10000$; explicit primitive $(6, 4)$ solution with all $24$ sums squares; infinitely many distinct all-positive pairwise disjoint $(5, 4)$ and $(6, 4)$ solutions) | [DOI](https://doi.org/10.5281/zenodo.24581044) | **Lean 4** · Cross-Model Audit · Python |
+| **64.** [Benjamini–Kozma–Tzalik Question 9 (Electron. J. Combin. 33(3) (2026) #P3.28 / `arXiv:2303.07956v2`, tiles of $\mathbb{Z}$ inside $\{1, 2, 4, \dots, 2^n\}$)](results/benjamini-kozma-tzalik-tiles/) | Disproved + complete size spectrum proved ($\{1, 4, 16\} \oplus (\{-1, 0, 1\} + 9\mathbb{Z}) = \mathbb{Z}$ gives a $3$-element tile for all $n \ge 4$; a $k$-element set of powers of $2$ tiles $\mathbb{Z}$ iff $k \in \{1, 2\}$ or $k$ is odd, via Euler + LTE and Newman periodicity + Coven–Meyerowitz (T1) + $\Phi_{2^j}$ obstruction; prime-size minimal span $(p-1)\,\mathrm{ord}_p(2)$ and exact counts $t(0), \dots, t(15)$) | [DOI](https://doi.org/10.5281/zenodo.24581640) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -142,6 +143,7 @@ python3 results/chandra-jain-second-conjecture/verify.py
 python3 results/cycle-convexity-helly-radon/verify.py
 python3 results/guday-sahin-conditional-sequences/verify.py
 python3 results/choudhry-sumset-squares/verify.py
+python3 results/benjamini-kozma-tzalik-tiles/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
