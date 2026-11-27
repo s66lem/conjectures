@@ -67,6 +67,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **55.** [Song–Dalfó–Fiol–Zhang Conjecture (`arXiv:2610.00500v1`, Laplacian spectral radius $\rho(F_k(G)) = \rho(G)$ of $k$-token graphs)](results/song-dalfo-fiol-zhang-token-laplacian/) | Resolved completely (Theorem 1 proves intended connected conjecture: every connected non-star $G$ of order $n \ge 4$ satisfies $\rho(F_2(G)) > \rho(G)$; Theorem 2 classifies all equality graphs of order $n \ge 4$ as $\overline{K_n}$, $S_m \cup (n - m)K_1$ ($m \ge 2$), and $K_3 \cup (n - 3)K_1$) | [DOI](https://doi.org/10.5281/zenodo.24573109) | **Lean 4** · Cross-Model Audit · Python |
 | **56.** [Thongjarast Problem 2 (`arXiv:2607.18452v1`, discarding a letter in cyclic equalizability of words)](results/thongjarast-cyclic-equalizability/) | Disproved for every alphabet size $m \ge 3$ ($u_m = \prod x_i x_i x_{i+1}$, $v_m = \prod x_{i+1} x_i x_{i+1}$ of length $3m$ cannot be $(\Sigma \setminus \{c\})$-cyclically equalized for any $c \in \Sigma$; smallest instance $m = 3$: `aabbbccca` vs `babcbcaca`, $\Sigma$-equalizable at length $15$) | [DOI](https://doi.org/10.5281/zenodo.24573606) | **Lean 4** · Cross-Model Audit · Python |
 | **57.** [Abbaszadeh–Ansarifar–Latifian–Seddighin Conjecture (`arXiv:2601.02095v1`, AAAI 2026, two-alternative line-metric distortion with preference intensities)](results/abbaszadeh-line-metric-distortion/) | Proved for all $\alpha \in (0, 1]$ ($\mathrm{dist}_\alpha(f^{\mathsf{tal}}_\alpha) = \max\bigl(\frac{3-\alpha}{1+\alpha}, 1+2\alpha\bigr)$ via affine normalization and coefficientwise cross-alternative pairing $B_M^{(i)}(n) + B_M^{(j)}(\sigma n) \le 0$; universal optimality witnessed by $(1,1,0,0)$ and $(0,0,1,1)$) | [DOI](https://doi.org/10.5281/zenodo.24575678) | **Lean 4** · Cross-Model Audit · Python |
+| **58.** [Bozóki–Csató Open Question (`arXiv:2603.24274v1`, full rank reversal between right and inverse left Perron eigenvectors for four alternatives)](results/bozoki-csato-eigenvector-reversal/) | Resolved affirmatively (explicit $4 \times 4$ rational PCM $A_4$ with $\lambda_{\max} = 5$, right Perron vector $w_4 = (34, 33, 32, 22)$ ranking $1 \succ 2 \succ 3 \succ 4$, inverse left Perron vector $v_4^{-1} = (\frac{17}{42}, \frac{11}{27}, \frac{32}{77}, \frac{11}{26})$ ranking $4 \succ 3 \succ 2 \succ 1$; full-reversal class characterization via constant-row-sum rescaling + $n = 3$ sharpness) | [DOI](https://doi.org/10.5281/zenodo.24575976) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -130,6 +131,7 @@ python3 results/lassak-szarek-pentagon-centroid/verify.py
 python3 results/song-dalfo-fiol-zhang-token-laplacian/verify.py
 python3 results/thongjarast-cyclic-equalizability/verify.py
 python3 results/abbaszadeh-line-metric-distortion/verify.py
+python3 results/bozoki-csato-eigenvector-reversal/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

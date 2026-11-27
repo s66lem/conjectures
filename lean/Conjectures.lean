@@ -55,3 +55,4 @@ import Conjectures.LassakSzarekPentagonCentroid
 import Conjectures.SongDalfoFiolZhangTokenLaplacian
 import Conjectures.ThongjarastCyclicEqualizability
 import Conjectures.AbbaszadehLineMetricDistortion
+import Conjectures.BozokiCsatoEigenvectorReversal
