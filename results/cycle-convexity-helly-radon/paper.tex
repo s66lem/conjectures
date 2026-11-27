@@ -1,0 +1,147 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\DeclareMathOperator{\hl}{hl_{cc}}
+\DeclareMathOperator{\rd}{rd_{cc}}
+\DeclareMathOperator{\Hull}{Hull_{cc}}
+
+\title{A Counterexample to the Helly--Radon Equality Conjecture in Cycle Convexity}
+\author{Salem Levinstein}
+\date{November 27, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Nair, Anand, Chandran S.\,V., Nascimento, and Anil (\texttt{arXiv:2609.34236v1}, Section~5) conjectured that the cycle convexity Helly number and Radon number coincide for every connected graph $G$ of order $n \ge 2$, i.e., $\hl(G) = \rd(G)$. We disprove this conjecture by constructing a connected $16$-vertex, $36$-edge graph $G_{16}$ satisfying $\hl(G_{16}) = 5 < 6 = \rd(G_{16})$. We also record the elementary general inequality $\hl(G) \le \rd(G)$ for every finite graph $G$. All results are machine-checked in Lean~4 (\texttt{v4.33.1} + Mathlib, standard axioms only) and cross-checked by exhaustive computation over all $2^{16}$ vertex subsets.
+\end{abstract}
+
+\section{Introduction}
+
+Let $G = (V, E)$ be a finite simple undirected graph. Following \cite{Nair2026}, the \emph{cycle interval} of $S \subseteq V$, denoted $I_{cc}(S)$, is the set consisting of $S$ together with all vertices $w \in V$ that lie on a cycle of $G$ whose remaining vertices belong to $S$. Equivalently, $w \in I_{cc}(S) \setminus S$ if and only if $w$ has at least two distinct neighbors in the same connected component of the induced subgraph $G[S]$. A set $W \subseteq V$ is \emph{cycle convex} if $I_{cc}(W) = W$, and the \emph{cycle convex hull} $\Hull(S)$ is the intersection of all cycle convex sets containing $S$.
+
+The two classical convexity invariants studied in \cite{Nair2026} are:
+\begin{itemize}
+\item A set $S \subseteq V$ is \emph{Helly independent} if $\bigcap_{a \in S} \Hull(S \setminus \{a\}) = \emptyset$. The \emph{cycle Helly number} $\hl(G)$ is the maximum cardinality of a Helly-independent set.
+\item A set $S \subseteq V$ is \emph{Radon independent} if there is no bipartition $\{A, B\}$ of $S$ (with $A, B \neq \emptyset$, $A \cap B = \emptyset$, $A \cup B = S$) such that $\Hull(A) \cap \Hull(B) \neq \emptyset$. The \emph{cycle Radon number} $\rd(G)$ is the maximum cardinality of a Radon-independent set.
+\end{itemize}
+
+In Section~5 of \cite{Nair2026}, the authors observed that $\hl(G)$ and $\rd(G)$ coincide across all graph classes they analyzed and posed the following conjecture.
+
+\begin{conjecture}[Nair et al.~\cite{Nair2026}, Conjecture~1]\label{conj:main}
+For every connected graph $G$ of order $n \ge 2$, we have $\hl(G) = \rd(G)$.
+\end{conjecture}
+
+In this note we prove that $\hl(G) \le \rd(G)$ holds universally for all finite graphs (Proposition~\ref{prop:levi}), and we refute Conjecture~\ref{conj:main} with an explicit connected $16$-vertex graph $G_{16}$ for which $\hl(G_{16}) = 5$ and $\rd(G_{16}) = 6$ (Theorem~\ref{thm:main}).
+
+\section{General Levi Inequality}
+
+\begin{proposition}\label{prop:levi}
+For every finite graph $G$, every Helly-independent set is Radon independent. Consequently, $\hl(G) \le \rd(G)$.
+\end{proposition}
+
+\begin{proof}
+Suppose $S \subseteq V(G)$ admits a Radon partition $\{A, B\}$ with $v \in \Hull(A) \cap \Hull(B)$. For each $a \in S$, either $a \in A$ (in which case $B \subseteq S \setminus \{a\}$, so $v \in \Hull(B) \subseteq \Hull(S \setminus \{a\})$) or $a \in B$ (in which case $A \subseteq S \setminus \{a\}$, so $v \in \Hull(A) \subseteq \Hull(S \setminus \{a\})$). Thus $v \in \bigcap_{a \in S} \Hull(S \setminus \{a\})$, showing that $S$ is Helly dependent.
+\end{proof}
+
+\section{The Counterexample Graph $G_{16}$}
+
+Construct the simple undirected graph $G_{16} = (V, E)$ on $16$ vertices as follows:
+\begin{itemize}
+\item For each $i \in \mathbb{Z}_3 = \{0, 1, 2\}$, take a complete graph $K^{(i)} \cong K_5$ on five vertices
+\[
+s_i = 5i, \quad t_i = 5i+1, \quad u_i = 5i+2, \quad p_i = 5i+3, \quad q_i = 5i+4.
+\]
+\item Add a central hub vertex $x = 15$ adjacent to $u_0, u_1, u_2$.
+\item Add three cyclic port edges $p_i q_{i+1}$ for $i \in \mathbb{Z}_3$, i.e., $(3, 9)$, $(8, 14)$, and $(13, 4)$.
+\end{itemize}
+Then $G_{16}$ has $16$ vertices and $3\binom{5}{2} + 3 + 3 = 36$ edges (graph6 string \texttt{O\~{}\{?GKFDw??@?BAB\_DxAC}), and is connected because every vertex in $K^{(i)}$ is equal or adjacent to $u_i$, which is adjacent to $x$.
+
+\begin{theorem}\label{thm:main}
+The connected $16$-vertex graph $G_{16}$ satisfies $\hl(G_{16}) = 5$ and $\rd(G_{16}) = 6$. In particular, Conjecture~\ref{conj:main} is false.
+\end{theorem}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+\begin{lemma}\label{lem:tri}
+If $T \subseteq V(G)$ contains three pairwise adjacent vertices $a, b, c$, then $T$ is Radon dependent. In particular, every Radon-independent (and hence every Helly-independent) subset $T \subseteq V(G_{16})$ satisfies $|T \cap K^{(i)}| \le 2$ for each $i \in \mathbb{Z}_3$.
+\end{lemma}
+
+\begin{proof}
+Consider the bipartition $A = \{a\}$, $B = T \setminus \{a\}$. Both $b$ and $c$ lie in $B$, and $a - b - c - a$ is a triangle, so $a \in \Hull(B) \cap \Hull(A)$. Since each $K^{(i)}$ is a clique, no Radon-independent set can contain three vertices from $K^{(i)}$.
+\end{proof}
+
+\begin{lemma}\label{lem:gen}
+Let $A \subseteq V(G_{16})$.
+\begin{enumerate}
+\item If $A$ contains two distinct vertices $a, b \in K^{(i)}$, then $K^{(i)} \subseteq \Hull(A)$.
+\item If $\Hull(A)$ contains two distinct cliques $K^{(i)}$ and $K^{(j)}$ ($i \neq j$), then $x \in \Hull(A)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For (1), every $w \in K^{(i)} \setminus \{a, b\}$ lies on the triangle $w - a - b - w$ with $a, b \in A$, so $w \in I_{cc}(A) \subseteq \Hull(A)$. For (2), since $i \neq j$ in $\mathbb{Z}_3$, one index is the cyclic successor of the other; without loss of generality $j = i + 1 \pmod 3$. Then $x - u_i - p_i - q_{i+1} - u_{i+1} - x$ is a $5$-cycle whose four vertices other than $x$ lie in $K^{(i)} \cup K^{(i+1)} \subseteq \Hull(A)$, so $x \in I_{cc}(\Hull(A)) = \Hull(A)$.
+\end{proof}
+
+\begin{lemma}\label{lem:hullS}
+Set $S = \{s_0, t_0, s_1, t_1, s_2, t_2\} = \{0, 1, 5, 6, 10, 11\}$. For every subset $A \subseteq S$, let $J(A) = \{i \in \mathbb{Z}_3 : s_i, t_i \in A\}$. Then
+\[
+\Hull(A) = W_A := A \cup \bigcup_{i \in J(A)} K^{(i)} \cup \begin{cases} \{x\}, & |J(A)| \ge 2, \\ \emptyset, & |J(A)| \le 1. \end{cases}
+\]
+\end{lemma}
+
+\begin{proof}
+The inclusion $W_A \subseteq \Hull(A)$ follows immediately from Lemma~\ref{lem:gen}. For the reverse inclusion, it suffices to show that $W_A$ is cycle convex, i.e., no vertex $w \notin W_A$ has two distinct neighbors in $W_A$ connected by a walk in $G_{16}[W_A]$.
+
+If $w = x \notin W_A$, then $|J(A)| \le 1$. The neighbors of $x$ in $G_{16}$ are $u_0, u_1, u_2$. Because $u_k \notin S$, we have $u_k \in W_A$ if and only if $k \in J(A)$, so $x$ has at most $|J(A)| \le 1$ neighbor in $W_A$.
+
+Now suppose $w \in K^{(k)} \setminus W_A$, so $k \notin J(A)$. Then $W_A \cap K^{(k)} = A \cap K^{(k)}$ has at most one element, which belongs to $\{s_k, t_k\}$. Since $s_k$ and $t_k$ have no neighbors outside $K^{(k)}$, any vertex of $W_A \cap K^{(k)}$ is isolated in $G_{16}[W_A]$, and thus cannot reach any other vertex of $W_A$. Meanwhile, by construction every vertex $w \in K^{(k)}$ has at most one neighbor outside $K^{(k)}$ ($s_k, t_k$ have none; $u_k$ has only $x$; $p_k$ has only $q_{k+1}$; $q_k$ has only $p_{k-1}$). Hence $w$ cannot have two distinct neighbors in $W_A$ that lie in the same connected component of $G_{16}[W_A]$. Therefore $W_A$ is cycle convex and $\Hull(A) = W_A$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+We establish the four bounds for $\rd(G_{16})$ and $\hl(G_{16})$.
+
+\emph{(1) $\rd(G_{16}) \ge 6$.} Let $\{A, B\}$ be any bipartition of $S$. Since $A \cap B = \emptyset$, the sets $J(A)$ and $J(B)$ are disjoint subsets of $\mathbb{Z}_3$, so $|J(A)| + |J(B)| \le 3$ and at most one of them has cardinality at least $2$. By Lemma~\ref{lem:hullS}, $x \notin W_A \cap W_B$, and the clique unions $\bigcup_{i \in J(A)} K^{(i)}$ and $\bigcup_{j \in J(B)} K^{(j)}$ are disjoint. Moreover, a vertex $v \in A \cap K^{(k)}$ cannot lie in $K^{(k)}$ inside $W_B$ (which would require $k \in J(B)$, forcing $s_k, t_k \in B$, contrary to $A \cap B = \emptyset$), and symmetrically for $B$. Hence $\Hull(A) \cap \Hull(B) = W_A \cap W_B = \emptyset$, so $S$ is Radon independent and $\rd(G_{16}) \ge |S| = 6$.
+
+\emph{(2) $\rd(G_{16}) \le 6$.} Suppose for contradiction that $T \subseteq V(G_{16})$ is Radon independent with $|T| \ge 7$. By Lemma~\ref{lem:tri}, $|T \cap K^{(i)}| \le 2$ for each $i \in \mathbb{Z}_3$. Since $V(G_{16}) = K^{(0)} \sqcup K^{(1)} \sqcup K^{(2)} \sqcup \{x\}$, we must have $x \in T$ and $|T \cap K^{(i)}| = 2$ for all $i \in \mathbb{Z}_3$. Partition $T$ as $A = \{x\}$ and $B = T \setminus \{x\}$. Because $B$ contains two vertices in $K^{(0)}$ and two in $K^{(1)}$, Lemma~\ref{lem:gen} gives $x \in \Hull(B)$, so $x \in \Hull(A) \cap \Hull(B)$, contradicting Radon independence.
+
+\emph{(3) $\hl(G_{16}) \ge 5$.} Take $H_5 = \{s_0, t_0, s_1, t_1, s_2\} \subset S$. Applying Lemma~\ref{lem:hullS}:
+\begin{align*}
+\Hull(H_5 \setminus \{s_0\}) &= \{t_0, s_2\} \cup K^{(1)}, &
+\Hull(H_5 \setminus \{t_0\}) &= \{s_0, s_2\} \cup K^{(1)}, \\
+\Hull(H_5 \setminus \{s_1\}) &= \{t_1, s_2\} \cup K^{(0)}, &
+\Hull(H_5 \setminus \{t_1\}) &= \{s_1, s_2\} \cup K^{(0)}, \\
+\Hull(H_5 \setminus \{s_2\}) &= K^{(0)} \cup K^{(1)} \cup \{x\}.
+\end{align*}
+Every vertex in $K^{(0)}$ is omitted from either $\Hull(H_5 \setminus \{s_0\})$ or $\Hull(H_5 \setminus \{t_0\})$; every vertex in $K^{(1)}$ is omitted from either $\Hull(H_5 \setminus \{s_1\})$ or $\Hull(H_5 \setminus \{t_1\})$; $s_2$ is omitted from $\Hull(H_5 \setminus \{s_2\})$; and every vertex in $(K^{(2)} \setminus \{s_2\}) \cup \{x\}$ is omitted from $\Hull(H_5 \setminus \{s_0\})$. Hence $\bigcap_{a \in H_5} \Hull(H_5 \setminus \{a\}) = \emptyset$, so $\hl(G_{16}) \ge 5$.
+
+\emph{(4) $\hl(G_{16}) \le 5$.} Suppose $T \subseteq V(G_{16})$ is Helly independent with $|T| \ge 6$. By Proposition~\ref{prop:levi} and Lemma~\ref{lem:tri}, $|T \cap K^{(i)}| \le 2$ for each $i \in \mathbb{Z}_3$. We claim $x \in \Hull(T \setminus \{a\})$ for every $a \in T$:
+\begin{itemize}
+\item If $a = x$, then $|T \setminus \{x\}| \ge 5$, so at least two cliques $K^{(i)}, K^{(j)}$ each contain two vertices of $T \setminus \{x\}$; Lemma~\ref{lem:gen} gives $x \in \Hull(T \setminus \{x\})$.
+\item If $a \neq x$ and $x \in T$, then $x \in T \setminus \{a\} \subseteq \Hull(T \setminus \{a\})$.
+\item If $a \neq x$ and $x \notin T$, then $|T| \ge 6$ forces $|T \cap K^{(i)}| = 2$ for all $i \in \mathbb{Z}_3$. Deleting $a \in K^{(k)}$ leaves two vertices in each of the other two cliques $K^{(i)}, K^{(j)}$, so Lemma~\ref{lem:gen} again yields $x \in \Hull(T \setminus \{a\})$.
+\end{itemize}
+Thus $x \in \bigcap_{a \in T} \Hull(T \setminus \{a\})$, contradicting Helly independence. This completes the proof.
+\end{proof}
+
+\section{Formalization and Computational Remarks}
+
+Proposition~\ref{prop:levi} and Theorem~\ref{thm:main} are completely formalized in Lean~4 (\texttt{v4.33.1} + Mathlib) in \texttt{lean/Conjectures/CycleConvexityHellyRadon.lean} using only the three standard axioms (\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}), with zero \texttt{sorry}, \texttt{admit}, or \texttt{native\_decide}. An independent Python~3 script (\texttt{results/cycle-convexity-helly-radon/verify.py}) also computes $\Hull(W)$ for all $65{,}536$ subsets of $V(G_{16})$ and confirms $\hl(G_{16}) = 5$ and $\rd(G_{16}) = 6$.
+
+Interestingly, exhaustive computer search over all connected graphs of order $n \le 10$ (including all $11{,}716{,}571$ connected graphs on $10$ vertices) found no counterexample to Conjecture~\ref{conj:main}; indeed, on every connected graph with $n \le 10$, Helly independence and Radon independence coincide at the level of individual vertex sets. Determining the minimum order $n_{\min} \in \{11, \dots, 16\}$ of a connected graph with $\hl(G) < \rd(G)$ remains open.
+
+\begin{thebibliography}{1}
+\bibitem{Nair2026}
+R.~S.~Nair, B.~S.~Anand, Ullas~Chandran~S.~V., J.~R.~Nascimento, and A.~Anil,
+\emph{Computing the Helly Number, Radon Number and Rank in Cycle Convexity},
+arXiv:2609.34236v1 [cs.DM], September 28, 2026.
+\end{thebibliography}
+
+\end{document}
