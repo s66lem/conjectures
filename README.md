@@ -65,6 +65,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **53.** [Mukherjee–Ray Problem 6.2 (`arXiv:2611.10985v2`, log-concavity of connected zero forcing polynomials of unicyclic graphs)](results/mukherjee-ray-unicyclic-zf/) | Disproved (exact closed form for all tadpoles $T_{m,\ell}$: log-concave $\iff m \le 4$ or $\ell \le 1$; counterexamples $T_{5, n-5}$ for every order $n \ge 7$, sharp & unique at $n = 7$ via $T_{5,2}$ with $7^2 = 49 < 50 = 5 \cdot 10$) | [DOI](https://doi.org/10.5281/zenodo.24572283) | **Lean 4** · Cross-Model Audit · Python |
 | **54.** [Lassak–Szarek Problem (`arXiv:2611.21947v1`, centroid Banach–Mazur distance $d_{\mathrm{BM}}^{\mathrm{cen}}(F, T)$ between pentagon and triangle)](results/lassak-szarek-pentagon-centroid/) | Disproved (rotated equilateral triangle gives $d_{\mathrm{BM}}^{\mathrm{cen}}(F, T) \le (1 + \cos 24^\circ)/\cos 36^\circ \approx 2.365272 < 19/8 = 2.375 < \eta = (7 - \sqrt{5})/2 \approx 2.381966$, with exact $\mathbb{Q}(\sqrt{5})$ rational certificate) | [DOI](https://doi.org/10.5281/zenodo.24572740) | **Lean 4** · Cross-Model Audit · Python |
 | **55.** [Song–Dalfó–Fiol–Zhang Conjecture (`arXiv:2610.00500v1`, Laplacian spectral radius $\rho(F_k(G)) = \rho(G)$ of $k$-token graphs)](results/song-dalfo-fiol-zhang-token-laplacian/) | Resolved completely (Theorem 1 proves intended connected conjecture: every connected non-star $G$ of order $n \ge 4$ satisfies $\rho(F_2(G)) > \rho(G)$; Theorem 2 classifies all equality graphs of order $n \ge 4$ as $\overline{K_n}$, $S_m \cup (n - m)K_1$ ($m \ge 2$), and $K_3 \cup (n - 3)K_1$) | [DOI](https://doi.org/10.5281/zenodo.24573109) | **Lean 4** · Cross-Model Audit · Python |
+| **56.** [Thongjarast Problem 2 (`arXiv:2607.18452v1`, discarding a letter in cyclic equalizability of words)](results/thongjarast-cyclic-equalizability/) | Disproved for every alphabet size $m \ge 3$ ($u_m = \prod x_i x_i x_{i+1}$, $v_m = \prod x_{i+1} x_i x_{i+1}$ of length $3m$ cannot be $(\Sigma \setminus \{c\})$-cyclically equalized for any $c \in \Sigma$; smallest instance $m = 3$: `aabbbccca` vs `babcbcaca`, $\Sigma$-equalizable at length $15$) | [DOI](https://doi.org/10.5281/zenodo.24573606) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -126,6 +127,7 @@ python3 results/agyingi-gaba-qhyperconvex-modular/verify.py
 python3 results/mukherjee-ray-unicyclic-zf/verify.py
 python3 results/lassak-szarek-pentagon-centroid/verify.py
 python3 results/song-dalfo-fiol-zhang-token-laplacian/verify.py
+python3 results/thongjarast-cyclic-equalizability/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):

@@ -1,0 +1,199 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Disproof of Thongjarast's Discard-Letter Conjecture on Cyclic Equalizability of Words}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We answer in the negative Problem~2 of S.~Thongjarast
+(arXiv:2607.18452v1), which asks whether two words $u, v$ over an alphabet
+$\Sigma$ of size $m \ge 3$ that are permutations of each other must always be
+$(\Sigma \setminus \{c\})$-cyclically equalizable for some letter $c \in \Sigma$.
+For every $m \ge 3$ and distinct letters $x_0, \dots, x_{m-1}$ (indices modulo
+$m$), we show that the length-$3m$ words
+$u_m = \prod_{i=0}^{m-1} x_i x_i x_{i+1}$ and
+$v_m = \prod_{i=0}^{m-1} x_{i+1} x_i x_{i+1}$
+are permutations of each other using all letters of $\Sigma$, yet are not
+$(\Sigma \setminus \{c\})$-cyclically equalizable for any $c \in \Sigma$.
+The smallest instance is $u_3 = \texttt{aabbbccca}$, $v_3 = \texttt{babcbcaca}$.
+The proof is completely elementary and is formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+Let $\Sigma$ be a finite alphabet and $\sigma \subseteq \Sigma$. A
+\emph{$\sigma$-simultaneous insertion} transforms two length-$n$ words
+$u = a_0 \dots a_{n-1}$ and $v = b_0 \dots b_{n-1}$ over $\Sigma$ into
+\[
+u' = w_0 a_0 w_1 a_1 \dots w_{n-1} a_{n-1} w_n, \qquad
+v' = w_0 b_0 w_1 b_1 \dots w_{n-1} b_{n-1} w_n,
+\]
+where $w_0, \dots, w_n \in \sigma^*$. Two words $u', v'$ of length $L$ are
+\emph{cyclically equivalent} if there exists an integer $d$ such that
+$u'[t] = v'[(t + d) \bmod L]$ for all $0 \le t < L$. The pair $(u, v)$ is
+\emph{$\sigma$-cyclically equalizable} if some $\sigma$-simultaneous insertion
+yields cyclically equivalent words $u', v'$.
+
+Thongjarast~\cite{Th2026} studied cyclic equalizability motivated by
+card-based cryptography and posed Problem~2:
+
+\begin{quote}
+Let $\Sigma$ be an alphabet of size at least $3$. Let $u$ and $v$ be words over
+$\Sigma$ that are permutations of each other. Must there exist a letter
+$c \in \Sigma$ such that $u$ and $v$ are $(\Sigma \setminus \{c\})$-equalizable?
+\end{quote}
+
+While the ternary pair $(\texttt{012}, \texttt{021})$ shows that the discarded
+letter cannot be chosen in advance (discarding $\texttt{0}$ fails, whereas
+discarding $\texttt{1}$ or $\texttt{2}$ succeeds), it remained open whether
+some letter can always be discarded. We show that the answer is no for every
+alphabet size $m \ge 3$.
+
+\section{Counterexample Family and Proof}
+
+\begin{theorem}\label{thm:main}
+For every integer $m \ge 3$ and alphabet $\Sigma = \{x_0, \dots, x_{m-1}\}$ of
+$m$ distinct letters (indices modulo $m$), define the length-$3m$ words
+\[
+u_m := \prod_{i=0}^{m-1} x_i x_i x_{i+1}, \qquad
+v_m := \prod_{i=0}^{m-1} x_{i+1} x_i x_{i+1}.
+\]
+Then $u_m$ and $v_m$ are permutations of each other using every letter of
+$\Sigma$, $u_m \ne v_m$, and for every $c \in \Sigma$ the pair $(u_m, v_m)$ is
+not $(\Sigma \setminus \{c\})$-cyclically equalizable.
+\end{theorem}
+
+\begin{proof}
+Index positions by $0, 1, \dots, 3m - 1$. Block $k \in \{0, \dots, m - 1\}$
+occupies indices $3k, 3k + 1, 3k + 2$ with letter pairs $(u_m[j], v_m[j])$
+equal to $(x_k, x_{k+1})$, $(x_k, x_k)$, and $(x_{k+1}, x_{k+1})$, respectively.
+Each letter $x_i$ occurs three times in $u_m$ and three times in $v_m$, so
+$u_m$ and $v_m$ are permutations of each other. Moreover $u_m[0] = x_0 \ne x_1
+= v_m[0]$, so $u_m \ne v_m$.
+
+Fix $c = x_i \in \Sigma$ and $\sigma := \Sigma \setminus \{c\}$. Suppose for a
+contradiction that some $\sigma$-simultaneous insertion produces cyclically
+equivalent words $u', v'$ of length $L$ with shift $d$:
+$u'[t] = v'[(t + d) \bmod L]$ for all $0 \le t < L$. Let
+$0 \le P(0) < P(1) < \dots < P(3m - 1) < L$ be the indices of the original
+letters in $u'$ (and in $v'$). For every $j$ we have $u'[P(j)] = u_m[j]$ and
+$v'[P(j)] = v_m[j]$, while every inserted index $t \notin \mathrm{range}(P)$
+satisfies $u'[t] = v'[t] \in \sigma$. Set $e := d \bmod L \in \{0, \dots, L - 1\}$.
+
+\medskip
+\noindent\textbf{Step 1 ($0 < e < L$).}
+If $e = 0$, then $u' = v'$, whence $u_m[j] = u'[P(j)] = v'[P(j)] = v_m[j]$ for
+all $j$, contradicting $u_m \ne v_m$.
+
+\medskip
+\noindent\textbf{Step 2 (Rigidity of $c$).}
+Let $U_c := \{j : u_m[j] = c\}$ and $V_c := \{j : v_m[j] = c\}$. For any
+$j \in U_c$, put $t' := (P(j) + e) \bmod L$. Then
+$v'[t'] = u'[P(j)] = c \notin \sigma$, so $t'$ cannot be an inserted index.
+Hence $t' = P(j')$ for a unique $j' \in V_c$. Setting $\varphi(j) := j'$ gives
+a map $\varphi : U_c \to V_c$ with $P(\varphi(j)) = (P(j) + e) \bmod L$. Since
+$P$ is injective and $0 < e < L$, $\varphi$ is injective and fixed-point-free;
+as $|U_c| = |V_c| = 3$, $\varphi$ is a fixed-point-free bijection.
+
+\medskip
+\noindent\textbf{Step 3 (Half-turn forcing: $2e = L$).}
+Let $i' := (i - 1) \bmod m$ and set
+\[
+\alpha := 3i' + 2, \qquad \beta := 3i, \qquad \gamma := 3i + 1, \qquad
+\delta := 3i'.
+\]
+Then $U_c = \{\alpha, \beta, \gamma\}$ and $V_c = \{\alpha, \gamma, \delta\}$
+are subsets of four distinct indices. Define the cyclic offset
+$x(j) := (P(j) + L - P(\beta)) \bmod L \in \{0, \dots, L - 1\}$. Then
+$x(\beta) = 0$ and $x(\varphi(j)) = (x(j) + e) \bmod L$ for all $j \in U_c$.
+
+We have $0 = x(\beta) < x(\gamma) < x(\delta) < x(\alpha) < L$:
+\begin{itemize}
+  \item If $i = 0$, then $i' = m - 1$ and $0 = \beta < \gamma = 1 < \delta =
+    3m - 3 < \alpha = 3m - 1$ (as $m \ge 3$), so $P(\beta) < P(\gamma) <
+    P(\delta) < P(\alpha) < L$ and $x(j) = P(j) - P(\beta)$ preserves order.
+  \item If $i \ge 1$, then $i' = i - 1$ and $\delta < \alpha < \beta < \gamma$,
+    so $P(\delta) < P(\alpha) < P(\beta) < P(\gamma) < L$ and
+    $x(\gamma) = P(\gamma) - P(\beta) < L - P(\beta) \le L + P(\delta) -
+    P(\beta) = x(\delta) < L + P(\alpha) - P(\beta) = x(\alpha) < L$.
+\end{itemize}
+There are exactly three fixed-point-free bijections $U_c \to V_c$, classified
+by $\varphi(\beta) \in \{\alpha, \gamma, \delta\}$:
+\begin{enumerate}
+  \item If $\varphi(\beta) = \alpha$, then $\varphi(\alpha) = \gamma$ and
+    $\varphi(\gamma) = \delta$, giving $x(\alpha) = e$, $x(\gamma) = 2e \bmod L$,
+    and $x(\delta) = 3e \bmod L$, so $0 < (2e \bmod L) < (3e \bmod L) < e$.
+    The last inequality forces $2e \ge L$, so $2e \bmod L = 2e - L$. If
+    $3e < 2L$, then $3e \bmod L = 3e - L < e$ gives $2e < L$; if $3e \ge 2L$,
+    then $3e \bmod L = 3e - 2L > 2e - L$ gives $e > L$. Both are impossible.
+  \item If $\varphi(\beta) = \gamma$, then $\varphi(\gamma) = \alpha$ and
+    $\varphi(\alpha) = \delta$, giving $x(\gamma) = e$, $x(\alpha) = 2e \bmod L$,
+    and $x(\delta) = 3e \bmod L$, so $0 < e < (3e \bmod L) < (2e \bmod L)$.
+    Here $2e \bmod L > e$ forces $2e < L$, so $2e \bmod L = 2e$. If $3e < L$,
+    then $3e \bmod L = 3e > 2e$; if $3e \ge L$, then $3e \bmod L = 3e - L > e$
+    gives $2e > L$. Both are impossible.
+  \item Therefore $\varphi(\beta) = \delta$, $\varphi(\alpha) = \gamma$, and
+    $\varphi(\gamma) = \alpha$. Hence $x(\alpha) = (x(\alpha) + 2e) \bmod L$,
+    so $2e \equiv 0 \pmod{L}$. Since $0 < e < L$, we obtain $2e = L$.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Step 4 (Antipodal-swap contradiction).}
+Since $2e = L$, shifting twice by $d$ is the identity modulo $L$. Let
+$t_0 := P(0)$ and $t_1 := (t_0 + d) \bmod L$. Then
+\[
+v'[t_1] = u'[t_0] = u_m[0] = x_0, \qquad
+u'[t_1] = v'[(t_1 + d) \bmod L] = v'[t_0] = v_m[0] = x_1.
+\]
+Since $x_1 \ne x_0$, we cannot have $u'[t_1] = v'[t_1]$, so $t_1$ is an
+original index: $t_1 = P(j_1)$ with $(u_m[j_1], v_m[j_1]) = (x_1, x_0)$.
+However, every mismatch position of $(u_m, v_m)$ has the form $j_1 = 3q$ with
+$(u_m[3q], v_m[3q]) = (x_q, x_{(q+1) \bmod m})$. Setting $x_q = x_1$ forces
+$q = 1$, and then $x_{(1+1) \bmod m} = x_0$ forces $2 \equiv 0 \pmod{m}$,
+contradicting $m \ge 3$.
+\end{proof}
+
+\section{Smallest Instance and Formal Verification}
+
+For $m = 3$ ($\Sigma = \{a, b, c\}$), Theorem~\ref{thm:main} yields the
+length-$9$ counterexample
+\[
+u_3 = \texttt{aabbbccca}, \qquad v_3 = \texttt{babcbcaca}.
+\]
+When the full alphabet $\Sigma$ is permitted, $(u_3, v_3)$ is cyclically
+equalizable: inserting the blocks
+$[\varepsilon, \varepsilon, \varepsilon, \texttt{ca}, \texttt{a}, \varepsilon,
+\texttt{a}, \texttt{ab}, \varepsilon, \varepsilon]$
+produces the length-$15$ words $\texttt{aabcababcacabca}$ and
+$\texttt{babcacabcaaabca}$, which agree under the cyclic shift $d = 10$.
+An exhaustive certificate search confirms that every pair of ternary
+permutations of length $n \le 6$ using all three letters is
+$(\Sigma \setminus \{c\})$-cyclically equalizable for at least one
+$c \in \{a, b, c\}$, so the minimal ternary counterexample length lies in
+$\{7, 8, 9\}$.
+
+Theorem~\ref{thm:main} (for arbitrary finite alphabets of size $\ge 3$) and the
+length-$15$ full-alphabet witness for $m = 3$ are formally verified in Lean~4
+(standard axioms only) and accompanied by a standalone Python verifier in the
+accompanying repository:
+\begin{center}
+\url{https://github.com/s66lem/conjectures/tree/main/results/thongjarast-cyclic-equalizability}
+\end{center}
+
+\begin{thebibliography}{9}
+\bibitem{Th2026}
+S.~Thongjarast,
+\emph{0-Cyclic Equalizability of Binary Words Characterized by Hamming Weight},
+arXiv:2607.18452v1, July 2026.
+\end{thebibliography}
+
+\end{document}
