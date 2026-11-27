@@ -1,0 +1,193 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Full Rank Reversal Between Right and Inverse Left Eigenvectors for Four Alternatives}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve affirmatively the open question of S.~Boz\'oki and L.~Csat\'o
+(arXiv:2603.24274) asking whether there exists a $4 \times 4$ pairwise
+comparison matrix whose right Perron eigenvector and inverse left Perron
+eigenvector yield strictly reversed rankings of the four alternatives, and we
+characterize the full-reversal class in every dimension $n$. We construct an
+explicit $4 \times 4$ rational pairwise comparison matrix $A_4$ with Perron
+eigenvalue $\lambda_{\max} = 5$, right Perron eigenvector
+$w = (34, 33, 32, 22)^T$ (ranking $1 \succ 2 \succ 3 \succ 4$), and left
+Perron eigenvector
+$v = (\frac{42}{17}, \frac{27}{11}, \frac{77}{32}, \frac{26}{11})^T$ (so
+$v^{-1}$ ranks $4 \succ 3 \succ 2 \succ 1$). We also give a self-contained
+proof that $w^R$ and $w^{-L}$ always agree for $n = 3$, confirming that
+$n = 4$ is sharp. All theorems are formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+An $n \times n$ real matrix $A = (a_{ij})$ is a \emph{pairwise comparison
+matrix} (PCM) if $a_{ij} > 0$ and $a_{ij} a_{ji} = 1$ for all $1 \le i, j \le n$.
+In Saaty's eigenvector method, priorities are derived from the positive right
+Perron eigenvector $w^R$ satisfying $A w^R = \lambda_{\max} w^R$. A natural
+dual priority vector is the entrywise reciprocal $w^{-L} = (1/v_1, \dots, 1/v_n)^T$
+of the positive left Perron eigenvector $v$ satisfying
+$v^T A = \lambda_{\max} v^T$.
+
+In~\cite{BC2026}, Bozóki and Csató study right--left asymmetry and recall a
+$5 \times 5$ example where $w^R$ and $w^{-L}$ induce strictly opposite rankings
+of all five alternatives, then pose the following open question:
+\begin{quote}
+It remains an open question whether an analogous example exists for four
+alternatives. In addition, Example~5 calls for finding a class of pairwise
+comparison matrices for which the right and inverse left eigenvectors lead to
+a reversed order of the alternatives.
+\end{quote}
+
+We answer both parts: Theorem~\ref{thm:class} characterizes the full-reversal
+class in arbitrary dimension $n$, Theorem~\ref{thm:four} exhibits an explicit
+rational $4 \times 4$ witness, and Theorem~\ref{thm:sharp} confirms sharpness
+at $n = 3$.
+
+\section{Uniqueness and Characterization}
+
+\begin{lemma}[Positive eigenvector uniqueness]\label{lem:uniq}
+Let $M \in \mathbb{R}_{>0}^{n \times n}$ ($n \ge 1$) have positive eigenvectors
+$M w = \lambda w$ and $v^T M = \lambda v^T$. Every positive right eigenvector
+$x$ of $M$ satisfies $M x = \lambda x$ and $x = t w$ for some $t > 0$;
+likewise every positive left eigenvector $y$ satisfies $y^T M = \lambda y^T$
+and $y = t v$ for some $t > 0$.
+\end{lemma}
+
+\begin{proof}
+Let $M x = \mu x$ with $x > 0$. Then
+$\mu (v^T x) = v^T M x = \lambda (v^T x)$, and $v^T x > 0$ gives $\mu = \lambda$.
+Also $\lambda > 0$ since $M, w > 0$. Let $t := \min_i (x_i / w_i) > 0$ and
+$z := x - t w \ge 0$, with $z_k = 0$ for a minimizing index $k$. Then
+$M z = \lambda z$. If $z \ne 0$, positivity of $M$ yields
+$0 < (M z)_k = \lambda z_k = 0$, a contradiction. Thus $z = 0$ and $x = t w$.
+Applying this result to $M^T$ proves left-eigenvector uniqueness.
+\end{proof}
+
+\begin{theorem}[Characterization of full reversal]\label{thm:class}
+Let $A \in \mathbb{R}_{>0}^{n \times n}$ be a PCM with positive right
+eigenvector $w$ and positive left eigenvector $v$ at eigenvalue $\lambda$. Set
+$B := D_w^{-1} A D_w$ (entries $b_{ij} = a_{ij} w_j / w_i$) and
+$u_i := v_i w_i$. Then:
+\begin{enumerate}
+\item $B$ is a PCM with constant row sums $\sum_{j=1}^n b_{ij} = \lambda$ and
+positive left eigenvector $u^T B = \lambda u^T$.
+\item $w$ is strictly decreasing and $v^{-1}$ is strictly increasing if and
+only if $u$ is strictly decreasing and
+$u_j / u_i < w_j / w_i < 1$ for all $1 \le i < j \le n$.
+\item Conversely, given any constant-row-sum PCM $B$ with strictly decreasing
+positive left eigenvector $u$ and any $w > 0$ satisfying
+$u_j / u_i < w_j / w_i < 1$ for all $i < j$, the matrix
+$A := D_w B D_w^{-1}$ is a PCM with right eigenvector $w$, left eigenvector
+$v = u / w$, and strictly reversed rankings under $w$ and $v^{-1}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Clearly $b_{ij} > 0$ and
+$b_{ij} b_{ji} = (a_{ij} a_{ji}) (w_j / w_i) (w_i / w_j) = 1$. Moreover
+$\sum_j b_{ij} = w_i^{-1} (A w)_i = \lambda$, and
+$(u^T B)_j = \sum_i (v_i w_i) (a_{ij} w_j / w_i) = (v^T A)_j w_j = \lambda u_j$.
+
+(2) Since $v_i = u_i / w_i$, the condition $v_i^{-1} < v_j^{-1}$ is equivalent
+to $v_j < v_i$, i.e., $u_j / w_j < u_i / w_i$, which rearranges to
+$u_j / u_i < w_j / w_i$. Similarly $w_j < w_i$ is equivalent to $w_j / w_i < 1$.
+Together these imply $u_j / u_i < 1$, so $u$ is strictly decreasing.
+
+(3) Setting $a_{ij} := w_i b_{ij} / w_j$ and $v_i := u_i / w_i$ gives a PCM
+with $(A w)_i = w_i \sum_j b_{ij} = \lambda w_i$ and
+$(v^T A)_j = w_j^{-1} (u^T B)_j = \lambda v_j$; reversal follows from~(2).
+\end{proof}
+
+\section{Explicit Four-Alternative Example and Sharpness}
+
+\begin{theorem}[Four-alternative full reversal]\label{thm:four}
+The $4 \times 4$ rational pairwise comparison matrix
+\[
+A_4 := \begin{pmatrix}
+1 & \frac{34}{11} & \frac{17}{48} & \frac{34}{33} \\[3pt]
+\frac{11}{34} & 1 & \frac{77}{32} & 2 \\[3pt]
+\frac{48}{17} & \frac{32}{77} & 1 & \frac{64}{77} \\[3pt]
+\frac{33}{34} & \frac{1}{2} & \frac{77}{64} & 1
+\end{pmatrix}
+\]
+has Perron eigenvalue $\lambda_{\max} = 5$, right Perron eigenvector
+$w_4 = (34, 33, 32, 22)^T$, and left Perron eigenvector
+$v_4 = \bigl(\frac{42}{17}, \frac{27}{11}, \frac{77}{32}, \frac{26}{11}\bigr)^T$.
+Consequently, every positive right eigenvector of $A_4$ induces the strict
+ranking $1 \succ 2 \succ 3 \succ 4$, while the entrywise reciprocal of every
+positive left eigenvector induces the strictly opposite ranking
+$4 \succ 3 \succ 2 \succ 1$.
+\end{theorem}
+
+\begin{proof}
+Consider the constant-row-sum PCM
+\[
+B := \begin{pmatrix}
+1 & 3 & \frac{1}{3} & \frac{2}{3} \\[3pt]
+\frac{1}{3} & 1 & \frac{7}{3} & \frac{4}{3} \\[3pt]
+3 & \frac{3}{7} & 1 & \frac{4}{7} \\[3pt]
+\frac{3}{2} & \frac{3}{4} & \frac{7}{4} & 1
+\end{pmatrix}.
+\]
+Every row of $B$ sums to $5$, and $u := (84, 81, 77, 52)^T$ satisfies
+$u^T B = 5 u^T$. The positive vector $w_4 = (34, 33, 32, 22)^T$ satisfies
+$\frac{81}{84} < \frac{33}{34} < 1$, $\frac{77}{81} < \frac{32}{33} < 1$, and
+$\frac{52}{77} < \frac{22}{32} < 1$. Rescaling via Theorem~\ref{thm:class}(3)
+produces $A_4 = D_{w_4} B D_{w_4}^{-1}$ and $v_4 = u / w_4$. Direct rational
+arithmetic confirms $A_4 w_4 = 5 w_4$, $v_4^T A_4 = 5 v_4^T$,
+$34 > 33 > 32 > 22$, and
+$\frac{17}{42} < \frac{11}{27} < \frac{32}{77} < \frac{11}{26}$. By
+Lemma~\ref{lem:uniq}, every positive right or left eigenvector is a positive
+scalar multiple of $w_4$ or $v_4$, preserving both strict orders.
+\end{proof}
+
+\begin{theorem}[Sharpness at $n = 3$]\label{thm:sharp}
+For every $3 \times 3$ PCM $A$, every positive right eigenvector $w$ and every
+positive left eigenvector $v$ satisfy $w = t v^{-1}$ for some $t > 0$. Thus
+no reversal is possible for $n = 3$.
+\end{theorem}
+
+\begin{proof}
+Write $a = a_{12}$, $b = a_{23}$, $c = a_{13}$, and set
+$q := (a b / c)^{1/3} > 0$, $\lambda := 1 + q + q^{-1}$. Direct substitution
+using $q^3 c = a b$ verifies that $w_0 := (c q,\, b / q,\, 1)^T$ satisfies
+$A w_0 = \lambda w_0$ and $(w_0^{-1})^T A = \lambda (w_0^{-1})^T$. By
+Lemma~\ref{lem:uniq}, $w = t_R w_0$ and $v = t_L w_0^{-1}$ for some
+$t_R, t_L > 0$, whence $w = (t_R t_L) v^{-1}$.
+\end{proof}
+
+\section{Formal Verification}
+
+All results in this paper are formally verified in Lean~4 using only the
+standard axioms (\texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound}), with zero errors and zero warnings:
+\begin{itemize}
+\item positive eigenvector uniqueness (\texttt{right\_perron\_unique} and
+\texttt{left\_perron\_unique});
+\item the dimension-free reversal class:\\
+\texttt{reversal\_class\_characterization} and
+\texttt{reversal\_from\_const\_rowsum};
+\item the four-alternative resolution
+(\texttt{bozoki\_csato\_four\_alternatives});
+\item sharpness for three alternatives (\texttt{n3\_right\_eq\_inv\_left}).
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{BC2026}
+S.~Boz\'oki and L.~Csat\'o,
+\emph{Theoretical properties of the eigenvector method},
+arXiv:2603.24274 (2026).
+\end{thebibliography}
+
+\end{document}
