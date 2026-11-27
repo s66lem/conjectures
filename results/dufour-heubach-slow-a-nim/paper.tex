@@ -1,0 +1,231 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Disproof and Exact Characterization for Dufour--Heubach Conjecture~1 on Slow $A$-Nim}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We disprove Conjecture~1 of M.~Dufour and S.~Heubach (INTEGERS~26 (2026),
+\#G3, Section~6; arXiv:2404.06608v3) on the $\mathcal{P}$-positions of Slow
+$A$-Nim for $A = \{k, k+1, \dots, n\}$, and we prove the exact corrected
+characterization for all $n \ge 1$, $k \ge 1$, and all positions
+$p \in \mathbb{N}^n$. Conjecture~1 fails in two ways in its middle set
+$s = k - 1$: at $n = 4, k = 2$, the reduced $\mathcal{P}$-position
+$(0, 1, 2, 2)$ violates the conjectured parity constraint $o \equiv n \pmod 2$;
+and for every odd $k \ge 3$ and $n \ge (3k - 1)/2$, having $(3k - 1)/2$ stacks
+of height $2$ yields a reduced $\mathcal{P}$-position violating $1 \le o$. We
+prove that for every position $p$ (reduced or not), letting $\tilde p$ denote
+its playable reduction, $D(q) := \sum_i \lceil q_i / 2 \rceil$, and
+$E(q) := \sum_i \lfloor q_i / 2 \rfloor$, the position $p$ is a
+$\mathcal{P}$-position if and only if
+$\lfloor D(\tilde p) / k \rfloor = \lfloor E(\tilde p) / k \rfloor$. The entire
+disproof and characterization theorem are formally verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+In Slow $A$-Nim~\cite{DH2026}, denoted $\mathrm{SN}(n, A)$, a position is a
+vector $p = (p_1, \dots, p_n) \in \mathbb{N}^n$ of stack heights. Under normal
+play, a legal move chooses $a \in A$ and removes one token from each of $a$
+distinct positive stacks. For $A = \{k, k+1, \dots, n\}$ ($k \ge 1$), set
+$\sigma(p) := \sum_{i=1}^n p_i$, $o(p) := |\{i : p_i \text{ is odd}\}|$, and
+$s(p) := \sigma(p) \bmod (2k)$. A position $p$ is \emph{reduced} if
+$k p_i \le \sigma(p)$ for all $i$. More generally, let
+\[
+t(p) := \max \Bigl\{ t \in \mathbb{N} : k t \le \sum_{i=1}^n \min(p_i, t) \Bigr\},
+\qquad
+\tilde p_i := \min(p_i, t(p)).
+\]
+In Section~6 of~\cite{DH2026}, Dufour and Heubach proposed Conjecture~1 for the
+playable reduced game $\mathrm{SN}_{\tilde G}(n, \{k, \dots, n\})$:
+\begin{quote}
+The set of $\mathcal{P}$-positions is given by
+\begin{align*}
+\mathcal{P}_{n,A} &= \{(s, o) \mid s \equiv o \pmod 2,\; 0 \le s < k - 1,\; o \le s\} \\
+&\quad \cup \{(k - 1, o) \mid o \equiv n \pmod 2,\; 1 \le o \le k - 1\} \\
+&\quad \cup \{(s, o) \mid s \equiv o \pmod 2,\; k - 1 < s < 2k - 1,\; o \le 2(k - 1) - s\}.
+\end{align*}
+\end{quote}
+
+We show that both extra conditions in the middle set ($o \equiv n \pmod 2$ and
+$1 \le o$) are false, and we establish the exact $\mathcal{P}$-position
+characterization for all $(n, k, p)$.
+
+\section{Exact Characterization Theorem}
+
+For $q \in \mathbb{N}^n$, define
+$D(q) := \sum_{i=1}^n \lceil q_i / 2 \rceil$ and
+$E(q) := \sum_{i=1}^n \lfloor q_i / 2 \rfloor$. Clearly
+$D(q) + E(q) = \sigma(q)$ and $D(q) - E(q) = o(q)$.
+
+\begin{lemma}[Reduction invariance]\label{lem:red}
+Let $k \ge 1$ and $p \in \mathbb{N}^n$, and set $t := t(p)$ and
+$H := \{i : p_i > t\}$. Then $\sigma(\tilde p) + |H| < k(t + 1)$, so $|H| < k$,
+and $t = 0$ iff fewer than $k$ stacks of $p$ are positive. Moreover, for every
+legal move $q = p - e_S$ ($|S| \ge k$), we have $t(q) < t(p)$ and
+$\widetilde{p - e_S} = \widetilde{\tilde p - e_S}$.
+\end{lemma}
+
+\begin{proof}
+Since $\sum_i \min(p_i, t + 1) = \sigma(\tilde p) + |H|$, maximality of $t$
+gives $\sigma(\tilde p) + |H| < k(t + 1)$, while $k t \le \sigma(\tilde p)$
+forces $|H| < k$. If $q = p - e_S$ with $|S| \ge k$, then
+$|H| + |S \setminus H| \ge |S| \ge k$, and chopping $q$ at $t$ decreases the
+sum by at least $|S \setminus H| \ge k - |H| > \sigma(\tilde p) - k t$, so
+$\sum_i \min(q_i, t) < k t$ and hence $t(q) < t$. For every $s < t$, each
+coordinate satisfies $\min(q_i, s) = \min(\tilde p_i - \mathbf{1}_{i \in S}, s)$,
+so both $p - e_S$ and $\tilde p - e_S$ share the same reduction height and
+reduced vector.
+\end{proof}
+
+\begin{lemma}[Even-below-$t$ lemma]\label{lem:even}
+Let $k \ge 1$ and $q \in \mathbb{N}^n$. If $q_i$ is even for every $i$ with
+$q_i \le t(q)$, then $\lfloor D(\tilde q)/k \rfloor = \lfloor E(\tilde q)/k \rfloor$.
+\end{lemma}
+
+\begin{proof}
+Set $t := t(q)$ and $H := \{i : q_i > t\}$ ($|H| < k$). If $t = 2r$ is even,
+every entry of $\tilde q$ is even, so $D(\tilde q) = E(\tilde q)$. If
+$t = 2r + 1$ is odd, then the odd entries of $\tilde q$ are exactly $H$, so
+$D(\tilde q) = E(\tilde q) + |H|$ and $D(\tilde q) + E(\tilde q) = \sigma(\tilde q)$.
+By Lemma~\ref{lem:red}, $k(2r + 1) \le \sigma(\tilde q)$ and
+$\sigma(\tilde q) + |H| < k(2r + 2)$. Hence
+$2 D(\tilde q) = \sigma(\tilde q) + |H| < 2k(r + 1)$ and
+$2 E(\tilde q) = \sigma(\tilde q) - |H| \ge k(2r + 1) - |H| > 2k r - 1$,
+giving $k r \le E(\tilde q) \le D(\tilde q) < k(r + 1)$.
+\end{proof}
+
+\begin{theorem}[Complete $\mathcal{P}$-position characterization]\label{thm:char}
+For every $n \ge 1$, $k \ge 1$, and $p \in \mathbb{N}^n$,
+\[
+p \text{ is a }\mathcal{P}\text{-position of }\mathrm{SN}(n, \{k, \dots, n\})
+\iff
+\left\lfloor \frac{D(\tilde p)}{k} \right\rfloor =
+\left\lfloor \frac{E(\tilde p)}{k} \right\rfloor.
+\]
+When $p$ is reduced, this holds iff $s(p) \le 2k - 2$ and
+$o(p) \le \min(s(p),\, 2k - 2 - s(p))$.
+\end{theorem}
+
+\begin{proof}
+We proceed by strong induction on $\sigma(p)$. By Lemma~\ref{lem:red}, it
+suffices to prove the two transition claims for reduced positions $p$.
+
+\medskip
+\noindent\textbf{Claim 1 ($\mathcal{P} \to \mathcal{N}$).}
+Assume $p$ is reduced and $\lfloor D(p)/k \rfloor = \lfloor E(p)/k \rfloor = m$.
+Then $k m \le E(p) \le D(p) < k(m + 1)$, so
+$\sigma(p) = D(p) + E(p) \le 2km + 2k - 2$. By reducedness,
+$k p_i \le \sigma(p) < k(2m + 2)$, hence $p_i \le 2m + 1$ and
+$\lfloor p_i / 2 \rfloor \le m$ for all $i$. Let $q = p - e_S$ ($|S| \ge k$)
+be any legal move. Pointwise $\lfloor q_i / 2 \rfloor + \mathbf{1}_{i \in S}
+\le \lceil p_i / 2 \rceil$, so summing yields
+$E(q) \le D(p) - |S| \le D(p) - k < k m$.
+
+If $q$ is reduced ($\tilde q = q$), then $\lceil q_i / 2 \rceil \ge \lfloor p_i / 2 \rfloor$
+gives $D(q) \ge E(p) \ge k m > E(q)$. Otherwise let $t := t(q)$,
+$H := \{i : q_i > t\}$ ($1 \le |H| < k$), and $c := \lceil t / 2 \rceil$.
+Picking $i_0 \in H$ gives $t + 1 \le q_{i_0} \le p_{i_0} \le 2m + 1$, so
+$t \le 2m$ and $c \le m$. For $i \notin H$,
+$\lceil \tilde q_i / 2 \rceil \ge \lfloor p_i / 2 \rfloor$; for $i \in H$,
+$\lceil \tilde q_i / 2 \rceil = c$ while $\lfloor p_i / 2 \rfloor \le m$.
+Summing gives
+\[
+D(\tilde q) \ge E(p) - |H|(m - c) \ge k m - |H|(m - c)
+= k c + (k - |H|)(m - c) \ge k c.
+\]
+If $c = m$, then $E(\tilde q) \le E(q) < k m = k c$. If $c \le m - 1$, then
+by Lemma~\ref{lem:red},
+$D(\tilde q) + E(\tilde q) + |H| < k(t + 1) \le k(2c + 1) = 2k c + k$;
+subtracting the lower bound on $D(\tilde q)$ yields
+\[
+E(\tilde q) < 2k c + (k - |H|) - k c - (k - |H|)(m - c)
+= k c - (k - |H|)(m - c - 1) \le k c.
+\]
+In all cases $E(\tilde q) < k c \le D(\tilde q)$, so
+$\lfloor D(\tilde q)/k \rfloor \ne \lfloor E(\tilde q)/k \rfloor$.
+
+\medskip
+\noindent\textbf{Claim 2 ($\mathcal{N} \to \mathcal{P}$).}
+Assume $p$ is reduced and $\lfloor D(p)/k \rfloor \ne \lfloor E(p)/k \rfloor$.
+Let $O := \{i : p_i \text{ odd}\}$. If $|O| \ge k$, play $S = O$; every entry
+of $q = p - e_O$ is even, so Lemma~\ref{lem:even} yields
+$\lfloor D(\tilde q)/k \rfloor = \lfloor E(\tilde q)/k \rfloor$.
+
+Now assume $|O| < k$ and put $m := \lfloor E(p)/k \rfloor$. Then
+$k m \le E(p) < k(m + 1) \le D(p)$, so $p$ is nonzero and reducedness gives at
+least $k$ positive stacks. Put $M := \max_i p_i$,
+$\mathrm{MaxS} := \{i : p_i = M\}$, and $S_0 := O \cup \mathrm{MaxS}$. For any
+set $S \supseteq O$ of positive stacks, $D(p - e_S) = E(p)$ and
+$E(p - e_S) = E(p) - (|S| - |O|)$.
+\begin{itemize}
+\item If $|S_0| \le k$, extend $S_0$ to a set $S$ of $k$ positive stacks. Then
+$\max(p - e_S) \le M - 1$, so $p - e_S$ is reduced
+($\sigma(p - e_S) = \sigma(p) - k \ge k(M - 1)$), $D(p - e_S) = E(p) \in [k m, k(m + 1))$,
+and $E(p - e_S) = D(p) - k \in [k m, k(m + 1))$.
+\item If $|S_0| > k$, then $M = 2r$ must be even (otherwise
+$\mathrm{MaxS} \subseteq O$, contradicting $|O| < k$). Also
+$k(2r) \le \sigma(p) = D(p) + E(p) < k(2m + 4)$, so $r \le m + 1$.
+If $r \le m$, pick $S = O$ together with $k - |O|$ elements of $\mathrm{MaxS}$;
+then $D(q) = E(p) \ge k m$ and $E(q) = D(p) - k \ge k m$, whence
+$\sigma(q) \ge 2k m \ge k(2r) = k M$, so $q$ is reduced and
+$\lfloor D(q)/k \rfloor = \lfloor E(q)/k \rfloor = m$.
+If $r = m + 1$, play $S = S_0$ ($|S_0| > k$). If $q = p - e_{S_0}$ is reduced,
+then $\sigma(q) \ge k(2m + 1)$ gives
+$E(q) = \sigma(q) - E(p) \ge k(2m + 1) - (k m + k - 1) > k m$, so
+$\lfloor D(q)/k \rfloor = \lfloor E(q)/k \rfloor = m$. If $q$ is not reduced,
+then $t(q) \le 2m$ and every stack of $q$ of height $\le 2m$ is even, so
+Lemma~\ref{lem:even} gives
+$\lfloor D(\tilde q)/k \rfloor = \lfloor E(\tilde q)/k \rfloor$.
+\end{itemize}
+Finally, writing $E(p) = k q + r$ ($0 \le r < k$), the equality
+$\lfloor D(p)/k \rfloor = \lfloor E(p)/k \rfloor$ holds iff $r + o(p) < k$,
+which is directly equivalent to $s(p) = 2r + o(p) \le 2k - 2$ and
+$o(p) \le \min(s(p), 2k - 2 - s(p))$.
+\end{proof}
+
+\section{Disproof of Conjecture~1}
+
+\begin{theorem}\label{thm:disproof}
+Conjecture~1 of~\cite{DH2026} is false:
+\begin{enumerate}
+\item For $n = 4$ and $k = 2$, $p = (0, 1, 2, 2)$ is reduced and is a
+$\mathcal{P}$-position of $\mathrm{SN}(4, \{2, 3, 4\})$ (with $D(p) = 3$,
+$E(p) = 2$), yet $s(p) = 1 = k - 1$ and $o(p) = 1 \not\equiv 4 = n \pmod 2$,
+so Conjecture~1 classifies $p$ as an $\mathcal{N}$-position.
+\item For every odd $k \ge 3$ and every $n \ge r := (3k - 1)/2$, the position
+with $r$ stacks of height $2$ and $n - r$ empty stacks is reduced and is a
+$\mathcal{P}$-position (with $D(p) = E(p) = r$), yet $s(p) = k - 1$ and
+$o(p) = 0 < 1$, so Conjecture~1 classifies it as an $\mathcal{N}$-position.
+\end{enumerate}
+\end{theorem}
+
+\section{Formal Verification}
+
+All results in this paper are formally verified in Lean~4 using only the
+standard axioms (\texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound}), with zero errors and zero warnings:
+\begin{itemize}
+\item complete characterization (\texttt{isP\_iff\_div\_eq} and
+\texttt{isP\_iff\_correctedSO\_of\_reduced});
+\item parity-clause disproof (\texttt{conjecture1\_false\_parity});
+\item infinite-family disproof (\texttt{conjecture1\_false\_infinite\_family}).
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{DH2026}
+M.~Dufour and S.~Heubach,
+\emph{On the $\mathcal{P}$-positions of some infinite families of Slow $A$-Nim},
+INTEGERS~26 (2026), \#G3 (arXiv:2404.06608v3).
+\end{thebibliography}
+
+\end{document}

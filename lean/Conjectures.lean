@@ -56,3 +56,4 @@ import Conjectures.SongDalfoFiolZhangTokenLaplacian
 import Conjectures.ThongjarastCyclicEqualizability
 import Conjectures.AbbaszadehLineMetricDistortion
 import Conjectures.BozokiCsatoEigenvectorReversal
+import Conjectures.DufourHeubachSlowANim
