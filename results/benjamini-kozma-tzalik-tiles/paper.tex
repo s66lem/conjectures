@@ -1,0 +1,91 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+
+\title{Tiles of $\mathbb{Z}$ Inside $\{1, 2, 4, \dots, 2^n\}$: Disproof and Complete Size Spectrum}
+\author{Salem Levinstein}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve the second part of Question~9 of I.~Benjamini, G.~Kozma, and E.~Tzalik (\emph{Electron.\ J.\ Combin.}\ \textbf{33(3)}, 2026, \#P3.28; \texttt{arXiv:2303.07956v2}, Question~13 in~v1), which asks whether the only translational tiles of $\mathbb{Z}$ contained in $\{1, 2, 4, \dots, 2^n\}$ are the sets of size~$1$ and~$2$. We disprove this via the explicit $3$-element tile $\{1, 4, 16\} \subset \{1, 2, 4, 8, 16\}$ with complement $T = \{-1, 0, 1\} + 9\mathbb{Z}$, and determine the complete size spectrum of power-of-$2$ tiles of $\mathbb{Z}$: a $k$-element subset of $\{2^j : j \ge 0\}$ tiles $\mathbb{Z}$ if and only if $k \in \{1, 2\}$ or $k$ is odd. Odd sizes are realized explicitly via Euler's theorem and lifting-the-exponent; even sizes $k \ge 4$ are ruled out via Newman periodicity, Coven--Meyerowitz's cyclotomic criterion~(T1), and an alternating-sum obstruction for $\Phi_{2^j}(X) = X^{2^{j-1}} + 1$. We also classify prime-size power-of-$2$ tiles (minimal span $(p-1)\,\mathrm{ord}_p(2)$) and determine the exact tile counts $t(n)$ inside $\{1, 2, \dots, 2^n\}$ for $0 \le n \le 15$. Both the $\{1, 4, 16\}$ counterexample and the complete size spectrum theorem are machine-verified in Lean~4.
+\end{abstract}
+
+\section{Introduction}
+
+A finite subset $S \subset \mathbb{Z}$ \emph{tiles $\mathbb{Z}$ by translations} if there exists $T \subset \mathbb{Z}$ such that $\mathbb{Z} = \bigsqcup_{t \in T} (S + t)$. In~\cite[Section~3, Question~9]{BKT2026} (Question~13 in the 2023 preprint), Benjamini, Kozma, and Tzalik ask:
+\begin{quote}
+\emph{How many tiles are contained in the set $\{1, 2, 4, \dots, 2^n\}$? Are the only such tiles the sets of size~$1$ and~$2$?}
+\end{quote}
+
+\section{Counterexample and Complete Size Spectrum}
+
+\begin{theorem}[Disproof of the second part of Question~9]\label{thm:ce}
+The $3$-element set $S = \{1, 4, 16\} \subset \{1, 2, 4, 8, 16\}$ tiles $\mathbb{Z}$ by translations with complement $T = \{-1, 0, 1\} + 9\mathbb{Z}$. Hence $\{1, 2, \dots, 2^n\}$ contains a tile of size~$3$ for every $n \ge 4$.
+\end{theorem}
+
+\begin{proof}
+The sumset $\{1, 4, 16\} + \{-1, 0, 1\} = \{0, 1, 2, 3, 4, 5, 15, 16, 17\}$ hits every residue class modulo~$9$ exactly once, so every integer $z \in \mathbb{Z}$ has a unique representation $z = s + t$ with $s \in S$ and $t \in T$.
+\end{proof}
+
+\begin{theorem}[Complete size spectrum]\label{thm:spec}
+For every $k \in \mathbb{N}$, there exists a $k$-element subset $S \subset \{2^j : j \ge 0\}$ that tiles $\mathbb{Z}$ by translations if and only if $k \in \{1, 2\}$ or $k$ is odd.
+\end{theorem}
+
+\begin{proof}
+For $k = 1$ and $k = 2$, $\{1\} \oplus \mathbb{Z} = \mathbb{Z}$ and $\{1, 2\} \oplus 2\mathbb{Z} = \mathbb{Z}$.
+
+\emph{Existence for odd $k \ge 3$.} Let $r = \varphi(k) \ge 1$ (or $r = \mathrm{ord}_{\mathrm{rad}(k)}(2)$), $q = 2^r$, and $g = q - 1$. Since $\gcd(2, k) = 1$, Euler's theorem gives $k \mid g$, so every odd prime $p \mid k$ satisfies $p \mid q - 1$. Set $f(m) = \sum_{j=0}^{m-1} q^j = (q^m - 1)/g$. For any odd prime $p \mid q - 1$, $p \nmid m$ gives $f(m) \equiv m \not\equiv 0 \pmod{p}$, while writing $q^a = 1 + pt$ gives $\sum_{i=0}^{p-1} (1 + pt)^i \equiv p + \binom{p}{2} pt \equiv p \pmod{p^2}$, so $v_p(f(pa)) = v_p(f(a)) + 1$. By strong induction, $v_p(f(m)) = v_p(m)$ for all $m \ge 1$ and all primes $p \mid k$, whence $k \mid f(m) \iff k \mid m$. For $0 \le d_1 < d_2 < k$, $f(d_2) - f(d_1) = q^{d_1} f(d_2 - d_1)$ is not divisible by~$k$ since $\gcd(q^{d_1}, k) = 1$ and $0 < d_2 - d_1 < k$. Thus $\{f(d) : 0 \le d < k\}$ is a complete residue system modulo~$k$, and $S_k = \{q^d : 0 \le d < k\} = \{1 + g f(d) : 0 \le d < k\}$ tiles $\mathbb{Z}$ with complement $T = \{t \in \mathbb{Z} : (t + 1) \bmod (gk) < g\}$.
+
+\emph{Impossibility for even $k \ge 4$.} Suppose $S \subset \{2^j : j \ge 0\}$ has $|S| = k$ (even, $k \ge 4$) and tiles $\mathbb{Z}$ via $T$. Dividing $S$ by $\min S = 2^e$ preserves tiling ($2^e S' \oplus T = \mathbb{Z} \implies S' \oplus \{t : 2^e t \in T\} = \mathbb{Z}$), so we may assume $1 \in S$. By Newman's periodicity argument~\cite{Newman1977}, the indicator of $T$ at $y$ is uniquely determined both by $T \cap [y - D, y)$ and by $T \cap (y, y + D]$ ($D = \max S - \min S$), so pigeonhole yields a period $M > 0$. Setting $A = T \cap \{0, \dots, M-1\}$, we have $|S||A| = M$ and $(X^M - 1) \mid \bigl(S(X) A(X) - \sum_{r=0}^{M-1} X^r\bigr)$ in $\mathbb{Z}[X]$ for the mask polynomials $S(X) = \sum_{s \in S} X^s$ and $A(X) = \sum_{a \in A} X^a$.
+
+For every prime power $q = p^a \mid M$ ($a \ge 1$), $\Phi_q(X)$ is monic over $\mathbb{Z}$, irreducible over $\mathbb{Q}$, and divides $(X^M - 1)/(X - 1)$, hence divides $S(X)$ or $A(X)$ in $\mathbb{Z}[X]$. Because $X^M - 1$ is separable over $\mathbb{Q}$, distinct $\Phi_q$ dividing $X^M - 1$ are pairwise coprime over $\mathbb{Q}$, so the monic products $P_S = \prod_{q \in Q_S} \Phi_q$ and $P_A = \prod_{q \in Q_A} \Phi_q$ over prime-power divisors of $M$ dividing $S$ or $A$ satisfy $P_S \mid S$ and $P_A \mid A$ in $\mathbb{Z}[X]$. Evaluating at~$1$ yields $P_S(1) \mid k$, $P_A(1) \mid |A|$, and $M = \prod_{p^a \mid M} p \mid P_S(1) P_A(1) \mid k |A| = M$, forcing $P_S(1) = k$ (Coven--Meyerowitz~\cite{CovenMeyerowitz1999}, condition~(T1)). Since $2 \mid k$, some $\Phi_{2^j}(X) = X^{2^{j-1}} + 1$ ($j \ge 1$) divides $S(X)$ in $\mathbb{Z}[X]$.
+
+Write $h = 2^{j-1}$ and $S(X) = (X^h + 1) Q(X)$. For any $r < h$ and $N$ with $Nh > \deg Q + h$, the alternating sum $\sum_{m=0}^{N-1} (-1)^m S[mh + r]$ telescopes to~$0$. If $j = 1$ ($h = 1, r = 0$), this forces $\#\{s \in S \text{ even}\} = \#\{s \in S \text{ odd}\} = 1$ (since $1$ is the only odd power of~$2$), so $k = 2 < 4$, contradiction. If $j \ge 2$ ($h \ge 2$ even, $r = 1 < h$), only $s = 1$ ($m = 0$) is congruent to $1 \pmod{h}$ among powers of~$2$, yielding $1 = 0$, contradiction.
+\end{proof}
+
+\section{Prime-Size Classification and Exact Counts for \texorpdfstring{$n \le 15$}{n <= 15}}
+
+\begin{proposition}[Prime sizes and exact counts for $n \le 15$]\label{prop:prime}
+Let $p$ be an odd prime and $r_p = \mathrm{ord}_p(2)$. By Newman's theorem~\cite{Newman1977} and lifting-the-exponent, a $p$-element set $S = \{2^c : c \in C\}$ tiles $\mathbb{Z}$ if and only if $C = c_0 + r_p p^t X$ for some $t \ge 0$ and a complete residue system $X \ni 0$ modulo~$p$. Hence the minimal $n$ for which $\{1, 2, \dots, 2^n\}$ contains a $p$-element tile is $(p - 1)\,\mathrm{ord}_p(2)$ ($4, 16, 18, 100$ for $p = 3, 5, 7, 11$). More generally, for any odd $k$ with prime divisor $p \mid k$, condition~(T1) forces $\Phi_{p^a} \mid S(X)$ ($a \ge 2$), giving $p$ distinct exponents congruent modulo $\mathrm{ord}_{p^{a-1}}(2) \ge r_p$ and hence span $\ge (p - 1) r_p$ (ruling out $k = 15$ for $n \le 15$ via $p = 5$). Together with Theorem~\ref{thm:spec} and exhaustive checking that size~$9$ requires span~$\ge 16$, the exact number $t(n)$ of tiles contained in $\{1, 2, \dots, 2^n\}$ for $0 \le n \le 15$ is
+\[
+1,\ 3,\ 6,\ 10,\ 16,\ 23,\ 31,\ 40,\ 51,\ 63,\ 78,\ 94,\ 112,\ 131,\ 153,\ 176.
+\]
+\end{proposition}
+
+\section{Formal Verification}
+
+Theorems~\ref{thm:ce} and~\ref{thm:spec} are formalized and machine-checked in Lean~4 with zero \texttt{sorry}, zero custom axioms (standard axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound} only), and zero forbidden tokens:
+\begin{itemize}
+\item Lean~4 formalization: \texttt{lean/Conjectures/BenjaminiKozmaTzalikTiles.lean}.
+\item Standalone verifier (checking Theorems~\ref{thm:ce}--\ref{thm:spec} and Proposition~\ref{prop:prime}):\\
+\texttt{results/benjamini-kozma-tzalik-tiles/verify.py}.
+\end{itemize}
+
+\begin{thebibliography}{3}
+\bibitem{BKT2026}
+I.~Benjamini, G.~Kozma, and E.~Tzalik,
+\emph{The number of tiles of $\mathbb{Z}^d$},
+Electron.\ J.\ Combin.\ \textbf{33(3)} (2026), \#P3.28,
+DOI: \href{https://doi.org/10.37236/14513}{10.37236/14513};
+\texttt{arXiv:2303.07956}.
+
+\bibitem{CovenMeyerowitz1999}
+E.~M.~Coven and A.~Meyerowitz,
+\emph{Tiling the integers with translates of one finite set},
+J.\ Algebra \textbf{212} (1999), 161--174.
+
+\bibitem{Newman1977}
+D.~J.~Newman,
+\emph{Tesselation of integers},
+J.\ Number Theory \textbf{9} (1977), 107--111.
+\end{thebibliography}
+
+\end{document}
