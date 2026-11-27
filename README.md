@@ -72,6 +72,7 @@ Each result directory contains a self-contained proof (`PROOF.md`), an internal 
 | **60.** [Second Chandra–Jain Conjecture + Exact Degree Criterion (`arXiv:2608.11372v3`, Sec. 5, algebraic degree of discrete landscape coefficients $c_k(N)$)](results/chandra-jain-second-conjecture/) | Proved for all $N \ge 3$ and odd $1 \le k < N$ (exact rule: $[\mathbb{Q}(c_k(N)):\mathbb{Q}] = \varphi(N_0)$ iff $N_0 = N/\gcd(N,k)$ is odd or every prime $p$ with odd $v_p(\gcd(N,k))$ divides $N_0$, and $2\varphi(N_0)$ otherwise; elementary cyclotomic Galois + quadratic Gauss sums + CRT proof, also recovering Zhou's $d = 1$ theorem) | [DOI](https://doi.org/10.5281/zenodo.24578327) | **Lean 4** · Cross-Model Audit · Python |
 | **61.** [Nair–Anand–Chandran–Nascimento–Anil Conjecture 1 (`arXiv:2609.34236v1`, Sec. 5, cycle convexity Helly vs. Radon equality $\mathrm{hl}_{cc}(G) = \mathrm{rd}_{cc}(G)$)](results/cycle-convexity-helly-radon/) | Disproved (connected $16$-vertex, $36$-edge graph $G_{16}$ of three $K_5$ cliques + hub $x$ + three cyclic port edges has exact $\mathrm{hl}_{cc}(G_{16}) = 5 < 6 = \mathrm{rd}_{cc}(G_{16})$, alongside general Levi inequality $\mathrm{hl}_{cc}(G) \le \mathrm{rd}_{cc}(G)$ for all finite graphs) | [DOI](https://doi.org/10.5281/zenodo.24579187) | **Lean 4** · Cross-Model Audit · Python |
 | **62.** [Güday–Şahin Conjectures 1 & 2 and Open Problem 1 (INTEGERS 26 (2026) #A5, general conditional sequences)](results/guday-sahin-conditional-sequences/) | Resolved completely (Conjecture 1 holds for $r \le 3$ and fails for every $r \ge 4$: explicit $r=4, m=5$ integer instance rules out all $\pm 1$ signs over $\mathbb{R}$ and all cutoffs $N$; Conjecture 2 holds for $m \le 5$ and fails for every $m \ge 6$ at $d=9$, with exact corrected formula $2|\mathcal{A}_d| = 2w_{3,m}(d) - w^{\bmod 3}_{3,m}(d)$ and minimal $m=6, d=9$ witness $25 \ne 22$; exact signed-bijection recurrence settles Open Problem 1) | [DOI](https://doi.org/10.5281/zenodo.24580791) | **Lean 4** · Cross-Model Audit · Python |
+| **63.** [Choudhry Sec. 6 Open Problem / Guy D14 (INTEGERS 26 (2026) #A66 / `arXiv:2508.07806`, $(5, 4)$ and $(6, 4)$ integer sumsets of perfect squares)](results/choudhry-sumset-squares/) | Resolved affirmatively + extended to $(6, 4)$ (minimal primitive $(5, 4)$ solution $A = \{216^2, 567^2, 1128^2, 1848^2, 5496^2\}$, $B = \{0, 1198800, 2695680, 22269520\}$ + all 5 primitive $(5, 4)$ solutions for $\max X \le 10000$; explicit primitive $(6, 4)$ solution with all $24$ sums squares; infinitely many distinct all-positive pairwise disjoint $(5, 4)$ and $(6, 4)$ solutions) | [DOI](https://doi.org/10.5281/zenodo.24581044) | **Lean 4** · Cross-Model Audit · Python |
 
 ## Reproduction
 
@@ -140,6 +141,7 @@ python3 results/dufour-heubach-slow-a-nim/verify.py
 python3 results/chandra-jain-second-conjecture/verify.py
 python3 results/cycle-convexity-helly-radon/verify.py
 python3 results/guday-sahin-conditional-sequences/verify.py
+python3 results/choudhry-sumset-squares/verify.py
 ```
 
 To check the Lean 4 formalizations (Lean `v4.33.1` + Mathlib):
