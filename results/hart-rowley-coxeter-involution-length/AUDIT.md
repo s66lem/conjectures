@@ -1,0 +1,14 @@
+# Independent Adversarial Audit — Row 65 (Hart–Rowley Conjecture 1.3 Disproof in Finite Coxeter Groups)
+
+- **Auditor:** Independent read-only cross-model review (`claude-sonnet-5-5`, effort `medium`)
+- **Date:** 2026-11-27
+- **Target:** `lean/Conjectures/HartRowleyCoxeterInvolutionLength.lean`, `results/hart-rowley-coxeter-involution-length/{README.md, PROOF.md, verify.py, paper.tex}`
+- **Verdict:** **PASS** on all 5 checks.
+
+## Summary of Checks
+
+1. **Build (`PASS`):** Compiled cleanly on remote Tincan node `bishop` (`leanprover/lean4:v4.33.1`, `rc=0`, `ok=True`), with 0 errors, 0 warnings, and 0 info messages beyond `#print axioms`.
+2. **Axioms (`PASS`):** Every public theorem, lemma, definition, and inductive (`isUniqueAncestor_unique`, `hasInvolutionLength_unique`, `wordPerm_apply_val`, `rootRep_wordProd`, `invCount_wordPerm_le`, `invCount_rootRep_le_length`, `wordProd_canon_mul_simple`, `wordProd_foldStep`, `wordProd_canon_surjective`, `wordProd_canon_injective`, `length_canonWord`, `orderOf_eq_two_iff_isInvIdx`, `isPrefix_of_orderOf_two_iff`, `isUniqueAncestor_of_idx`, `H3_hasAncestorProperty`, `witness1_involutionLength`, `witness2_involutionLength`, `hart_rowley_conj_1_3_false_H3`, `H3Equiv`, `rootRep`, `genPerm`, `canonWord`, `stepTable`, `foldStep`, `isInvIdx`, `isUniqueAncestorIdx`, `invCount`, `wordPerm`, `IsPrefix`, `IsUniqueAncestor`, `HasAncestorProperty`, `HasInvolutionLength`) depends only on standard axioms `[propext, Classical.choice, Quot.sound]` (or `[propext]` for decidable definitions).
+3. **Forbidden tokens (`PASS`):** 0 matches across the entire file (including comments and docstrings) for `sorry`, `admit`, `axiom`, `native_decide`, `Lean.ofReduceBool`, `Lean.trustCompiler`, `unsafe`, `implemented_by`, `extern`, `partial`, `set_option`.
+4. **Spec faithfulness and mathematical rigor (`PASS`):** Verified Mathlib's `CoxeterMatrix.H₃` matches `m(0,1)=3`, `m(1,2)=5`, `m(0,2)=2`; `IsPrefix`, `IsUniqueAncestor`, `HasAncestorProperty`, and `HasInvolutionLength` match Hart–Rowley (`arXiv:2502.00777v1`, §1) and quantify universally over any `CoxeterSystem CoxeterMatrix.H₃ W`; the full proof chain (`cs.lift`, `invCount_rootRep_le_length`, `applyCert_sound`, `H3Equiv`, `length_canonWord`, `H3_hasAncestorProperty`, `witness1_involutionLength`, `witness2_involutionLength`, `hart_rowley_conj_1_3_false_H3`) has no gaps; `python -O -W error verify.py` exits `0` (`ALL CHECKS PASSED`).
+5. **Doc consistency (`PASS`):** Non-blocking nits from the audit were resolved post-audit: dropped unverified $H_4 / E_8$ maxima from `README.md`, `PROOF.md`, and `paper.tex` (retaining only Lean/Python-verified $H_3, F_4, E_6$ and rigorous parabolic inheritance $E_6 \subset E_7$), harmonized "119 non-identity elements" phrasing, and normalized the `verify.py` docstring decomposition order.
