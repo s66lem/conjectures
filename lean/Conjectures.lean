@@ -63,3 +63,4 @@ import Conjectures.GudaySahinConditionalSequences
 import Conjectures.ChoudhrySumsetSquares
 import Conjectures.BenjaminiKozmaTzalikTiles
 import Conjectures.HartRowleyCoxeterInvolutionLength
+import Conjectures.LiTwinPractical
